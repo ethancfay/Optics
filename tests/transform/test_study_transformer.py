@@ -53,7 +53,7 @@ def loc(state="Massachusetts", geo=None, **fields):
 @given(ctgov_query_pages())
 def test_p3_every_site_nctid_is_a_study_row(pages):
     """P3. **Validates: Requirements 5.5, 13.2**"""
-    studies, sites, _ = build_study_and_site_rows(pages, FETCH_DATE)
+    studies, sites, _, _ = build_study_and_site_rows(pages, FETCH_DATE)
     study_ids = [s.nctId for s in studies]
     for site in sites:
         assert study_ids.count(site.nctId) == 1
@@ -62,7 +62,7 @@ def test_p3_every_site_nctid_is_a_study_row(pages):
 @given(ctgov_query_pages())
 def test_p4_non_empty_coordinates_are_in_range(pages):
     """P4. **Validates: Requirements 5.6, 13.3**"""
-    _, sites, _ = build_study_and_site_rows(pages, FETCH_DATE)
+    _, sites, _, _ = build_study_and_site_rows(pages, FETCH_DATE)
     for site in sites:
         if site.latitude != "":
             assert -90.0 <= float(site.latitude) <= 90.0
@@ -73,7 +73,7 @@ def test_p4_non_empty_coordinates_are_in_range(pages):
 @given(ctgov_query_pages())
 def test_p8_nctid_unique_in_study_rows(pages):
     """P8. **Validates: Requirements 4.6, 13.12**"""
-    studies, _, _ = build_study_and_site_rows(pages, FETCH_DATE)
+    studies, _, _, _ = build_study_and_site_rows(pages, FETCH_DATE)
     ids = [s.nctId for s in studies]
     assert len(ids) == len(set(ids))
 
@@ -81,7 +81,7 @@ def test_p8_nctid_unique_in_study_rows(pages):
 # --- Status filter and Recent_Completed_Cutoff (Req 4.1) -------------------------
 
 def test_completed_cutoff_boundary():
-    studies, _, _ = run(
+    studies, _, _, _ = run(
         study("NCT1", "COMPLETED", "2023-10-24"),  # on the cutoff: kept
         study("NCT2", "COMPLETED", "2023-10-23"),  # one day before: dropped
         study("NCT3", "COMPLETED", "2023-02-30"),  # invalid date: dropped
@@ -95,12 +95,12 @@ def test_cutoff_on_29_february_maps_to_28_february():
     leap = datetime(2028, 2, 29, 12, tzinfo=timezone.utc)  # cutoff 2025-02-28
     pages = [{"studies": [study("NCT1", "COMPLETED", "2025-02-28"),
                           study("NCT2", "COMPLETED", "2025-02-27")]}]
-    studies, _, _ = build_study_and_site_rows(pages, leap)
+    studies, _, _, _ = build_study_and_site_rows(pages, leap)
     assert [s.nctId for s in studies] == ["NCT1"]
 
 
 def test_active_statuses_kept_regardless_of_date_and_others_dropped():
-    studies, _, _ = run(
+    studies, _, _, _ = run(
         study("NCT1", "RECRUITING", "2001-01-01"),
         study("NCT2", "NOT_YET_RECRUITING", None),
         study("NCT3", "ACTIVE_NOT_RECRUITING", "bad"),
@@ -111,7 +111,7 @@ def test_active_statuses_kept_regardless_of_date_and_others_dropped():
 
 
 def test_every_study_type_kept_including_empty_and_absent():
-    studies, _, _ = run(
+    studies, _, _, _ = run(
         study("NCT1", designModule={"studyType": "INTERVENTIONAL"}),
         study("NCT2", designModule={"studyType": "OBSERVATIONAL"}),
         study("NCT3", designModule={"studyType": "EXPANDED_ACCESS"}),
@@ -127,27 +127,27 @@ def test_every_study_type_kept_including_empty_and_absent():
 def test_study_in_q1_and_q2_keeps_the_q1_copy_and_its_sites():
     q1 = study("NCT1", "ACTIVE_NOT_RECRUITING", locations=[loc(facility="Q1 site")])
     q2 = study("NCT1", "COMPLETED", "2026-01-01", locations=[loc(facility="Q2 site")])
-    studies, sites, _ = run(q1, q2=[q2])
+    studies, sites, _, _ = run(q1, q2=[q2])
     assert [(s.nctId, s.overallStatus) for s in studies] == [("NCT1", "ACTIVE_NOT_RECRUITING")]
     assert [s.facility for s in sites] == ["Q1 site"]
 
 
 def test_dedup_runs_before_status_filter():
     # The first copy is dropped by the status filter; the later copy is not used.
-    studies, sites, _ = run(study("NCT1", "TERMINATED"), study("NCT1", "RECRUITING"))
+    studies, sites, _, _ = run(study("NCT1", "TERMINATED"), study("NCT1", "RECRUITING"))
     assert studies == [] and sites == []
 
 
 def test_missing_or_empty_nctid_excluded():
     no_id = study("x")
     del no_id["protocolSection"]["identificationModule"]["nctId"]
-    studies, sites, _ = run(no_id, study(""), study("NCT1"))
+    studies, sites, _, _ = run(no_id, study(""), study("NCT1"))
     assert [s.nctId for s in studies] == ["NCT1"]
     assert {s.nctId for s in sites} == {"NCT1"}
 
 
 def test_study_without_allowed_state_site_dropped():
-    studies, sites, _ = run(
+    studies, sites, _, _ = run(
         study("NCT1", locations=[loc("California"), loc(None), loc("")]),
         study("NCT2", locations=[]),
     )
@@ -169,7 +169,7 @@ def test_study_row_fields_copied_and_source_url():
             "meshes": [{"id": "D001249", "term": "Asthma"}, {"term": "No id"}],
             "ancestors": [{"id": "D012140", "term": "Respiratory Tract Diseases"}]}},
     )
-    (row,), _, _ = run(record)
+    (row,), _, _, _ = run(record)
     assert row.briefTitle == "Title NCT9"
     assert row.phases == ["PHASE2", "PHASE3"]
     assert row.healthyVolunteers == "false"
@@ -185,7 +185,7 @@ def test_study_row_fields_copied_and_source_url():
 
 
 def test_healthy_volunteers_true_false_or_empty():
-    studies, _, _ = run(
+    studies, _, _, _ = run(
         study("NCT1", eligibilityModule={"healthyVolunteers": True}),
         study("NCT2", eligibilityModule={"healthyVolunteers": False}),
         study("NCT3", eligibilityModule={}),
@@ -197,7 +197,7 @@ def test_missing_fields_become_empty_values():
     record = study("NCT1", eligibilityModule={"minimumAge": "", "stdAges": []})
     record["protocolSection"]["identificationModule"].pop("briefTitle")
     record["protocolSection"]["statusModule"].pop("lastUpdatePostDateStruct")
-    (row,), _, _ = run(record)
+    (row,), _, _, _ = run(record)
     assert row.briefTitle == "" and row.lastUpdatePostDate == ""
     assert row.minimumAge == "" and row.maximumAge == ""
     assert row.stdAges == [] and row.phases == [] and row.conditions == []
@@ -212,20 +212,20 @@ def test_every_site_status_kept_and_stripped():
     locations = [loc(facility=str(i), status=s)
                  for i, s in enumerate(["RECRUITING", " COMPLETED ", "WITHDRAWN", ""])]
     locations.append(loc(facility="none"))  # no status key
-    _, sites, _ = run(study("NCT1", locations=locations))
+    _, sites, _, _ = run(study("NCT1", locations=locations))
     assert [s.siteStatus for s in sites] == ["RECRUITING", "COMPLETED", "WITHDRAWN", "", ""]
 
 
 def test_state_match_strips_and_ignores_case():
     states = ["Massachusetts", " ma ", "RHODE ISLAND", "nh", "Connecticut", "NY", "vermont",
               "Maine", "Ontario"]
-    _, sites, _ = run(study("NCT1", locations=[loc(s, facility=s) for s in states]))
+    _, sites, _, _ = run(study("NCT1", locations=[loc(s, facility=s) for s in states]))
     assert [s.state for s in sites] == [
         "Massachusetts", "ma", "RHODE ISLAND", "nh", "Connecticut", "NY", "vermont"]
 
 
 def test_site_text_stripped_and_missing_values_empty():
-    _, (site,), _ = run(study("NCT1", locations=[
+    _, (site,), _, _ = run(study("NCT1", locations=[
         {"facility": "  Mass General  ", "state": " Massachusetts "}]))
     assert (site.facility, site.city, site.state, site.zip) == (
         "Mass General", "", "Massachusetts", "")
@@ -243,7 +243,7 @@ def test_location_quality_ok_missing_geo_out_of_range():
         "lat_out": {"lat": 90.5, "lon": -71.1},
         "lon_out": {"lat": 42.3, "lon": -180.1},
     }
-    _, sites, missing = run(study("NCT1", locations=[loc(geo=g, facility=k)
+    _, sites, missing, _ = run(study("NCT1", locations=[loc(geo=g, facility=k)
                                                       for k, g in geos.items()]))
     got = {s.facility: (s.latitude, s.longitude, s.location_quality) for s in sites}
     assert got == {
@@ -266,7 +266,87 @@ def test_duplicate_sites_collapse_and_missing_geo_listed_once():
     same = loc(facility="Site", geo=None)        # equal after stripping
     other_zip = loc(facility="Site", zip="01605")
     outside = loc("California", facility="Far", geo=None)  # not retained, not logged
-    _, sites, missing = run(study("NCT1", locations=[dup, same, other_zip, outside]))
+    _, sites, missing, _ = run(study("NCT1", locations=[dup, same, other_zip, outside]))
     assert [(s.facility, s.zip) for s in sites] == [("Site", "02115"), ("Site", "01605")]
     assert [(m.facility, m.location_quality) for m in missing] == [
         ("Site", "missing_geo"), ("Site", "missing_geo")]
+
+
+
+def test_zip_used_in_deduplication_before_validation():
+    """Req 5.10: deduplication uses the stripped source zip; validation happens after."""
+    def loc(z): return {"city": "Boston", "state": "MA", "facility": "A", "zip": z, "geoPoint": {"lat": 42, "lon": -71}}
+    
+    # Two sites with same invalid zip: deduplicated to one, then blanked
+    dup = page(nct("NCT10", locations=[loc("0211512345"), loc("0211512345")]))
+    _, sites, _, count = build_study_and_site_rows([dup], FETCH_DATE)
+    assert len(sites) == 1
+    assert sites[0].zip == ""
+    assert count == 1  # counted once, not twice
+
+
+def test_zip_validation():
+    r"""Req 5.1: zip must match ^\d{5}(-?\d{4})?$, else blanked and counted."""
+    def build(z):
+        return study(locations=[loc(zip=z)])
+    
+    # Valid zips
+    _, sites, _, count = run(build("02115"))
+    assert len(sites) == 1
+    assert sites[0].zip == "02115"
+    assert count == 0
+    
+    _, sites, _, count = run(build("021151234"))
+    assert sites[0].zip == "021151234"
+    assert count == 0
+    
+    _, sites, _, count = run(build("02115-1234"))
+    assert sites[0].zip == "02115-1234"
+    assert count == 0
+    
+    # Whitespace stripped before validation
+    _, sites, _, count = run(build("  02115  "))
+    assert sites[0].zip == "02115"
+    assert count == 0
+    
+    # Invalid: 10 digits (the trigger for this requirement)
+    _, sites, _, count = run(build("0211512345"))
+    assert sites[0].zip == ""
+    assert count == 1
+    
+    # Invalid: letters
+    _, sites, _, count = run(build("ABC12"))
+    assert sites[0].zip == ""
+    assert count == 1
+    
+    # Invalid: 4 digits
+    _, sites, _, count = run(build("1234"))
+    assert sites[0].zip == ""
+    assert count == 1
+    
+    # Empty zip is kept empty, not counted
+    _, sites, _, count = run(build(""))
+    assert sites[0].zip == ""
+    assert count == 0
+    
+    # Multiple sites: some valid, some invalid
+    multi = study(locations=[
+        loc(zip="02115"), loc(zip="0211512345"), loc(zip="ABC"), loc(zip="02116-1234")
+    ])
+    _, sites, _, count = run(multi)
+    assert len(sites) == 4
+    assert [s.zip for s in sites] == ["02115", "", "", "02116-1234"]
+    assert count == 2
+
+
+def test_zip_used_in_deduplication_before_validation():
+    """Req 5.10: deduplication uses the stripped source zip; validation happens after."""
+    # Two sites with same invalid zip: deduplicated to one, then blanked
+    dup = study(locations=[
+        loc(facility="A", zip="0211512345"),
+        loc(facility="A", zip="0211512345")
+    ])
+    _, sites, _, count = run(dup)
+    assert len(sites) == 1
+    assert sites[0].zip == ""
+    assert count == 1  # counted once, not twice

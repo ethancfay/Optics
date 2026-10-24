@@ -115,15 +115,42 @@ def test_matching_identifier_is_redacted():
     assert EMAIL_VALUE not in msg
 
 
-def test_site_zip_is_checked_for_email_only():
-    """Req 8.1 (amended in task 11): a 10-digit ZIP+4 with no hyphen is not a phone
-    match in sites.zip, but an email in zip, or a phone in another site field, still is."""
-    ok = site()
-    ok = SiteRow(**{**ok.__dict__, "zip": "0211512345"})
-    pii_guard.check(tables(sites=[ok]))
-    with_email = SiteRow(**{**ok.__dict__, "zip": "a@b.org"})
+def test_site_zip_checked_against_both_patterns():
+    """Req 8.7 rewritten: sites.zip is checked against both patterns.
+    
+    Valid 5 or 5+4 digit zips cannot match Phone_Pattern, so no exemption is needed.
+    The Study_Transformer blanks invalid zips before encoding.
+    """
+    # Valid zips: 5 digits, or 5+4 with/without hyphen
+    ok_5 = site()
+    ok_5 = SiteRow(**{**ok_5.__dict__, "zip": "02115"})
+    pii_guard.check(tables(sites=[ok_5]))
+    
+    ok_9_no_hyphen = SiteRow(**{**ok_5.__dict__, "zip": "021151234"})
+    pii_guard.check(tables(sites=[ok_9_no_hyphen]))
+    
+    ok_9_hyphen = SiteRow(**{**ok_5.__dict__, "zip": "02115-1234"})
+    pii_guard.check(tables(sites=[ok_9_hyphen]))
+    
+    # Email in zip still flagged
+    with_email = SiteRow(**{**ok_5.__dict__, "zip": "a@b.org"})
     assert pii_guard.find_matches(tables(sites=[with_email])) == [
         "sites.csv: nctId=NCT00000001, row 1: field zip: email"]
-    phone_city = SiteRow(**{**ok.__dict__, "city": "0211512345"})
+    
+    # Phone in another site field still flagged
+    phone_city = SiteRow(**{**ok_5.__dict__, "city": "617-555-0100"})
     assert pii_guard.find_matches(tables(sites=[phone_city])) == [
         "sites.csv: nctId=NCT00000001, row 1: field city: phone"]
+
+
+def test_valid_zips_do_not_match_phone_pattern():
+    """Prove that valid 5 or 5+4 digit zips cannot match Phone_Pattern (Req 8.7)."""
+    from pipeline.patterns import PHONE
+    # 5 digits
+    assert PHONE.search("02115") is None
+    # 9 digits, no hyphen
+    assert PHONE.search("021151234") is None
+    # 9 digits, with hyphen
+    assert PHONE.search("02115-1234") is None
+    # 10 digits would match if not validated first
+    assert PHONE.search("0211512345") is not None

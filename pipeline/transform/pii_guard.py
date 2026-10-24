@@ -16,10 +16,6 @@ from pipeline.errors import PipelineError
 from pipeline.io.csv_writer import LIST_COLUMNS, EncodedTable
 from pipeline.patterns import EMAIL, PATTERNS, PHONE  # noqa: F401 (EMAIL, PHONE re-exported)
 
-# Fields checked against the Email_Pattern only (Req 8.1, amended in task 11):
-# a 10-digit ZIP+4 written without its hyphen matches the Phone_Pattern.
-EMAIL_ONLY_FIELDS = {"sites": frozenset({"zip"})}
-
 # Table order used when listing matches.
 TABLE_ORDER = ("studies", "sites", "places")
 
@@ -37,10 +33,15 @@ def _candidates(cell: str, is_list: bool) -> list[str]:
     return values
 
 
-def _matched_patterns(cell: str, is_list: bool, email_only: bool = False) -> list[str]:
+def _matched_patterns(cell: str, is_list: bool) -> list[str]:
+    """Patterns that match the cell or any of its decoded elements.
+    
+    Req 8.7 rewritten: sites.zip is checked against both patterns. The
+    Study_Transformer validates zips and blanks invalid ones, so only valid
+    5 or 5+4 digit values reach here, which cannot match the Phone_Pattern.
+    """
     values = _candidates(cell, is_list)
-    return [name for name, regex in PATTERNS
-            if not (email_only and name == "phone") and any(regex.search(v) for v in values)]
+    return [name for name, regex in PATTERNS if any(regex.search(v) for v in values)]
 
 
 def _is_clean(value: str) -> bool:
@@ -70,10 +71,9 @@ def find_matches(tables: dict[str, EncodedTable]) -> list[str]:
     for key in ordered:
         table = tables[key]
         list_columns = LIST_COLUMNS.get(table.kind, frozenset())
-        email_only = EMAIL_ONLY_FIELDS.get(table.kind, frozenset())
         for index, cells in enumerate(table.rows):
             for name, cell in zip(table.header, cells):
-                for pattern in _matched_patterns(cell, name in list_columns, name in email_only):
+                for pattern in _matched_patterns(cell, name in list_columns):
                     entries.append("%s: %s: field %s: %s" % (
                         table.file_name, _row_identifier(table, index, cells), name, pattern))
     return entries

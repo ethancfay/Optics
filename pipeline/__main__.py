@@ -189,7 +189,7 @@ def _run_stages(args: argparse.Namespace, paths: Paths, client: object) -> None:
     check_allowed_states(sources.pages_by_query)
 
     ctgov_pages = sources.pages_by_query["q1"] + sources.pages_by_query["q2"]
-    studies, sites, missing_geo = build_study_and_site_rows(ctgov_pages, sources.fetch_date)
+    studies, sites, missing_geo, invalid_zip_count = build_study_and_site_rows(ctgov_pages, sources.fetch_date)
     places, places_duplicates = build_places_rows(sources.places_records)
 
     tables = {
@@ -210,6 +210,7 @@ def _run_stages(args: argparse.Namespace, paths: Paths, client: object) -> None:
         urls=sources.urls,
         contact_removals=sources.contact_removals,
         missing_geo=missing_geo,
+        invalid_zip_count=invalid_zip_count,
         places_duplicates=places_duplicates,
         warnings=warnings,
     )

@@ -378,7 +378,8 @@ Steps, in this order:
 5. Build sites (Req 5). Keep a location only if `is_allowed_state` from `ctgov_fetcher.py` accepts it, that is, its stripped, casefolded `state` is one of `massachusetts, ma, rhode island, ri, new hampshire, nh, connecticut, ct, new york, ny, vermont, vt` (Req 5.3). Each kept location becomes a Site_Row with stripped text values. A missing or empty value becomes `""`.
    - `siteStatus` is the location `status`, stripped. All statuses are kept (Req 5.2).
    - Geo: if `geoPoint.lat` and `geoPoint.lon` are both `int` or `float` (not `bool`) and finite, they are range-checked. Within range gives `ok`. Out of range gives `out_of_range` with empty coordinates (Req 5.7). Anything else gives `missing_geo` with empty coordinates (Req 5.4).
-   - Deduplicate on (`nctId`, `facility`, `city`, `state`, `zip`), comparing the stripped values and keeping the first (Req 5.10).
+   - Deduplicate on (`nctId`, `facility`, `city`, `state`, `zip`), comparing the stripped values and keeping the first (Req 5.10). The stripped source zip is used in the deduplication key.
+   - Zip validation (Req 5.1): after deduplication, each Site_Row's `zip` is checked against `^\d{5}(-?\d{4})?$`. An invalid zip becomes `""` and is counted for `fetch_log.json`. Valid zips are written as stripped, with or without hyphen.
 6. Drop any study left with zero Site_Rows (Req 4.3).
 7. Build the missing-geo list from the remaining Site_Rows whose quality is not `ok`. Each entry is (`nctId`, `facility`, `location_quality`). After deduplication, each site appears at most once (Req 5.11).
 
@@ -551,6 +552,7 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
                        "responsibleParty investigator name fields": 0,
                        "locations[] facility/city pattern matches": 0},
   "missing_geo": {"count": 0, "sites": [{"nctId": "", "facility": "", "location_quality": ""}]},
+  "invalid_zip_count": 0,
   "places_duplicates": [{"locationid": "", "measureid": "", "kept_year": "", "discarded": 0}],
   "warnings": []
 }
@@ -562,6 +564,7 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
 - `contact_removals`: in a network run, these are the scrubber totals from that run. In Offline_Mode, they are the totals stored in the manifest plus the re-scrub totals. The re-scrub totals are 0 unless the raw files were edited, so offline logs match the network log. If they were edited, the log reports the extra removals.
 - The row counts in `files` are the data row counts of the tables that were encoded and written (Req 12.7).
 - `missing_geo.sites` is sorted by `nctId`, then `facility`. `places_duplicates` is sorted by `locationid`, then `measureid`.
+- `invalid_zip_count` is the count of sites whose zip did not match `^\d{5}(-?\d{4})?$` and was written as empty (Req 5.1, 12.3).
 
 Implementation details fixed in task 10:
 

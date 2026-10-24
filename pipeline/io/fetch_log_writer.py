@@ -22,16 +22,17 @@ from pipeline.transform.study_transformer import MissingGeo
 FILE_NAME = "fetch_log.json"
 TOP_LEVEL_KEYS = (
     "run_started_at", "run_mode", "fetch_date", "files", "clinicaltrials_gov", "urls",
-    "contact_removals", "missing_geo", "places_duplicates", "warnings",
+    "contact_removals", "missing_geo", "invalid_zip_count", "places_duplicates", "warnings",
 )
 QUERIES = ("q1", "q2")
 URL_SOURCES = ("clinicaltrials_gov", "cdc_places")
+
 RunMode = Literal["network", "offline"]
 
 
 def query_counts(pages_by_query: dict[str, list[dict]]) -> dict[str, dict[str, object]]:
     """Per-query Total_Count (page 1 `totalCount`) and records fetched (Req 1.9, 12.11).
-
+    
     Same reading in network and offline runs. A non-integer or bool
     `totalCount` is reported as null (the fetch check stops such runs first).
     """
@@ -57,16 +58,19 @@ def build_fetch_log(
     urls: dict[str, list[str]],
     contact_removals: RemovalCounts,
     missing_geo: Iterable[MissingGeo],
+    invalid_zip_count: int,
     places_duplicates: Iterable[PlacesDuplicate],
     warnings: Iterable[str],
 ) -> dict:
     if run_mode not in ("network", "offline"):
         raise ValueError("run_mode must be 'network' or 'offline'")
+
     # Row counts come from the tables that are written (Req 12.2, 12.7).
     files = {FILE_NAMES[kind]: len(tables[kind].rows) for kind in ("studies", "sites", "places")}
     counts = query_counts(pages_by_query)
     sites = sorted(missing_geo, key=lambda m: (m.nctId, m.facility))
     duplicates = sorted(places_duplicates, key=lambda d: (d.locationid, d.measureid))
+
     log = {
         "run_started_at": format_fetch_date(run_started_at),
         "run_mode": run_mode,
@@ -84,6 +88,7 @@ def build_fetch_log(
                 for m in sites
             ],
         },
+        "invalid_zip_count": invalid_zip_count,
         "places_duplicates": [
             {"locationid": d.locationid, "measureid": d.measureid,
              "kept_year": d.kept_year, "discarded": d.discarded}

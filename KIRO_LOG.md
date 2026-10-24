@@ -13,3 +13,15 @@
 | 2026-10-24T18:16Z | Kiro | Spec task execution | First live run bug: `HttpClient._read_body` called `settimeout` on the socket `http.client` had already closed at end of body → OSError EBADF → "connection error (OSError) after 4 attempts". Fixed with a `fileno() != -1` check plus a regression test. No HTTP 400 was seen and the age fields were accepted, so the 400 rejected-parameter change was not made. | task 11 |
 | 2026-10-24T18:16Z | Kiro | Spec enhancement | Second live run: PII_Guard stopped it (Req 8.2) on 2 Massachusetts sites: a facility text with 2 phone numbers and a 10-digit ZIP+4 without hyphen. The phone text had also reached `pipeline/raw/`. With owner approval: the Contact_Scrubber now replaces Email/Phone matches in `locations[]` facility/city with `[removed]` before the raw write (new count `locations[] facility/city pattern matches`), `sites.zip` is checked against the Email_Pattern only, and the patterns moved to `pipeline/patterns.py`. Req 3.2, 3.4, 5.1, 8.7 (new), 12.6 amended; design updated. The old raw cache was deleted. | task 11 |
 | 2026-10-24T18:16Z | Kiro | Spec task execution | Live run (fetch_date 2026-10-24T18:12:26Z), exit 0 in 228.6 s: studies.csv 16079, sites.csv 52880, places_ma.csv 560. Q1 9095/9095, Q2 7110/7110, q2_server_cutoff true. Warnings: none. missing_geo 28 (all missing_geo, 0 out_of_range). Contact removals: 0 for all structure types, 544 facility/city pattern matches (2 of them in sites.csv). The raw page files contain no contact keys. `pipeline/processed/` was not committed because structure.md does not say whether it should be. | task 11 |
+
+## 2025-01-XX: Step 1 - Zip validation (Req 5.1, 8.7, 12.3)
+
+Tightened sites.zip validation to accept only `^\d{5}(-?\d{4})?$` (5 digits or 5+4 with optional hyphen). Invalid zips are blanked and counted in fetch_log.json as `invalid_zip_count`. Removed the email-only exemption for sites.zip in the PII_Guard (Req 8.7 rewritten) because valid zips cannot match the Phone_Pattern.
+
+- Updated requirements.md (Req 5.1, 8.7, 12.3) and design.md (Study_Transformer, PII_Guard, Fetch_Log_Writer sections)
+- Modified study_transformer.py to validate zip codes after deduplication; added invalid_zip_count return value
+- Updated pii_guard.py to remove EMAIL_ONLY_FIELDS exemption
+- Modified fetch_log_writer.py to add invalid_zip_count parameter and log key
+- Updated __main__.py to wire the invalid_zip_count through
+- Added tests for zip validation, deduplication interaction, and phone pattern non-matching for valid zips
+- All 238 tests pass

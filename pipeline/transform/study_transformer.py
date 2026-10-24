@@ -10,7 +10,8 @@ Steps, in this order:
 4. status filter, including the post-fetch Recent_Completed_Cutoff, which
    always runs whatever Q2 did on the server (Req 4.1); every `studyType` is kept;
 5. build Site_Rows for Allowed_States locations, with `location_quality` and
-   deduplication on (nctId, facility, city, state, zip) (Req 5);
+   deduplication on (nctId, facility, city, state, zip), then validate zip codes
+   (Req 5.1); invalid zips are blanked and counted;
 6. drop studies left with zero Site_Rows (Req 4.3);
 7. list the retained sites whose quality is not `ok` (Req 5.4, 5.7, 5.11).
 
@@ -32,6 +33,8 @@ ALLOWED_OVERALL_STATUS = frozenset({
 })
 SOURCE_URL_PREFIX = "https://clinicaltrials.gov/study/"
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# Req 5.1: 5 digits, or 5 digits + optional hyphen + 4 digits
+_ZIP_RE = re.compile(r"^\d{5}(-?\d{4})?$")
 
 LocationQuality = Literal["ok", "missing_geo", "out_of_range"]
 
@@ -79,8 +82,11 @@ class MissingGeo:
 
 
 def build_study_and_site_rows(pages: list[dict], fetch_date: datetime
-                              ) -> tuple[list[StudyRow], list[SiteRow], list[MissingGeo]]:
-    """`pages` is the Q1 pages followed by the Q2 pages, each query in page order."""
+                              ) -> tuple[list[StudyRow], list[SiteRow], list[MissingGeo], int]:
+    """`pages` is the Q1 pages followed by the Q2 pages, each query in page order.
+    
+    Returns (study_rows, site_rows, missing_geo_list, invalid_zip_count).
+    """
     cutoff = recent_completed_cutoff(fetch_date)
 
     # Steps 1-3: flatten, drop records with no nctId, keep the first per nctId.
@@ -111,10 +117,31 @@ def build_study_and_site_rows(pages: list[dict], fetch_date: datetime
         study_rows.append(_build_study(nct_id, record))
         site_rows.extend(sites)
 
+    # Step 5 (continued): validate and blank invalid zip codes (Req 5.1).
+    invalid_zip_count = 0
+    validated_sites: list[SiteRow] = []
+    for site in site_rows:
+        if site.zip != "" and not _ZIP_RE.match(site.zip):
+            # Invalid zip: blank it and count it
+            site = SiteRow(
+                nctId=site.nctId,
+                facility=site.facility,
+                city=site.city,
+                state=site.state,
+                zip="",  # blanked
+                latitude=site.latitude,
+                longitude=site.longitude,
+                siteStatus=site.siteStatus,
+                location_quality=site.location_quality,
+            )
+            invalid_zip_count += 1
+        validated_sites.append(site)
+
     # Step 7: missing-geo list (each site at most once, after deduplication).
     missing = [MissingGeo(s.nctId, s.facility, s.location_quality)
-               for s in site_rows if s.location_quality != "ok"]
-    return study_rows, site_rows, missing
+               for s in validated_sites if s.location_quality != "ok"]
+
+    return study_rows, validated_sites, missing, invalid_zip_count
 
 
 def _get(node: object, *path: str) -> object:
@@ -247,11 +274,13 @@ def _build_sites(nct_id: str, record: dict) -> list[SiteRow]:
             continue  # Req 5.3
         facility, city = _text(loc.get("facility")), _text(loc.get("city"))
         state, zip_code = _text(loc.get("state")), _text(loc.get("zip"))
+        # Req 5.10: deduplication uses the stripped source zip
         key = (nct_id, facility, city, state, zip_code)
         if key in seen:
-            continue  # Req 5.10
+            continue
         seen.add(key)
         lat, lon, quality = _geo(loc.get("geoPoint"))
+        # Site is created with the stripped zip; validation happens in build_study_and_site_rows
         rows.append(SiteRow(
             nctId=nct_id, facility=facility, city=city, state=state, zip=zip_code,
             latitude=lat, longitude=lon,

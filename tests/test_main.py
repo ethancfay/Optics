@@ -325,7 +325,7 @@ def test_facility_phone_is_redacted_before_raw_store(tmp_path, capsys):
     study = make_study("NCT00000001")
     loc = study["protocolSection"]["contactsLocationsModule"]["locations"][0]
     loc["facility"] = "Clinic (1-617-555-0100, 1-617-555-0199)"
-    loc["zip"] = "0160512345"
+    loc["zip"] = "01605"
     paths = main_mod.Paths(tmp_path)
     assert main_mod.run([], paths, FakeClient([[study]], [[]], default_sources()[2])) == 0
     for path in list(paths.raw.iterdir()) + list(paths.processed.iterdir()):
@@ -334,7 +334,7 @@ def test_facility_phone_is_redacted_before_raw_store(tmp_path, capsys):
     assert log["contact_removals"]["locations[] facility/city pattern matches"] == 2
     sites = read_csv(paths.processed / "sites.csv", "sites")
     assert sites[0]["facility"] == "Clinic ([removed], [removed])"
-    assert sites[0]["zip"] == "0160512345"
+    assert sites[0]["zip"] == "01605"
 
 
 @pytest.mark.parametrize("stage", sorted(_STAGE_FAILURES))

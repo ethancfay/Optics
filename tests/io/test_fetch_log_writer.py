@@ -52,6 +52,7 @@ def build(**overrides):
         missing_geo=[MissingGeo("NCT2", "A", "missing_geo"),
                      MissingGeo("NCT1", "B", "out_of_range"),
                      MissingGeo("NCT1", "A", "missing_geo")],
+        invalid_zip_count=0,
         places_duplicates=[PlacesDuplicate("25027", "CASTHMA", "2023", 1),
                            PlacesDuplicate("25001", "OBESITY", "", 2)],
         warnings=["warning: one", "warning: two"],
@@ -112,3 +113,12 @@ def test_serialize_is_indented_utf8_with_trailing_newline():
     assert "Diabète".encode("utf-8") in data
     assert data.startswith(b'{\n  "run_started_at"')
     assert data == fetch_log_writer.serialize(build(warnings=["warning: Diabète"]))
+
+
+def test_invalid_zip_count_in_log():
+    """Req 12.3 (Step 1): invalid_zip_count appears after missing_geo."""
+    log = build(invalid_zip_count=5)
+    assert log["invalid_zip_count"] == 5
+    # Check key order: invalid_zip_count comes after missing_geo
+    keys = list(log.keys())
+    assert keys.index("invalid_zip_count") == keys.index("missing_geo") + 1

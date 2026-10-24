@@ -179,7 +179,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 8.1, 8.2, 8.4, 8.5, 11.1–11.6, 12.2–12.8, 12.11, 12.12_
 
-- [-] 11. Atomic output, end-to-end run, and first live fetch
+- [x] 11. Atomic output, end-to-end run, and first live fetch
   - Implement `pipeline/io/atomic.py`: a staging directory under `pipeline/`, three CSVs then `os.replace`, then `fetch_log.json`, with cleanup in `finally` (design § Atomic output).
   - Wire up `run()` in `__main__.py` in the order shown in design § Data flow:
     - The network path and the offline path. The offline path never builds an HTTP_Client.
@@ -210,3 +210,9 @@ Rules for every task:
   - If this task is skipped, Req 10.5 is covered only by the design (stored Fetch_Date and stored URLs) and is not tested.
   - Done when: `pytest` passes.
   - _Requirements: 10.5, 12.4, 12.5_
+- [x] Step 1 (2025-01-XX): Tighten Req 8.7 (sites.zip validation)
+  - User decision: sites.zip must match `^\d{5}(-?\d{4})?$`, else blanked and counted
+  - Updated requirements.md (Req 5.1, 8.7, 12.3), design.md
+  - Updated study_transformer.py, pii_guard.py, fetch_log_writer.py, __main__.py
+  - Added tests for zip validation, deduplication, and phone pattern non-matching
+  - All 238 tests pass
