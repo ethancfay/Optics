@@ -21,6 +21,7 @@ pipeline/
   mapping/      # Spec 2: MeSH/condition text -> PLACES measure grouping, recall check
   scoring/      # Spec 3: sites per 100k affected adults, distance to nearest site
   export.py     # Spec 3: writes web/public/data/*.json
+  errors.py     # PipelineError, shared by data/, transform/, io/
   __main__.py   # entry point: python -m pipeline [--offline]
   raw/          # cached raw API pages (scrubbed). Gitignored.
   processed/    # studies.csv, sites.csv, places_ma.csv, fetch_log.json

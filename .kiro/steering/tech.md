@@ -16,8 +16,13 @@
 
 ## External APIs
 
-- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies` with `filter.geo=distance(42.3,-71.8,150mi)`, `filter.overallStatus=RECRUITING`, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination. Hard limit of 100 pages; a repeated token is an error. The number of studies fetched must equal `totalCount`.
-- CDC PLACES (Socrata): dataset `swc5-untb`, filtered to `stateabbr=MA` and `datavaluetypeid=CrdPrv`, page size 1000 with offset paging, sorted by `locationname` then `measureid`. Hard limit of 100 pages. Keep `locationid` (county FIPS) and `measure` (label).
+- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies`. Two queries are sent, Q1 first and then Q2. Both use `filter.geo=distance(42.3,-71.8,150mi)`, all study types, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination.
+  - **Q1:** `filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING`.
+  - **Q2:** `filter.overallStatus=COMPLETED` plus `filter.advanced=AREA[LastUpdatePostDate]RANGE[<cutoff − 1 day>,MAX]`, where the cutoff is the fetch date minus 3 years.
+  - Results are merged (Q1 first) and deduplicated by `nctId`. The 3-year `lastUpdatePostDate` rule for COMPLETED is applied again after the fetch.
+  - Each query has a hard limit of 100 pages, a repeated token is an error, and the studies fetched must equal that query's `totalCount`.
+  - Probes on 2026-10-24 returned Q1 = 9,095 and Q2 = 7,110 (see `.kiro/specs/research-gap-data-pipeline/probe_results.md`).
+  - Study-type and status filtering for metrics happens in scoring, not fetching.
 
 ## Conventions
 
@@ -38,17 +43,15 @@
 
 ## Common commands
 
-Planned commands, to be confirmed during design:
+Run from the repository root:
 
 ```sh
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Network run (exact entry point TBD in design)
-python -m pipeline
-
-# Offline run from pipeline/raw/ (flag name TBD)
-python -m pipeline --offline
+# Pipeline: python -m pipeline [--offline]
+python -m pipeline            # network run: fetch, then write pipeline/processed/
+python -m pipeline --offline  # rerun from pipeline/raw/ with no network requests
 
 # Tests
 pytest
@@ -56,5 +59,3 @@ pytest
 # Website
 cd web && npm install && npm run dev
 ```
-
-Update this section once the entry point and flags are fixed.

@@ -1,0 +1,211 @@
+# Implementation Plan: Research Gap Data Pipeline
+
+Rules for every task:
+
+- Cite requirement numbers (for example "Req 5.3") in tests and commit messages.
+- A task is done when `pytest` passes with no network access. Task 1 is the exception, because it writes no code.
+- Commit with the task number, for example `task 4: contact scrubber`. If something notable happened, add a line to `KIRO_LOG.md`.
+- Tasks marked `*` and **(optional)** can be skipped if time is short. Skipping one leaves the listed requirement checked only by the review, not by a test.
+- Design sections are cited as "design § Name".
+
+- [x] 1. Run API probes V1–V10 and record results
+  - Run each probe in design § Verify before building, using `pageSize=1` (`$limit=1` for PLACES) and the output filters given.
+  - Never print or save raw ClinicalTrials.gov bodies. Print only key names, counts, identifiers, and dates.
+  - Write `.kiro/specs/research-gap-data-pipeline/probe_results.md` with one row per probe, giving:
+    - probe ID
+    - pass or fail
+    - observed value (for example `totalCount`, HTTP status, key set, `geolocation` shape)
+    - UTC date and time
+    - the request URL
+  - Record the Q1 and Q2 `totalCount` values and the expected page counts.
+  - **Stop here if V1, V3, V4, or V5 fails.** Report the failure, and revise the design before starting task 2.
+  - For V2, V6, V7, V8, V9, or V10 failures, record which fallback from the design applies. For V10, record the value of `Q2_SERVER_CUTOFF` (`True` or `False`).
+  - In the same step, once V10's result is known:
+    - Apply the requirement changes in design § Requirements changes needed to `requirements.md`. Use the V10 outcome to decide whether Q2 includes `filter.advanced`.
+    - Update the ClinicalTrials.gov line in the "External APIs" section of `tech.md` to describe Q1 and Q2.
+  - **Then stop and show `probe_results.md` to the owner before starting task 2.**
+  - Done when: `probe_results.md`, `requirements.md`, and `tech.md` are updated, there are no core failures, and the owner has reviewed the results. No code is written and no tests run in this task.
+  - _Requirements: 1.1, 1.7, 1.9, 1.11, 2.1–2.3, 3.1, 4.1, 4.2, 5.1–5.4, 6.1, 6.5, 6.8_
+
+- [ ] 2. Scaffold the package, version check, and test harness
+  - Create the module layout in design § Module layout. This covers the `pipeline/` subpackages `data/`, `transform/`, and `io/`, plus `pipeline/errors.py`, an empty `pipeline/__init__.py`, and `tests/` mirroring `pipeline/` with `__init__.py` files.
+  - `pipeline/__main__.py`:
+    - The version check, written so any Python 3 can parse it (design § Version check).
+    - `argparse` with `--offline`.
+    - A `run(argv, paths, client)` function and the `PipelineError` → stderr + exit 1 handling.
+  - `tests/conftest.py`:
+    - Network block: patch `socket.socket.connect` and `urllib.request.urlopen` so any attempt fails with the URL.
+    - Hypothesis profile: `max_examples=100`, `deadline=None`.
+  - `requirements.txt`: pin `pytest` and `hypothesis` to exact versions.
+  - Tests:
+    - The version check rejects 3.10, accepts 3.11 and newer, and does no I/O when it rejects.
+    - A deliberate network attempt fails and reports its URL.
+  - Done when: `pytest` passes.
+  - _Requirements: 13.5, 13.6, 13.7, 14.1, 14.2, 14.5, 14.8_
+
+- [ ] 3. HTTP_Client
+  - Implement `pipeline/data/http_client.py` as specified in design § HTTP_Client:
+    - The host allowlist.
+    - 4 attempts, with waits of 1, 2, then 4 s.
+    - Retries on connection errors, timeouts, 429, and 5xx. No retry on other 4xx.
+    - A 60 s deadline over the whole response, using chunked reads.
+    - Error messages that contain the URL, status, and attempt count.
+  - Example tests with an injected `opener`, `sleep`, and `clock`:
+    - The retry sequence and waits.
+    - The 4th failure.
+    - No retry on 404.
+    - A 2xx response after 2 failures.
+    - The deadline being exceeded.
+    - A host outside the allowlist.
+  - Done when: `pytest` passes.
+  - _Requirements: 9.1–9.5, 9.7, 14.3_
+
+- [ ] 4. Contact_Scrubber and Raw_Store
+  - Implement `pipeline/data/contact_scrubber.py`: an iterative tree walk, `RemovalCounts`, and errors with the page number and URL only (design § Contact_Scrubber).
+  - Implement `pipeline/data/raw_store.py`:
+    - The file names `ctgov_q1_page_*`, `ctgov_q2_page_*`, and `places_page_*`.
+    - Writes to a temporary name, then `os.replace`.
+    - `begin_network_run` deletes the manifest first.
+    - `finish_network_run` writes the manifest, including `q2_server_cutoff` and the removal counts.
+    - `load` checks completeness and names the incomplete source.
+  - Property **P6**: contact structures injected at any depth are removed, none of the injected values remain, and the counts are exact.
+  - Example tests:
+    - The scrubber failure path writes nothing to the Raw_Store.
+    - `load` reports "ClinicalTrials.gov", "PLACES", or both when pages or the manifest are missing.
+    - A raw file write failure names the file and leaves the store incomplete.
+  - Done when: `pytest` passes.
+  - _Requirements: 3.2, 3.4, 3.5, 3.6, 10.1, 10.4, 10.6–10.9, 13.10_
+
+- [ ] 5. CTGov_Fetcher (Q1 and Q2) and fetch checks
+  - Implement `pipeline/data/ctgov_fetcher.py` as specified in design § CTGov_Fetcher:
+    - Q1, then Q2.
+    - The `fields` list.
+    - `Q2_SERVER_CUTOFF` set from `probe_results.md`.
+    - The `filter.advanced` lower bound at cutoff − 1 day.
+    - Pagination for each query, with tokens, the 100-page limit, and page numbers tracked per query.
+    - URL recording, scrubbing, then a raw write before the next request.
+    - The HTTP 400 → `filter.geo` (Q2: `filter.advanced`) message.
+  - Implement the fetch checks in `__main__.py`: the per-query `totalCount` check, and the Allowed_States presence check (design § Fetch checks).
+  - Example tests with a fake `HttpClient` that serves canned pages:
+    - Parameters are identical across pages except `pageToken`.
+    - The Q2 URL contains the expected cutoff date. This includes a Fetch_Date on 29 February and a `Q2_SERVER_CUTOFF=False` case.
+    - A repeated token within a query, and the same token in Q1 and Q2 (allowed).
+    - A query whose Total_Count is an exact multiple of 1,000. The full last page carries a token, and the next page returns `studies: []` with no token (probe V7).
+    - The 100-page limit.
+    - A non-JSON body, and a missing `studies` key.
+    - A `totalCount` mismatch in Q1, and separately in Q2.
+    - No Allowed_States site.
+  - Done when: `pytest` passes.
+  - _Requirements: 1.1–1.12 (as amended), 3.1, 3.3, 3.5_
+
+- [ ] 6. PLACES_Fetcher
+  - Implement `pipeline/data/places_fetcher.py` as specified in design § PLACES_Fetcher: `$select`, `$where`, and `$order`, with or without `:id` depending on V9, plus `$limit=1000` and the `$offset` sequence.
+  - Error handling: stop on an empty first page, an invalid body, or the 100-page limit.
+  - Each page is written to the Raw_Store before the next request.
+  - Example tests with a fake client: 1, 2, and 3 pages; an empty page after a full page; an empty first page; a non-list body; and the page limit.
+  - Done when: `pytest` passes.
+  - _Requirements: 2.1–2.9, 10.1_
+
+- [ ] 7. Study_Transformer
+  - Implement `pipeline/transform/study_transformer.py` following design § Study_Transformer steps 1–7:
+    - Q1-then-Q2 order.
+    - `nctId` deduplication before the status filter.
+    - The post-fetch Recent_Completed_Cutoff, which always runs.
+    - Allowed_States site filter.
+    - `location_quality`.
+    - Site deduplication.
+    - Dropping studies with no sites.
+    - Paired lists of equal length.
+  - Properties:
+    - **P3**: every site's `nctId` is in the Study_Rows.
+    - **P4**: coordinates are in range, including the ±90 and ±180 boundaries.
+    - **P8**: `nctId` is unique, with duplicates within and across pages and queries.
+  - Example tests:
+    - The cutoff boundary: on the cutoff date (kept), one day before (dropped), and an invalid date (dropped).
+    - Every `studyType` is kept, including an empty one.
+    - Every site status is kept.
+    - `healthyVolunteers` is written as `true`, `false`, or empty.
+    - `missing_geo` versus `out_of_range`.
+    - A study in both Q1 and Q2 keeps the Q1 copy.
+  - Done when: `pytest` passes.
+  - _Requirements: 4.1–4.9, 5.1–5.11, 13.2, 13.3, 13.12_
+
+- [ ] 8. PLACES_Transformer
+  - Implement `pipeline/transform/places_transformer.py` as specified in design § PLACES_Transformer:
+    - The MA + `CrdPrv` filter.
+    - Identifier validation, and `locationid` converted to a 5-character FIPS string.
+    - Duplicate resolution that keeps the latest `year`, records the duplicates, and continues the run.
+    - `Decimal` range checks that keep the source text.
+    - GeoJSON and WKT `geolocation` parsing.
+  - Property **P7**: `locationid` is 5 digits and equals the zero-padded source value. Generated sources include ints, strings with leading zeros, and short values.
+  - Example tests:
+    - Duplicate years: a numeric year beats a missing one, a tie goes to the first in fetch order, and the log entry is correct.
+    - A bad `locationid` (`"25a"`, `250010`, `1.0`) stops the run with the field named.
+    - Zero records left after the filter.
+    - Out-of-range values become empty.
+  - Done when: `pytest` passes.
+  - _Requirements: 6.1–6.8, 13.11_
+
+- [ ] 9. CSV_Writer and CSV_Reader
+  - Implement `pipeline/io/csv_writer.py` as specified in design § CSV_Writer:
+    - Column order.
+    - Sorting with the tie-breakers.
+    - JSON_Array_Cells, with `ensure_ascii=False` and compact separators.
+    - The custom minimal-quoting function.
+    - LF line endings, UTF-8 without a BOM.
+    - A header-only file for zero rows.
+  - Implement `pipeline/io/csv_reader.py`, which shares the list-column definitions with the writer.
+  - Property **P5**: rows survive a write then a read. Generated values include `|`, `\`, `[`, `]`, JSON-looking strings, commas, quotes, CR, LF, non-ASCII text, `""` elements, and `[]`.
+  - Example tests:
+    - Exact bytes for a small fixture, which pins the header row and quoting.
+    - Writing the same input twice gives identical bytes.
+  - Done when: `pytest` passes.
+  - _Requirements: 7.2–7.9, 13.4_
+
+- [ ] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
+  - Implement `pipeline/transform/pii_guard.py` as specified in design § PII_Guard:
+    - Scan the encoded cells and each decoded list item.
+    - Report every match, with file, row identifier, field, and pattern, but never the matched text.
+    - The coordinate-safe phone regex.
+  - Implement `pipeline/transform/sanity_checker.py`: the two warnings, sent to stderr and returned.
+  - Implement `pipeline/io/fetch_log_writer.py` with the fixed key order, per-query counts, `q2_server_cutoff`, removal totals, missing-geo entries, PLACES duplicates, and warnings.
+  - Example tests:
+    - Email and phone values are caught in a scalar cell and in a list item.
+    - A long coordinate decimal is not flagged.
+    - The error lists every match and contains no matched substring.
+    - Sanity thresholds at 1,999 and 2,000, and at 13, 14, and 0 counties.
+    - The fetch log shape and the row counts.
+  - Done when: `pytest` passes.
+  - _Requirements: 8.1, 8.2, 8.4, 8.5, 11.1–11.6, 12.2–12.8, 12.11, 12.12_
+
+- [ ] 11. Atomic output, end-to-end run, and first live fetch
+  - Implement `pipeline/io/atomic.py`: a staging directory under `pipeline/`, three CSVs then `os.replace`, then `fetch_log.json`, with cleanup in `finally` (design § Atomic output).
+  - Wire up `run()` in `__main__.py` in the order shown in design § Data flow:
+    - The network path and the offline path. The offline path never builds an HTTP_Client.
+    - Re-scrubbing when offline.
+    - Printing the stdout summary only on success.
+  - Properties, using a fake client and `tmp_path`:
+    - **P1**: either the run stops and the `processed/` hashes are unchanged, or there is no pattern match in any output.
+    - **P2**: when contact data appears only inside contact structures, the run exits 0 and the outputs are clean.
+  - Example tests:
+    - A failure at each stage leaves `processed/` unchanged and creates no new files there.
+    - A CSV write failure names the file.
+    - A `fetch_log.json` write failure names the file.
+    - `--offline` with an empty `raw/` fails and names both sources.
+    - Sanity warnings still exit 0.
+  - Live run: `python -m pipeline`. Record in `KIRO_LOG.md`:
+    - the row counts
+    - the Q1 and Q2 `totalCount`
+    - the warnings
+    - the elapsed time
+
+    Confirm that `studies.csv` has more than 4,000 rows. If not, investigate before closing the task. Run a final manual check that `pipeline/raw/` contains no contact keys.
+  - Done when: `pytest` passes and the live run exits 0.
+  - _Requirements: 7.1, 7.10, 8.2, 8.3, 8.6, 9.6, 10.3, 12.1, 12.9, 12.10, 13.1, 13.9, 14.4, 14.6–14.8_
+
+- [ ]* 12. Offline byte-identity check **(optional)**
+  - Add a test that runs the pipeline twice against a fixture cache: once in network mode through a fake client that serves the fixture pages, then with `--offline`. It asserts that the three CSVs are byte-identical, and that `fetch_log.json` differs only in `run_started_at` and `run_mode`.
+  - Manual check after task 11's live run: `python -m pipeline --offline`, then `cmp` each CSV against copies saved from the live run.
+  - If this task is skipped, Req 10.5 is covered only by the design (stored Fetch_Date and stored URLs) and is not tested.
+  - Done when: `pytest` passes.
+  - _Requirements: 10.5, 12.4, 12.5_

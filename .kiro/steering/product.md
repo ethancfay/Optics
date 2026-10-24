@@ -1,49 +1,66 @@
 # Product
 
-Research Gap Index shows which common health conditions get few clinical trial
-opportunities in Massachusetts, relative to how many adults have them.
+Research Gap Index is a burden-first research intelligence prototype. It compares
+how common selected diseases are among Massachusetts adults with observable
+clinical research activity, and helps researchers investigate why an apparent
+mismatch appears in the available public data.
 
 ## User
-Massachusetts patient advocacy organizations who push trial sponsors and
-hospitals to open studies for their community's conditions.
+Pharmaceutical and biotech R&D strategy and clinical-development professionals
+doing early opportunity screening. They use it to decide what to investigate
+next, not to make investment or drug-development decisions.
 
-## Problem
-Massachusetts has ~3,100 recruiting studies, but nobody can see which common
-conditions get few trial opportunities relative to how many adults have them.
-A pre-build test found recruiting MA sites per 100,000 affected adults ranging
-from ~260 (cancer) to under 2 (high cholesterol, asthma, high blood pressure).
+## Core question
+Why might some diseases with substantial measured burden in Massachusetts show
+comparatively limited observable clinical research activity?
 
-## MVP features
-1. WHAT view (main): per condition, recruiting MA trial sites per 100,000
-   affected adults, shown as a low-high range from CDC PLACES confidence limits.
-2. Condition detail: study count, affected adults, link to the matching
-   ClinicalTrials.gov search, plain-language caveat.
-3. WHERE view (supporting): MA county map of miles to the nearest recruiting
-   site for a chosen condition, and affected adults living >30 miles away.
-4. Method & sources page: formula, sources with dates, limits, recall check.
+## What "gap" means
+A descriptive discrepancy between measured burden and observed research activity.
+It is NOT proof of underfunding, unmet therapeutic need, commercial opportunity,
+or a reason to develop a drug. Do not imply an optimal burden-to-trial ratio.
 
-## Honest limits
-- Compares trial opportunity with how common a condition is, not how severe it is.
-- An index, not a prediction. Not medical advice.
+## Scope
+- Massachusetts proof of concept. 3,145 recruiting studies list a Massachusetts
+  location (ClinicalTrials.gov v2, query.locn=Massachusetts,
+  filter.overallStatus=RECRUITING, retrieved 2026-10-24).
+- 3-5 common diseases with a direct CDC PLACES measure match (candidates:
+  asthma, high cholesterol, high blood pressure, diabetes, depression).
+- Burden = CDC PLACES crude prevalence, adults 18+, county level. DALYs/severity
+  are not included; say so in the app.
+- MA trial activity does not represent all research relevant to MA patients.
+
+## MVP features (user flow)
+1. Burden vs activity (WHAT): per disease, distinct studies (NCT IDs) per 100,000
+   affected adults as a low-high range from PLACES confidence limits:
+   [T/(N*p_high), T/(N*p_low)] * 100,000. Sites shown as a local breakdown.
+2. Investigate: for a selected disease, breakdown by overall status, study type,
+   intervention type and phase, and MA vs US study counts (same filters).
+   Label findings "possible explanation from available records" or
+   "cannot determine from public data".
+3. Evidence: list of contributing NCT IDs with links, filters, mapping choices,
+   missing data and "Data as of" date.
+4. WHERE (secondary): county map of miles to the nearest verified site for the
+   disease; show "unknown" when no matching site exists, never 0.
+5. Method page: crosswalk, filters, formulas, limits.
 
 ## Success
-An advocate names 3 under-served conditions in under 1 minute, on a phone.
+A researcher picks a disease, sees burden vs activity, and reaches at least one
+record-supported explanation plus what remains unknown, in under 1 minute.
 
 ## Non-goals
-No trial matching for individuals, no user accounts, no health data collected,
-no severity weighting, no states beyond MA in the MVP, no AI-generated text.
+No drug efficacy prediction, diagnosis or treatment advice; no claims a disease is
+neglected or needs more trials; no inferring pharma motives; no global pipeline;
+no rare-disease ontology; no openFDA in the MVP; no AI-generated text.
 
-## Components
-1. Data pipeline (spec: research-gap-data-pipeline): fetches ClinicalTrials.gov
-   v2 and CDC PLACES 2025 county data, writes pipeline/processed/.
-2. Condition grouping: maps studies to PLACES measures; must reach >=80% of
-   ClinicalTrials.gov's own condition-search count per condition.
-3. Scoring and export: computes ranges and distances, writes web/public/data/*.json.
-4. Dashboard: static website on Vercel.
+## Counting rules
+- Study count = distinct NCT IDs within each disease. A study may count for
+  several diseases; totals across diseases need not equal total studies.
+- Site status is separate from overall study status.
+- County joins use 5-character FIPS strings.
 
 ## Non-negotiable rules
-- **No contact data, ever.** The pipeline never reads, stores, or logs person names, emails, or phone numbers. Exclude `centralContacts`, `overallOfficials`, `locations[].contacts`, and `responsibleParty` investigator names from API requests, scrub them before anything touches disk, and check every output value against email and phone patterns before writing.
-- Logs, errors, and `fetch_log.json` contain only identifiers, counts, URLs, field names, and timestamps. Never include excerpts of API response bodies.
+- **No contact data, ever.** Never read, store, or log person names, emails, or phone numbers. Exclude `centralContacts`, `overallOfficials`, `locations[].contacts`, and `responsibleParty` investigator names from API requests, scrub them before anything touches disk, and check every output value against email and phone patterns before writing.
+- Logs, errors, and `fetch_log.json` contain only identifiers, counts, URLs, field names, and timestamps.
 - A failed run leaves existing files in `pipeline/processed/` byte-for-byte unchanged.
 - Runs on a laptop only. No backend, database, or cloud service. Network access is limited to `clinicaltrials.gov` and `data.cdc.gov`.
 - Offline reruns from cached raw data must produce byte-identical outputs.
