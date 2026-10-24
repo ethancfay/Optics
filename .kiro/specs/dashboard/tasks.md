@@ -237,9 +237,42 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
   - Keep all existing tests passing; add tests for the `null` us_studies message, the Drug caption, and the sample-data banner; update the WHERE/geojson-dependent tests for the hidden view.
   - _Requirements: 1.2, 2.1, 2.2, 2.3, 2.5, 2.6, 2.7, 6.1, 7.2, 7.8, 8.1, 9 (hidden), 13.1, 14.1_
 
+- [ ] 17. Replace invented sample NCTs with real records
+  - Replace the hand-written NCTs in `web/public/data/evidence.json` (4 of 10 are real but unrelated trials — NCT05234567, NCT04776655, NCT04332211, NCT04221100 — and the other 6 do not exist) with real records copied verbatim from `pipeline/processed/studies.csv`, and make the Evidence page render ClinicalTrials.gov codes as readable labels. Spec docs (requirements.md Req 18, design.md sample-data plan + Evidence_Page section + Property 14) are already updated; this task implements them.
+  - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5, 18.6, 18.7, 18.8, 8.1_
+
+  - [ ] 17.1 Confirm the spec reflects the plan (design.md + requirements.md)
+    - Verify requirements.md Requirement 18 and design.md state: (a) `evidence.json` `ncts` are copied verbatim from `pipeline/processed/studies.csv` and never invented; (b) the Evidence page shows readable labels for ClinicalTrials.gov codes (RECRUITING→Recruiting, ACTIVE_NOT_RECRUITING→Active, not recruiting, PHASE2→Phase 2, NA→Not applicable, INTERVENTIONAL→Interventional, DRUG→Drug) and shows unknown codes unchanged.
+    - This is the spec-change checkpoint: do not start 17.2-17.5 until the spec changes are approved.
+    - _Requirements: 18.1, 18.2, 18.6, 18.7_
+
+  - [ ] 17.2 Add `formatCtgovLabel` and use it on the Evidence page
+    - Create a pure `formatCtgovLabel(code: string): string` in `web/src/data/` with a fixed lookup table for the known status, study-type, phase, and intervention-type codes (at least RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED, INTERVENTIONAL, OBSERVATIONAL, PHASE1-4, NA, DRUG, BIOLOGICAL, DEVICE, BEHAVIORAL, PROCEDURE); return a non-empty string for every input and return any unknown code unchanged.
+    - Use it in `web/src/pages/Evidence.tsx` for `status`, `study_type`, `phases`, and `intervention_types` (mapping each array element), keeping the existing "unknown" placeholder for omitted details.
+    - Add unit tests (each known code maps to its label; an unknown code is returned unchanged) plus a property-based test tagged `// Feature: dashboard, Property 14: ...` at `numRuns: 100` asserting the output is never empty, known codes map to labels, and unknown codes are returned unchanged.
+    - _Requirements: 18.6, 18.7, 18.8_
+
+  - [ ] 17.3 Rebuild `ncts[]` in `evidence.json` from real records
+    - For each `measure_id`, pick up to 3 studies from `pipeline/processed/studies.csv` by exact list-item equality against the disease's MeSH heading (Asthma; Depressive Disorder; Hypertension; Diabetes Mellitus, Type 2; Hypercholesterolemia): a study qualifies when one of its `meshTerms` equals the heading exactly; only if fewer than 3 qualify on `meshTerms`, also admit studies with an exact `ancestorTerms` match. No substring/prefix match — e.g. "Hypertension, Pulmonary" and "Hypertension, Pregnancy-Induced" must NOT match "Hypertension". Prefer `overallStatus` = RECRUITING.
+    - Only pick studies with at least one Massachusetts site in `pipeline/processed/sites.csv` (or confirm `studies.csv` is already MA-only and record in the notes how that was checked).
+    - If a disease has 0 qualifying studies, leave its `ncts` empty and add a `missing_data_notes` line saying no qualifying study was found; never invent or substitute.
+    - Copy `nctId`, `briefTitle`, `overallStatus`, `studyType`, `phases`, `interventionTypes`, `interventionNames` exactly in ClinicalTrials.gov code form into `nct_id`, `title`, `status`, `study_type`, `phases`, `intervention_types`, `intervention_names`; set `url` = the row's `source_url`. Never write or paraphrase a title.
+    - Parse the CSV's JSON-array string encoding for the multi-valued fields (`phases`, `interventionTypes`, `interventionNames`) and split into arrays of individual values.
+    - Set each entry's `mapping_choices` to describe the exact-match MeSH-heading selection rule, and add the `missing_data_notes` entry "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
+    - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5_
+
+  - [ ] 17.4 Update tests that reference specific NCT IDs
+    - Find and update any test that asserts a now-removed NCT ID (e.g. NCT04123456) so tests reference the real records now in `evidence.json`; keep the existing Evidence-page and sample-fixture tests passing.
+    - _Requirements: 8.1, 18.1_
+
+  - [ ] 17.5 Verify and commit in three separate commits
+    - Run `tsc`, `npm test`, and `npm run build` in `web/`; fix any failures.
+    - Commit as three separate commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `formatCtgovLabel` helper plus its tests and the Evidence-page change; (3) the `evidence.json` data change and any updated tests.
+    - _Requirements: 18.1, 18.2, 18.6_
+
 ## Notes
 
-- Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 13 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
+- Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 14 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
 - Each property-based test is a single fast-check test at `numRuns: 100`, tagged `// Feature: dashboard, Property N: <text>`, targeting the pure logic modules (and small render harnesses for Properties 8-13) so generators stay cheap and in-memory.
 - All tests mock `fetch`; a test that performs real network I/O must fail.
 - The Dashboard reads precomputed `low`/`mid`/`high` and never recomputes the index formula at runtime; it reads only the six same-origin files under `/data/`.
@@ -257,7 +290,11 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     { "id": 4, "tasks": ["8.1", "8.2", "9.1", "10.1", "13"] },
     { "id": 5, "tasks": ["8.3", "8.4", "9.2", "10.2", "12.1", "12.2", "12.3", "12.6", "12.9", "12.10", "12.11"] },
     { "id": 6, "tasks": ["12.4", "12.5", "12.7", "12.8", "14.1"] },
-    { "id": 7, "tasks": ["14.2", "14.3", "14.4"] }
+    { "id": 7, "tasks": ["14.2", "14.3", "14.4"] },
+    { "id": 8, "tasks": ["17.1"] },
+    { "id": 9, "tasks": ["17.2", "17.3"] },
+    { "id": 10, "tasks": ["17.4"] },
+    { "id": 11, "tasks": ["17.5"] }
   ]
 }
 ```
