@@ -232,7 +232,7 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     stubFetchWithRealFiles();
   });
 
-  it("what.json loads with zero omitted entries and 3-5 distinct in-scope ids (Req 2.6, 2.8)", async () => {
+  it("what.json loads with zero omitted entries and exactly the three in-scope ids (Req 2.6, 2.8, 20.1)", async () => {
     const state = await loadJson<WhatEntry>("what.json", validateWhatEntry);
     expect(state.status).toBe("ready");
     if (state.status !== "ready") return;
@@ -240,20 +240,9 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     expect(state.omittedCount).toBe(0);
     expect(state.data.length).toBe(whatRaw.length);
 
-    const inScope = new Set([
-      "CASTHMA",
-      "HIGHCHOL",
-      "BPHIGH",
-      "DIABETES",
-      "DEPRESSION",
-    ]);
     const ids = state.data.map((e) => e.measure_id);
     expect(new Set(ids).size).toBe(ids.length); // distinct
-    expect(ids.length).toBeGreaterThanOrEqual(3);
-    expect(ids.length).toBeLessThanOrEqual(5);
-    for (const id of ids) {
-      expect(inScope.has(id)).toBe(true);
-    }
+    expect([...ids].sort()).toEqual(["CASTHMA", "DIABETES", "HIGHCHOL"]);
   });
 
   it("investigate.json: one entry per what id, every breakdown non-empty, >=1 finding per label (Req 2.9)", async () => {

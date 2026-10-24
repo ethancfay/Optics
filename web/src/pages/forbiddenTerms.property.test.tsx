@@ -76,7 +76,7 @@ const EVIDENCE_LABEL_VALUES = [
 ] as const;
 
 /** Distinct in-scope measure ids used across all files so routes resolve. */
-const MEASURE_IDS = ["CASTHMA", "HIGHCHOL", "BPHIGH", "DIABETES"] as const;
+const MEASURE_IDS = ["CASTHMA", "HIGHCHOL", "DIABETES"] as const;
 
 /** 14 distinct 5-char MA county FIPS codes, matching the generated GeoJSON. */
 const COUNTY_FIPS = [

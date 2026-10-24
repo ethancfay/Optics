@@ -22,7 +22,7 @@ import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Footer } from "./Footer";
-import { useIsSample } from "../data/providers";
+import { useSources } from "../data/providers";
 import "./Layout.css";
 
 /** The visible text of the sample-data label (Req 2.7). */
@@ -88,13 +88,14 @@ export function Nav() {
 /**
  * The sample-data label (Req 2.7). Rendered in the header region, above the Nav,
  * so it is visible within the first screen at 375 px without scrolling. It reads
- * `useIsSample()` (which requires `SourcesProvider` in scope — the router wraps
+ * `useSources()` (which requires `SourcesProvider` in scope — the router wraps
  * the whole app in it for the Footer) and renders nothing unless the loaded
- * `sources.json` is flagged `is_sample: true`.
+ * `sources.json` is flagged `is_sample: true`. It deliberately does not use the
+ * cautious `useIsSample()`, which is also true while loading (Req 20.5).
  */
 export function SampleDataBanner() {
-  const isSample = useIsSample();
-  if (!isSample) {
+  const sources = useSources();
+  if (!(sources.status === "ready" && sources.isSample)) {
     return null;
   }
   return (
