@@ -271,7 +271,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Commit as three separate commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `formatCtgovLabel` helper plus its tests and the Evidence-page change; (3) the `evidence.json` data change and any updated tests.
     - _Requirements: 18.1, 18.2, 18.6_
 
-  - [ ] 17.6 Exclude child-only studies from the selection
+  - [x] 17.6 Exclude child-only studies from the selection
     - Extend the 17.3 selection to drop any study whose `stdAges` includes neither `ADULT` nor `OLDER_ADULT` (equivalently `maximumAge` < 18 years), matching Spec 2's inclusion rule, then re-run the selection and the verbatim check.
     - Update `mapping_choices` to note the adult-only (non-child-only) restriction; re-run `tsc`, `npm test`, `npm run build`; update any test whose expected NCT changed.
     - Commit as two commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `evidence.json` data change and any updated tests.

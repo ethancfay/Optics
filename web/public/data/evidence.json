@@ -42,7 +42,8 @@
     ],
     "mapping_choices": [
       "Selected studies whose meshTerms list contains the MeSH heading \"Asthma\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
-      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
     ],
     "missing_data_notes": [
       "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
@@ -89,7 +90,8 @@
     ],
     "mapping_choices": [
       "Selected studies whose meshTerms list contains the MeSH heading \"Depressive Disorder\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
-      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
     ],
     "missing_data_notes": [
       "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
@@ -139,7 +141,8 @@
     "mapping_choices": [
       "Selected studies whose meshTerms list contains the MeSH heading \"Hypertension\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
       "Exact-match only: terms such as \"Hypertension, Pulmonary\" and \"Hypertension, Pregnancy-Induced\" are not treated as matching \"Hypertension\".",
-      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
     ],
     "missing_data_notes": [
       "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
@@ -192,7 +195,8 @@
     ],
     "mapping_choices": [
       "Selected studies whose meshTerms list contains the MeSH heading \"Diabetes Mellitus, Type 2\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
-      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
     ],
     "missing_data_notes": [
       "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
@@ -239,7 +243,8 @@
     ],
     "mapping_choices": [
       "Selected studies whose meshTerms list contains the MeSH heading \"Hypercholesterolemia\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
-      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
     ],
     "missing_data_notes": [
       "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
