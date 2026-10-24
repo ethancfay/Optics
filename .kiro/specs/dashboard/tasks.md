@@ -375,7 +375,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
   - Problem: `chartScale` uses a linear domain starting at min(`low`), so the shipped values (0.23–12.83) squeeze High Cholesterol and Asthma against the left edge and exaggerate the gap between them.
   - _Requirements: 5.4, 5.6, 5.12-5.14, 6.1-6.9, 22.1-22.8_
 
-  - [ ] 21.1 Confirm the spec reflects the plan (requirements.md + design.md)
+  - [x] 21.1 Confirm the spec reflects the plan (requirements.md + design.md)
     - Requirement 22 (new); amended Req 5.4, Req 6.1; new Req 5.12-5.14 and 6.6-6.9; glossary Log_Scale, One_Per_N_Range, Headline_Ratio_Range; design chart section (scale, headline, table), Property 6 (amended), Properties 19 and 20, testing strategy.
     - Spec-change checkpoint: do not start 21.2-21.5 until the spec changes are approved.
     - _Requirements: 5.12-5.14, 6.1-6.9, 22.1-22.8_
