@@ -1,0 +1,117 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25001", "county": "Barnstable" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-70.65, 41.55], [-70.00, 41.55], [-69.95, 41.95], [-70.55, 42.05], [-70.65, 41.55]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25003", "county": "Berkshire" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-73.50, 42.04], [-73.05, 42.04], [-73.05, 42.74], [-73.27, 42.74], [-73.50, 42.45], [-73.50, 42.04]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25005", "county": "Bristol" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.37, 41.55], [-70.85, 41.55], [-70.90, 42.00], [-71.37, 42.00], [-71.37, 41.55]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25007", "county": "Dukes" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-70.85, 41.25], [-70.45, 41.25], [-70.45, 41.47], [-70.85, 41.47], [-70.85, 41.25]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25009", "county": "Essex" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.20, 42.42], [-70.62, 42.42], [-70.62, 42.88], [-71.05, 42.88], [-71.20, 42.70], [-71.20, 42.42]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25011", "county": "Franklin" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-72.87, 42.44], [-72.19, 42.44], [-72.19, 42.74], [-72.87, 42.74], [-72.87, 42.44]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25013", "county": "Hampden" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-72.86, 42.00], [-72.20, 42.00], [-72.20, 42.28], [-72.86, 42.28], [-72.86, 42.00]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25015", "county": "Hampshire" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-72.86, 42.24], [-72.994, 42.24], [-72.35, 42.24], [-72.35, 42.46], [-72.86, 42.46], [-72.86, 42.24]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25017", "county": "Middlesex" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.62, 42.15], [-71.00, 42.15], [-71.00, 42.73], [-71.62, 42.73], [-71.62, 42.15]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25019", "county": "Nantucket" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-70.28, 41.23], [-69.96, 41.23], [-69.96, 41.40], [-70.28, 41.40], [-70.28, 41.23]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25021", "county": "Norfolk" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.33, 42.05], [-70.90, 42.05], [-70.90, 42.33], [-71.33, 42.33], [-71.33, 42.05]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25023", "county": "Plymouth" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.00, 41.70], [-70.50, 41.70], [-70.50, 42.18], [-71.00, 42.18], [-71.00, 41.70]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25025", "county": "Suffolk" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-71.19, 42.28], [-70.92, 42.28], [-70.92, 42.45], [-71.19, 42.45], [-71.19, 42.28]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "county_fips": "25027", "county": "Worcester" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-72.20, 42.00], [-71.62, 42.00], [-71.62, 42.74], [-72.20, 42.74], [-72.20, 42.00]]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+/*
+ * Styles for the DotWhiskerChart text-alternative table. Colours reference the
+ * palette custom properties from `src/styles/palette.css` (single source of
+ * truth, WCAG AA contrast). The row controls that navigate to the Investigate
+ * page carry a visible keyboard focus ring (Req 15.3, 15.4, 15.5).
+ */
+
+.dw-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.dw-table caption {
+  text-align: left;
+  color: var(--ink);
+  padding: 0.5rem 0;
+}
+
+.dw-table th,
+.dw-table td {
+  border: 1px solid var(--seq-2);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: var(--ink);
+}
+
+/*
+ * Each row's condition is a keyboard-focusable button that navigates to the
+ * Investigate page. Styled as an underlined link so it reads as an action
+ * without relying on colour alone (Req 15.2).
+ */
+.dw-row-button {
+  display: inline-block;
+  padding: 0.25rem 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+  /* Single-tap friendly touch target on mobile (Req 16.2). */
+  min-height: 44px;
+}
+
+.dw-row-button:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Visible focus ring for keyboard users (Req 15.4). */
+.dw-row-button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}

@@ -1,0 +1,82 @@
+/*
+ * Styles for the Investigate_Page. Colours reference the palette custom
+ * properties in `src/styles/palette.css` (single source of truth, WCAG AA
+ * contrast). The Evidence_Label badge never relies on colour alone — it always
+ * carries its text label (Req 7.3, 15.2).
+ */
+
+.inv-breakdowns {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.inv-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.inv-table caption {
+  text-align: left;
+  color: var(--ink);
+  font-weight: 600;
+  padding: 0.5rem 0;
+}
+
+.inv-table th,
+.inv-table td {
+  border: 1px solid var(--seq-2);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: var(--ink);
+}
+
+.inv-counts {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.inv-count-value {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.inv-findings {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.inv-finding {
+  border: 1px solid var(--seq-2);
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: var(--ink);
+}
+
+/*
+ * Evidence_Label badge. Always paired with its text so meaning never depends on
+ * colour alone (Req 7.3, 15.2). AA contrast on white via --ink border/text.
+ */
+.inv-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.inv-definition {
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+
+.inv-evidence-link,
+.inv-back-link {
+  color: var(--accent);
+}

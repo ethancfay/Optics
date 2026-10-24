@@ -1,0 +1,103 @@
+[
+  {
+    "measure_id": "CASTHMA",
+    "condition": "Asthma",
+    "ncts": [
+      { "nct_id": "NCT04123456", "url": "https://clinicaltrials.gov/study/NCT04123456" },
+      { "nct_id": "NCT05234567", "url": "https://clinicaltrials.gov/study/NCT05234567" }
+    ],
+    "filters": [
+      "Recruiting status only",
+      "Located in Massachusetts",
+      "Adult participants (18 and older)"
+    ],
+    "mapping_choices": [
+      "CDC PLACES measure CASTHMA mapped to asthma condition terms",
+      "Distinct NCT IDs counted once per study"
+    ],
+    "missing_data_notes": [
+      "Some studies list multiple conditions and may also appear under related entries.",
+      "Trials without a recorded Massachusetts site are excluded."
+    ]
+  },
+  {
+    "measure_id": "DEPRESSION",
+    "condition": "Depression",
+    "ncts": [
+      { "nct_id": "NCT04987654", "url": "https://clinicaltrials.gov/study/NCT04987654" },
+      { "nct_id": "NCT05112233", "url": "https://clinicaltrials.gov/study/NCT05112233" },
+      { "nct_id": "NCT06009988", "url": "https://clinicaltrials.gov/study/NCT06009988" }
+    ],
+    "filters": [
+      "Recruiting status only",
+      "Located in Massachusetts",
+      "Adult participants (18 and older)"
+    ],
+    "mapping_choices": [
+      "CDC PLACES measure DEPRESSION mapped to depressive disorder terms",
+      "Behavioral and drug interventions both included"
+    ],
+    "missing_data_notes": [
+      "Studies tagged only with broader mental-health terms are not counted."
+    ]
+  },
+  {
+    "measure_id": "BPHIGH",
+    "condition": "High Blood Pressure",
+    "ncts": [
+      { "nct_id": "NCT04776655", "url": "https://clinicaltrials.gov/study/NCT04776655" },
+      { "nct_id": "NCT05443322", "url": "https://clinicaltrials.gov/study/NCT05443322" }
+    ],
+    "filters": [
+      "Recruiting status only",
+      "Located in Massachusetts",
+      "Adult participants (18 and older)"
+    ],
+    "mapping_choices": [
+      "CDC PLACES measure BPHIGH mapped to hypertension condition terms",
+      "Distinct NCT IDs counted once per study"
+    ],
+    "missing_data_notes": [
+      "Combined cardiovascular studies may overlap with other conditions."
+    ]
+  },
+  {
+    "measure_id": "DIABETES",
+    "condition": "Diabetes",
+    "ncts": [
+      { "nct_id": "NCT04332211", "url": "https://clinicaltrials.gov/study/NCT04332211" },
+      { "nct_id": "NCT05667788", "url": "https://clinicaltrials.gov/study/NCT05667788" }
+    ],
+    "filters": [
+      "Recruiting status only",
+      "Located in Massachusetts",
+      "Adult participants (18 and older)"
+    ],
+    "mapping_choices": [
+      "CDC PLACES measure DIABETES mapped to type 2 diabetes terms",
+      "Type 1 diabetes studies excluded where separable"
+    ],
+    "missing_data_notes": [
+      "Studies covering both diabetes types are counted once under diabetes."
+    ]
+  },
+  {
+    "measure_id": "HIGHCHOL",
+    "condition": "High Cholesterol",
+    "ncts": [
+      { "nct_id": "NCT04221100", "url": "https://clinicaltrials.gov/study/NCT04221100" }
+    ],
+    "filters": [
+      "Recruiting status only",
+      "Located in Massachusetts",
+      "Adult participants (18 and older)"
+    ],
+    "mapping_choices": [
+      "CDC PLACES measure HIGHCHOL mapped to hyperlipidemia terms",
+      "Distinct NCT IDs counted once per study"
+    ],
+    "missing_data_notes": [
+      "Lipid studies are sometimes recorded under broader cardiovascular labels."
+    ]
+  }
+]
