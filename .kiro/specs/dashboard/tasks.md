@@ -59,8 +59,8 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Network rejection, 404, malformed JSON / wrong top-level shape, and a >10 s timeout each produce the correct `error` state naming the file and render no numbers, exercised for each of `what.json`, `investigate.json`, `evidence.json`, `where.json`, `sources.json`, and `ma_counties.geojson`; `fetch` is mocked.
     - _Requirements: 1.7, 3.2, 3.3_
 
-- [ ] 5. Pure logic modules for pages and visualizations
-  - [ ] 5.1 Implement condition sort
+- [x] 5. Pure logic modules for pages and visualizations
+  - [x] 5.1 Implement condition sort
     - Create `src/data/conditions.ts` with `sortConditions(entries)` (ascending `mid`, ties broken by ascending case-insensitive `condition`).
     - _Requirements: 5.3, 6.2, 16.1_
 
@@ -69,7 +69,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - **Validates: Requirements 5.2, 5.3, 6.1, 6.2, 16.1**
     - Tag: `// Feature: dashboard, Property 4: ...`; include datasets with duplicate `mid` values; `numRuns: 100`.
 
-  - [ ] 5.3 Implement top-finding selection
+  - [x] 5.3 Implement top-finding selection
     - Add `selectTopFinding(entries)` to `src/data/conditions.ts`: the disease with the minimum `mid`, ties broken by case-insensitively smallest `condition`.
     - _Requirements: 4.2, 4.3_
 
@@ -78,7 +78,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - **Validates: Requirements 4.2, 4.3**
     - Tag: `// Feature: dashboard, Property 5: ...`; `numRuns: 100`.
 
-  - [ ] 5.5 Implement chart scale
+  - [x] 5.5 Implement chart scale
     - Create `src/data/chartScale.ts` with `chartScale(entries)` returning a linear scale mapping values to x positions such that `x(low) <= x(mid) <= x(high)` for every entry.
     - _Requirements: 5.1, 5.6_
 
@@ -87,7 +87,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - **Validates: Requirements 5.1, 5.6**
     - Tag: `// Feature: dashboard, Property 6: ...`; `numRuns: 100`.
 
-  - [ ] 5.7 Implement county state resolution
+  - [x] 5.7 Implement county state resolution
     - Create `src/data/where.ts` with `resolveCountyState(whereData, measureId, countyFips)` returning `{ kind: "bucket", miles, bucket }` when a matching entry exists and is not in the Unknown_Distance state, and `{ kind: "unknown" }` when no matching entry exists or the entry has `miles_to_nearest === null && has_verified_site === false` (never the zero-distance bucket, never blank).
     - _Requirements: 9.1, 9.3, 9.4_
 
