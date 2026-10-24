@@ -1,0 +1,67 @@
+[
+  {
+    "condition": "Asthma",
+    "measure_id": "CASTHMA",
+    "low": 1.82,
+    "mid": 2.14,
+    "high": 2.55,
+    "t": 37,
+    "affected_adults": 612000,
+    "p_low": 0.102,
+    "p_high": 0.113,
+    "prevalence_year": "2023",
+    "ctgov_url": "https://clinicaltrials.gov/search?cond=Asthma&locStr=Massachusetts"
+  },
+  {
+    "condition": "Depression",
+    "measure_id": "DEPRESSION",
+    "low": 2.41,
+    "mid": 2.78,
+    "high": 3.22,
+    "t": 58,
+    "affected_adults": 948000,
+    "p_low": 0.188,
+    "p_high": 0.206,
+    "prevalence_year": "2023",
+    "ctgov_url": "https://clinicaltrials.gov/search?cond=Depression&locStr=Massachusetts"
+  },
+  {
+    "condition": "High Blood Pressure",
+    "measure_id": "BPHIGH",
+    "low": 3.05,
+    "mid": 3.44,
+    "high": 3.91,
+    "t": 142,
+    "affected_adults": 1720000,
+    "p_low": 0.288,
+    "p_high": 0.311,
+    "prevalence_year": "2023",
+    "ctgov_url": "https://clinicaltrials.gov/search?cond=Hypertension&locStr=Massachusetts"
+  },
+  {
+    "condition": "Diabetes",
+    "measure_id": "DIABETES",
+    "low": 4.12,
+    "mid": 4.63,
+    "high": 5.24,
+    "t": 96,
+    "affected_adults": 603000,
+    "p_low": 0.096,
+    "p_high": 0.108,
+    "prevalence_year": "2023",
+    "ctgov_url": "https://clinicaltrials.gov/search?cond=Diabetes&locStr=Massachusetts"
+  },
+  {
+    "condition": "High Cholesterol",
+    "measure_id": "HIGHCHOL",
+    "low": 1.33,
+    "mid": 1.58,
+    "high": 1.89,
+    "t": 41,
+    "affected_adults": 1490000,
+    "p_low": 0.274,
+    "p_high": 0.299,
+    "prevalence_year": "2023",
+    "ctgov_url": "https://clinicaltrials.gov/search?cond=Hypercholesterolemia&locStr=Massachusetts"
+  }
+]

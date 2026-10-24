@@ -1,0 +1,98 @@
+/*
+ * Styles for the Investigate_Page. Colours reference the palette custom
+ * properties in `src/styles/palette.css` (single source of truth, WCAG AA
+ * contrast). The Evidence_Label badge never relies on colour alone — it always
+ * carries its text label (Req 7.3, 15.2).
+ */
+
+/*
+ * The four breakdown tables sit in a responsive grid. Table cell/row styling
+ * (full width, --surface header row, --border rules, right-aligned numbers)
+ * lives in the shared base.css so every table matches; this file only owns the
+ * Investigate-specific pieces (layout grid, finding cards, badge, definitions).
+ */
+.inv-breakdowns {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 16px;
+}
+
+.inv-findings {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.inv-finding {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 16px;
+  color: var(--ink);
+}
+
+.inv-finding p {
+  margin: 0;
+}
+
+/*
+ * Evidence_Label badge. Always paired with its text so meaning never depends on
+ * colour alone (Req 7.3, 15.2). AA contrast on white via --ink border/text.
+ */
+.inv-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 2px 10px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* First-use definition, rendered as a soft helper note. */
+.inv-definition {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  background: var(--surface);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  padding: 8px 12px;
+}
+
+.inv-evidence-link,
+.inv-back-link {
+  color: var(--accent);
+}
+
+/*
+ * Note shown beneath a breakdown table (e.g. the Drug-count explanation next to
+ * the intervention-type breakdown). Muted helper text, never colour-only.
+ */
+.inv-caption {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+/* CDC PLACES data year, shown under the prevalence definition (Req 19.7). */
+.inv-prevalence-year {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* The headline count (WHAT `t`) leads the counts list (Req 19.3). */
+.inv-count-headline {
+  font-weight: 600;
+}
+
+.inv-count-headline .load-state {
+  display: inline;
+  font-weight: 400;
+}
