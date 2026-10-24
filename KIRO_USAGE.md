@@ -36,7 +36,7 @@ Six steering files keep Kiro consistent across all specs:
 - **research-gap-data** Power bundles our data steering, skill, MCP config, and domain allowlist so the setup can be reused
 
 ## Testing
-353 tests on the scoring export alone, run automatically through hooks.
+353 tests on the scoring export alone, plus property-based tests with fast-check on the dashboard. Tests run automatically through hooks.
 
 ## Other tools
 We used Kombai only for final UI polish (spacing and colors), after Kiro finished the dashboard tasks. Each use is noted in `KIRO_LOG.md`.
