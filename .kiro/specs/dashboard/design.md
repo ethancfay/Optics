@@ -124,7 +124,7 @@ Routes use `measure_id` to identify a disease so display labels can change witho
 | Path | Component | Data needed | Requirements |
 | --- | --- | --- | --- |
 | `/` | `Home_Page` | What_Data | 4 |
-| `/what` | `What_View` | What_Data | 5, 6, 16 |
+| `/what` | `What_View` | What_Data | 5, 6, 16, 22 |
 | `/investigate/:measureId` | `Investigate_Page` | Investigate_Data, What_Data (headline `t` + `prevalence_year`) | 7, 19 |
 | `/evidence/:measureId` | `Evidence_Page` | Evidence_Data, Sources_Data | 8 |
 | `/method` | `Method_Page` | Sources_Data | 11 |
@@ -173,11 +173,59 @@ While `loading`, pages show a loading indicator in place of data content (Req 3.
 
 ### Chart: DotWhiskerChart + Text Alternative
 
-`DotWhiskerChart` renders inline SVG. For each disease (already sorted ascending by `mid`), it draws a horizontal whisker from `low` to `high` on a shared linear scale and a dot at `mid` (Req 5.1). All diseases appear in a single chart — there is no tab split (Req 5.2). The axis is labeled "distinct recruiting MA studies per 100,000 affected adults (18+)" (Req 5.4). Marks use the Colorblind_Safe_Palette and never rely on colour alone — each row also has a text label and numeric values (Req 5.8, 15.2).
+`DotWhiskerChart` renders inline SVG. For each disease (already sorted ascending by `mid`), it draws a horizontal whisker from `low` to `high` on a shared scale and a dot at `mid` (Req 5.1). All diseases appear in a single chart — there is no tab split (Req 5.2). The axis is labeled "distinct recruiting MA studies per 100,000 affected adults (18+)", with the suffix " (log scale)" while the log scale is in use (Req 5.4, 22.4). Marks use the Colorblind_Safe_Palette and never rely on colour alone — each row also has a text label and numeric values (Req 5.8, 15.2).
+
+**Scale (Req 22).** The earlier linear domain `[min(low), max(high)]` put the shipped values (0.23–12.83) on one axis where High Cholesterol (0.23–0.27) and Asthma (1.09–1.36) were squeezed against the left edge and the empty space between them read as a large gap. `chartScale(entries, range)` now picks the mode from the plotted entries (after Req 5.9 omission) and returns the geometry and ticks together, so the chart never computes ticks separately:
+
+```ts
+interface ChartScale {
+  kind: "log" | "linear";
+  x: (value: number) => number;   // monotonically non-decreasing
+  domainMin: number;
+  domainMax: number;
+  rangeMin: number;
+  rangeMax: number;
+  ticks: readonly number[];       // gridline + label positions
+}
+```
+
+- **Log mode** — when every plotted `low > 0` (Req 22.1). `domainMin = 10 ** floor(log10(min low))` (computed with a small epsilon so `log10(0.1)` floating-point noise cannot drop a power), `domainMax = 1.1 × max high` (Req 22.2). `x(v) = rangeMin + (log10 v − log10 domainMin) / (log10 domainMax − log10 domainMin) × (rangeMax − rangeMin)`. `ticks` = every `10^k` with `domainMin ≤ 10^k ≤ domainMax` (Req 22.3). Shipped data: domain `[0.1, 14.113]`, ticks `0.1, 1, 10`; whiskers fall at about 17–20 % (High Cholesterol), 48–53 % (Asthma) and 92–98 % (Diabetes) of the plot width, so no disease is pinned to an edge.
+- **Linear fallback** — when any plotted `low ≤ 0` (e.g. a future disease with `t = 0`, giving `low = mid = high = 0`; Req 22.5). Domain `[0, max high]`; `ticks` come from the existing `axisTicks(0, max high)` so they start at 0. If `max high` is also 0 the domain has zero width and `x` pins every value to `rangeMin` (unchanged degenerate behaviour, no division by zero).
+- `formatAxisTick` renders log ticks in plain decimal form with en-US grouping ("0.1", "1", "10", "1,000").
+- The axis label is `AXIS_LABEL + (scale.kind === "log" ? " (log scale)" : "")`, and the SVG `<title>` gains the sentence "The axis uses a log scale: each labeled step is ten times the one before." in log mode only (Req 22.4).
+- In both modes `x(low) ≤ x(mid) ≤ x(high)` and every mark lies in `[rangeMin, rangeMax]` (Req 22.6; Property 6).
+
+**Headline (Req 5.12–5.14).** `What.tsx` renders a `<p className="what-headline">` between the `<h1>` and the chart, built from a pure helper in `web/src/data/headlineRatio.ts`:
+
+```ts
+type HeadlineRatio =
+  | null                                   // fewer than 2 diseases: render nothing
+  | { kind: "unknown" }                    // min(low) <= 0: no ratio
+  | { kind: "range"; lower: number; upper: number }; // exact, unrounded
+
+function headlineRatio(entries: readonly WhatEntry[]): HeadlineRatio;
+// lower = max(low) / min(high); upper = max(high) / min(low)
+function headlineText(entries: readonly WhatEntry[]): string | null;
+```
+
+`headlineText` rounds each bound with `roundSig2` and fills the exported constants `HEADLINE_RANGE_TEMPLATE` ("Across these <n> diseases, the highest index is about <lower> to <upper> times the lowest."), `HEADLINE_UNKNOWN` ("The highest-to-lowest ratio cannot be computed because at least one disease has a low value of 0.") and `HEADLINE_LIMIT` ("This compares study counts with how common each disease is, not how severe it is."). Shipped data: `9.61 / 0.27 = 35.6 → 36`, `12.83 / 0.23 = 55.8 → 56` → "Across these 3 diseases, the highest index is about 36 to 56 times the lowest." The headline always shows two bounds (Req 5.6), names no disease, makes no claim about what the ratio should be (Req 17.2), and is part of the rendered What page that Property 12 scans for Forbidden_Terms. `min(high) > 0` follows from `min(low) > 0` because `low ≤ high`, so the `unknown` branch covers both divisions. The headline is one or two short lines, so the three lowest-`mid` diseases still appear in the first screen at 375 px (Req 16.1). The chart's `aria-describedby` still points only at the table id (Req 6.3, 22.8); the headline is ordinary page text before the chart.
 
 Accessibility:
-- The chart container has `role="img"` with an `aria-label` summarizing it, and is programmatically associated with its text-alternative table via `aria-describedby` pointing at the table's id (Req 6.3, 15.5, 15.8).
-- A visually-complete data table (`TextAlternative`) lists one row per disease with columns `condition`, `low`, `mid`, `high`, `t` (distinct study count), `affected_adults`, in the same order as the chart (Req 6.1, 6.2). Missing cells show "unavailable" rather than blank (Req 6.5).
+- The chart container has `role="img"` with an `aria-label` summarizing it, and is programmatically associated with its text-alternative table via `aria-describedby` pointing at the table's id (Req 6.3, 15.5, 15.8). This link is unchanged by the log-scale work (Req 22.8).
+- A visually-complete data table (`TextAlternative`) lists one row per disease in the same order as the chart (Req 6.1, 6.2), with headers and cells:
+
+  | Header | Cell | Example (Diabetes) |
+  | --- | --- | --- |
+  | Disease | `condition` (the focusable select button) | Diabetes |
+  | Studies counted | `t` | 61 |
+  | Affected MA adults | `affected_adults` | 553,588 |
+  | Index range per 100k | `"<low> to <high> (midpoint <mid>)"` | 9.61 to 12.83 (midpoint 11.02) |
+  | 1 recruiting MA study per … adults | `"<fewest> to <most>"` from `onePerN` | 7,800 to 10,000 |
+
+  The midpoint stays inside the range cell so the table still carries every value the chart draws (Req 6.1). The `prevalence_year` column is removed; the caption is "Adults 18+, CDC PLACES <year>. Range reflects prevalence uncertainty only." built by `prevalenceCaption(entries)` from the displayed entries' `prevalence_year` values (one shared year; several distinct years ascending joined by " and "; none → "(data year unavailable)") (Req 6.8). Missing cells show "unavailable" rather than blank (Req 6.5).
+- Number formatting lives in `web/src/data/whatTable.ts`: `formatNumber(v)` uses a module-level `Intl.NumberFormat("en-US", { maximumFractionDigits: 2 })` so grouping is locale-independent (Req 6.6); `roundSig2(v) = Number(v.toPrecision(2))`; `onePerN(entry)` returns `{ kind: "range", fewest: 100000 / high, most: 100000 / low }` (exact), `{ kind: "unknown" }` when `low ≤ 0` or `high ≤ 0`, or `{ kind: "unavailable" }` when either is missing or non-finite; the cell renders `formatNumber(roundSig2(fewest)) + " to " + formatNumber(roundSig2(most))` (Req 6.9). Shipped data: Asthma 74,000 to 92,000; Diabetes 7,800 to 10,000; High Cholesterol 370,000 to 430,000.
+- Numeric `<td>`s and their `<th scope="col">` carry `className="num"` (`text-align: right; font-variant-numeric: tabular-nums`) (Req 6.7).
+- These derived values (One_Per_N_Range, Headline_Ratio_Range) are computed only from the loaded `low`/`high`, so they satisfy Req 3.6; they do not recompute the index formula (assumption 8).
 - Selecting a disease (dot/row is a keyboard-focusable `<button>`/`<Link>`) navigates to the Investigate page by `measure_id` (Req 5.5, 15.3).
 - The What_View never uses any Forbidden_Terms in labels, headings, or captions (Req 5.11, 17).
 
@@ -427,11 +475,11 @@ The following prework analysis was performed to classify every acceptance criter
 
 **Validates: Requirements 4.2, 4.3**
 
-### Property 6: Displayed index values always show the full low-high range, with the dot inside the whisker
+### Property 6: Displayed index values always show the full low-high range, with the dot inside the whisker, on either scale
 
-*For any* valid disease rendered in the chart or table, both the `low` and `high` values are shown (never a single `mid`-only ranking), and on the chart scale the dot position for `mid` lies between the whisker endpoints for `low` and `high` (i.e. `x(low) <= x(mid) <= x(high)`).
+*For any* set of valid diseases rendered in the chart or table, both the `low` and `high` values are shown (never a single `mid`-only ranking); `chartScale` returns `kind: "log"` exactly when every `low > 0` and `kind: "linear"` with `domainMin = 0` otherwise; and in both modes, for every disease, `x(low) <= x(mid) <= x(high)` with all three positions inside `[rangeMin, rangeMax]`. In log mode every tick is a power of ten inside the domain. Generators draw `low` from values spanning several decades (e.g. `1e-3` to `1e3`) and, in a share of cases, inject an entry with `low = 0` so both modes are exercised.
 
-**Validates: Requirements 5.1, 5.6**
+**Validates: Requirements 5.1, 5.6, 22.1, 22.2, 22.3, 22.5, 22.6**
 
 ### Property 7: Every county resolves to its own distance bucket or an explicit unknown marker (WHERE view — reinstated only)
 
@@ -505,6 +553,18 @@ The following prework analysis was performed to classify every acceptance criter
 
 **Validates: Requirements 20.2**
 
+### Property 19: The "1 per N" bounds are 100000/high and 100000/low
+
+*For any* valid What_Entry with `low > 0`, `onePerN(entry)` returns `{ kind: "range", fewest, most }` with `fewest === 100000 / high` and `most === 100000 / low` (so `fewest <= most`); for any entry with `low <= 0` it returns `{ kind: "unknown" }`. The rendered cell text equals `formatNumber(roundSig2(fewest)) + " to " + formatNumber(roundSig2(most))`, and each rounded bound has at most 2 significant figures and is within 5 % of its exact value.
+
+**Validates: Requirements 6.6, 6.9**
+
+### Property 20: The headline ratio range matches the formula
+
+*For any* list of at least two valid What_Entries with every `low > 0`, `headlineRatio(entries)` returns `{ kind: "range", lower, upper }` with `lower === max(low) / min(high)` and `upper === max(high) / min(low)` (so `lower <= upper`), and `headlineText(entries)` contains `roundSig2(lower)` and `roundSig2(upper)` formatted per Req 6.6, the entry count `n`, and `HEADLINE_LIMIT`, and contains none of the Forbidden_Terms. For fewer than two entries it returns `null`; when there are at least two entries and any `low <= 0` it returns `{ kind: "unknown" }` and the text equals `HEADLINE_UNKNOWN + " " + HEADLINE_LIMIT` (no ratio number).
+
+**Validates: Requirements 5.6, 5.12, 5.13, 5.14, 17.1-17.4**
+
 ## Error Handling
 
 The data layer is the single place that turns failures into the discriminated `LoadState`, so every page handles errors the same way.
@@ -540,12 +600,12 @@ The project uses **Vitest** as the test runner for the web package and **fast-ch
 - Library: **fast-check**. Each property test runs a **minimum of 100 generated examples** (`fc.assert(fc.property(...), { numRuns: 100 })`).
 - Each property test is implemented as a **single** property-based test and is tagged with a comment referencing its design property, in the form:
   `// Feature: dashboard, Property N: <property text>`
-- Target the pure logic modules so generators are cheap and in-memory: `validateWhatEntry`, `validateInvestigateEntry`, `validateEvidenceEntry`, `validateWhereEntry`, `validateSourceEntry`, `loadJson` (with a stubbed fetch returning a generated body), `sortConditions`, `selectTopFinding`, `chartScale`, `resolveCountyState`, `formatCtgovLabel`, the finding-label check, the Forbidden_Terms check, and the Evidence NCT-link check.
+- Target the pure logic modules so generators are cheap and in-memory: `validateWhatEntry`, `validateInvestigateEntry`, `validateEvidenceEntry`, `validateWhereEntry`, `validateSourceEntry`, `loadJson` (with a stubbed fetch returning a generated body), `sortConditions`, `selectTopFinding`, `chartScale` (both modes), `onePerN`, `headlineRatio`/`headlineText`, `resolveCountyState`, `formatCtgovLabel`, the finding-label check, the Forbidden_Terms check, and the Evidence NCT-link check.
 - Generators: arbitraries for `WhatEntry`, `InvestigateEntry`, `EvidenceEntry`, `WhereEntry`, `SourceEntry` (both valid and each kind of violation), arrays mixing valid/invalid entries, datasets with duplicate `mid` values to exercise tie-breaking, and county/selection combinations (including Unknown_Distance entries and missing entries). Edge cases (empty arrays, all-invalid arrays, whitespace-only strings, missing fields, range/probability violations, `null` miles, bad NCT patterns, missing county entries) are produced by the generators rather than by separate hand-written cases.
 
 - Generator hygiene: any generated array that React renders as a keyed list (breakdown `label`s, What_Entry `measure_id`s, source names, NCT ids) is built with `fc.uniqueArray(..., { selector })` on the key field, so generated data never triggers React's duplicate-key warning (e.g. the keys "K", "Delta", "range", "Gamma" seen from the Investigate and Forbidden_Terms generators). This mirrors the Property 8 fix (`fc.uniqueArray` keyed by `name`) and matches the real data, where labels within one breakdown are distinct. The test run must emit no "Encountered two children with the same key" warning.
 
-Mapping of properties to the Correctness Properties above: Properties 1-15 each have one property-based test; Properties 16-18 are data invariants over the shipped files and each has one data test (in `src/data/sampleData.consistency.test.ts`).
+Mapping of properties to the Correctness Properties above: Properties 1-15, 19 and 20 each have one property-based test; Properties 16-18 are data invariants over the shipped files and each has one data test (in `src/data/sampleData.consistency.test.ts`).
 
 ### Unit / example tests
 
@@ -558,7 +618,10 @@ Cover the criteria classified EXAMPLE/EDGE_CASE in the prework:
 - `formatCtgovLabel`: unit tests asserting each known status/study-type/phase/intervention-type code maps to its readable label and an unknown code is returned unchanged (Req 18.6, 18.7, 18.8).
 - Sample `evidence.json` provenance: every NCT entry is verifiable against a row of `pipeline/processed/studies.csv` — its `nct_id`, `title`, `status`, `study_type`, `phases`, `intervention_types`, `intervention_names`, and `url` equal that row's `nctId`, `briefTitle`, `overallStatus`, `studyType`, `phases`, `interventionTypes`, `interventionNames`, and `source_url`; each entry's `missing_data_notes` includes the "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export." note (Req 18.1, 18.2, 18.3, 18.5).
 - Content safety: no rendered page text and no sample-file string field matches an email or phone pattern (Req 2.13).
-- Fixed strings: chart axis unit label "distinct recruiting MA studies per 100,000 affected adults (18+)", Method formula and limit strings, Build page title and its `.kiro/`/`KIRO_LOG.md` links (asserted to be absolute `https://github.com/ethancfay/research-gap-index/blob/main/...` URLs rather than site-relative paths), Footer "Data as of" label (Req 5.4, 11, 12, 13.4).
+- WHAT log scale and fallback (Req 22): with the shipped `what.json` the scale is `log`, the ticks are exactly `0.1, 1, 10`, and the axis label ends in " (log scale)"; with one entry set to `low = mid = high = 0` (a zero-study disease) the scale is `linear`, `domainMin` is 0, the first tick is 0, the axis label has no suffix, the chart renders without error, and its `aria-describedby` still points at the table id; with every entry at 0 all marks sit at `rangeMin`.
+- WHAT table (Req 6): headers are exactly "Disease", "Studies counted", "Affected MA adults", "Index range per 100k", "1 recruiting MA study per … adults"; no `prevalence_year` column; shipped Diabetes row shows "553,588", "9.61 to 12.83 (midpoint 11.02)" and "7,800 to 10,000"; numeric cells and headers carry the `num` class; the caption is "Adults 18+, CDC PLACES 2023. Range reflects prevalence uncertainty only." and switches to the multi-year and "(data year unavailable)" forms for mixed and missing years; a `low = 0` row shows "unknown" in the 1-per-N cell.
+- WHAT headline (Req 5.12-5.14): shipped data renders "Across these 3 diseases, the highest index is about 36 to 56 times the lowest." plus the limit sentence, above the chart; one disease renders no headline; a `low = 0` entry renders `HEADLINE_UNKNOWN`.
+- Fixed strings: chart axis unit label "distinct recruiting MA studies per 100,000 affected adults (18+)" (plus " (log scale)" in log mode), Method formula and limit strings, Build page title and its `.kiro/`/`KIRO_LOG.md` links (asserted to be absolute `https://github.com/ethancfay/research-gap-index/blob/main/...` URLs rather than site-relative paths), Footer "Data as of" label (Req 5.4, 11, 12, 13.4).
 - Forbidden language: the rendered copy of every page is asserted to contain none of the `FORBIDDEN_TERMS` (Req 17).
 - Routing: navigation reaches every page without full reload, direct-URL entry renders each route including `/investigate/:measureId` and `/evidence/:measureId`, active page indicated, focus moves to `#main` on route change (Req 14, 15.7).
 - Accessibility: `aria-describedby` links each chart/map to its table (Req 6.3, 10.3); every interactive control is keyboard operable with a visible focus style and a programmatic label (Req 15.3, 15.4, 15.8); unknown counties use a hatch pattern and every row/county has a text label (Req 15.2); contrast ratios of each palette text/background pair meet WCAG AA (Req 15.1).

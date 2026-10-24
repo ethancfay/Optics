@@ -55,6 +55,9 @@ This spec also defines sample placeholder JSON files so the site can be built an
 - **Method_Page**: The Dashboard page showing the crosswalk, filters, formula, and limits.
 - **Build_Page**: The Dashboard page titled "How we built it with Kiro" linking to `.kiro/` files and `KIRO_LOG.md`.
 - **Dot_Whisker_Chart**: A chart that draws, per Disease, a dot at the `mid` value and a whisker spanning from `low` to `high`.
+- **Log_Scale**: The base-10 logarithmic value axis the Dot_Whisker_Chart uses when every plotted Disease has `low` > 0 (Requirement 22).
+- **One_Per_N_Range**: For one Disease, the range "1 recruiting MA study per N adults" from `100000 / high` to `100000 / low`, each bound rounded to 2 significant figures (Requirement 6.9). It is derived solely from `low` and `high` (Requirement 3.6) and is not a recomputation of the Index_Value formula.
+- **Headline_Ratio_Range**: Over the Diseases displayed in the What_View, the range from `max(low) / min(high)` to `max(high) / min(low)`, each bound rounded to 2 significant figures (Requirement 5.12). It is derived solely from `low` and `high` (Requirement 3.6).
 - **County_Map**: The Massachusetts county map shown in the Where_View.
 - **Unknown_Distance**: The state of a county and Disease pair for which no verified recruiting site exists, represented in the data and displayed as "unknown", distinct from a numeric distance of zero and from a blank value.
 - **Evidence_Label**: One of exactly two labels applied to every explanatory finding on the Investigate_Page: "possible explanation from available records" or "cannot determine from public data".
@@ -138,7 +141,7 @@ This spec also defines sample placeholder JSON files so the site can be built an
 1. WHEN the What_View finishes loading What_Data, THE What_View SHALL display a Dot_Whisker_Chart in which each Disease is drawn with a dot at its `mid` value and a whisker spanning from its `low` value to its `high` value.
 2. THE What_View SHALL display all Diseases in What_Data in a single chart and SHALL NOT separate any Disease onto a distinct tab.
 3. THE What_View SHALL sort the Diseases in ascending order of `mid` value, with ties broken by ascending case-insensitive `condition` label, so that the Disease with the lowest midpoint appears first.
-4. THE What_View SHALL label the chart axis with the unit "distinct recruiting MA studies per 100,000 affected adults (18+)".
+4. THE What_View SHALL label the chart axis with the unit "distinct recruiting MA studies per 100,000 affected adults (18+)", followed by the suffix " (log scale)" WHILE the Log_Scale is in use (Requirement 22.4) and with no suffix WHILE the linear fallback is in use (Requirement 22.5).
 5. WHEN a user selects a Disease in the What_View, THE Dashboard SHALL navigate to the Investigate_Page for that Disease identified by its `measure_id`.
 6. THE What_View SHALL display the Index_Value of each Disease as a low-high range and SHALL NOT display a single-number ranking without its range.
 7. WHERE What_Data contains zero valid Diseases, THE What_View SHALL display a message that no diseases are available.
@@ -146,6 +149,9 @@ This spec also defines sample placeholder JSON files so the site can be built an
 9. IF a What_Entry is missing any of `low`, `mid`, or `high`, or its values violate `low` <= `mid` <= `high`, THEN THE What_View SHALL omit that What_Entry from the Dot_Whisker_Chart and SHALL display the remaining valid Diseases.
 10. IF a user selects a Disease whose `measure_id` has no Investigate_Entry, THEN THE Dashboard SHALL navigate to the Investigate_Page and display the Disease-not-found message defined in Requirement 7.
 11. THE What_View SHALL NOT use any Forbidden_Terms when presenting or describing the ranking.
+12. WHEN the What_View displays two or more Diseases, THE What_View SHALL display, above the Dot_Whisker_Chart, a headline giving the Headline_Ratio_Range: lower bound `max(low) / min(high)` and upper bound `max(high) / min(low)`, where the maxima and minima are taken over the Diseases displayed in the chart (after Requirement 5.9 omission), each bound rounded to 2 significant figures and shown as a range "<lower> to <upper>", never as a single number (criterion 6).
+13. THE headline SHALL read exactly "Across these <n> diseases, the highest index is about <lower> to <upper> times the lowest. This compares study counts with how common each disease is, not how severe it is.", where `<n>` is the number of displayed Diseases, and SHALL NOT use any Forbidden_Terms (Requirement 17).
+14. IF fewer than two Diseases are displayed, THEN THE What_View SHALL display no headline. IF the smallest displayed `low` is less than or equal to 0, THEN THE What_View SHALL display, in place of the ratio sentence, "The highest-to-lowest ratio cannot be computed because at least one disease has a low value of 0." followed by the same limit sentence, and SHALL NOT display a number for the ratio.
 
 ### Requirement 6: WHAT View Text Alternative
 
@@ -153,11 +159,15 @@ This spec also defines sample placeholder JSON files so the site can be built an
 
 #### Acceptance Criteria
 
-1. THE What_View SHALL provide a Text_Alternative that is a data table with one row per Disease and one column each for the `condition` label, the `low` value, the `mid` value, the `high` value, the `t` distinct study count, the `affected_adults` count, and the `prevalence_year` (the CDC PLACES data year shown next to the prevalence-derived affected-adults count).
+1. THE What_View SHALL provide a Text_Alternative that is a data table with one row per Disease and exactly these human-readable column headers, in this order: "Disease" (the `condition` label), "Studies counted" (the `t` distinct study count), "Affected MA adults" (the `affected_adults` count), "Index range per 100k" (shown as "<low> to <high> (midpoint <mid>)", so the table carries the same values as the chart's whisker and dot), and "1 recruiting MA study per … adults" (the One_Per_N_Range, criterion 9). The table SHALL NOT have a separate prevalence-year column; the year appears in the caption (criterion 8).
 2. THE Text_Alternative table SHALL present Diseases in the same top-to-bottom order as the Dot_Whisker_Chart, namely ascending `mid` value with ties broken by ascending case-insensitive `condition` label.
 3. THE What_View SHALL associate the Text_Alternative with the Dot_Whisker_Chart in the accessibility tree so that assistive technology can reach the table from the chart.
 4. WHERE What_Data contains zero valid Diseases, THE Text_Alternative SHALL display its column headers with no data rows and SHALL display a text indication that no data is available.
 5. IF a displayed Disease is missing a value for a Text_Alternative column, THEN THE Text_Alternative SHALL display an unavailable indication in that cell rather than an empty cell.
+6. THE Text_Alternative SHALL format every number with en-US thousands separators (e.g. "657,991", "10,000") so the output does not depend on the browser locale, and SHALL show `low`, `mid` and `high` with the decimals present in the data.
+7. THE Text_Alternative SHALL right-align every numeric cell and the header of every numeric column, using tabular figures.
+8. THE Text_Alternative SHALL have the caption "Adults 18+, CDC PLACES <year>. Range reflects prevalence uncertainty only.", where `<year>` is the `prevalence_year` shared by the displayed Diseases. IF the displayed Diseases carry more than one distinct `prevalence_year`, THEN `<year>` SHALL list the distinct years in ascending order joined by " and ". IF no displayed Disease has a `prevalence_year`, THEN the caption SHALL read "Adults 18+, CDC PLACES (data year unavailable). Range reflects prevalence uncertainty only." The year SHALL be read from What_Data and never hard-coded.
+9. THE "1 recruiting MA study per … adults" cell SHALL show "<fewest> to <most>", where `fewest` is `100000 / high` and `most` is `100000 / low`, each rounded to 2 significant figures and formatted per criterion 6 (e.g. `low` 9.61, `high` 12.83 → "7,800 to 10,000"). IF `low` or `high` is missing, THEN the cell SHALL show the unavailable indication (criterion 5). IF `low` or `high` is less than or equal to 0, THEN the cell SHALL show "unknown" and SHALL NOT show 0 or a division result.
 
 ### Requirement 7: Investigate Page
 
@@ -359,3 +369,20 @@ Sources: Spec 2 `.kiro/specs/condition-grouping/requirements.md` (Requirements 2
 4. THE Method_Page SHALL state that studies marked "questionable" (their condition is not clearly the Disease) are not counted, with an example taken from a real Spec 2 Questionable_Term. This matches the data contract and the scoring export, where only `match_status` `included` makes an Eligible_Study.
 5. THE Method_Page SHALL NOT use the word "crosswalk", SHALL NOT render any "to do" text, and the Method_Page source SHALL NOT contain a `TODO(scoring-export)` comment.
 6. THE matching-rule text SHALL be written at grade 8 or lower and SHALL NOT use any Forbidden_Terms (Requirement 11.6, 17).
+
+### Requirement 22: Log Scale for the WHAT View Chart
+
+**User Story:** As a researcher, I want the WHAT chart to use a log scale, so that diseases whose values differ by more than ten times are all readable and the gaps between them are not exaggerated.
+
+Context: a linear axis starting at the smallest `low` puts the shipped values (0.23 to 12.83) on one scale where two diseases sit against the left edge and the distance between them looks larger than it is.
+
+#### Acceptance Criteria
+
+1. WHILE every Disease plotted in the Dot_Whisker_Chart has `low` > 0, THE Dot_Whisker_Chart SHALL use the Log_Scale: each value's x position is a linear function of `log10(value)`.
+2. WHILE the Log_Scale is in use, the axis domain SHALL run from the largest power of ten less than or equal to the smallest plotted `low` to 1.1 times the largest plotted `high`.
+3. WHILE the Log_Scale is in use, THE Dot_Whisker_Chart SHALL draw a gridline and a tick label at every power of ten inside the domain, labeled in plain decimal form ("0.1", "1", "10", "100", "1,000"). For the shipped sample `what.json` (smallest `low` 0.23, largest `high` 12.83) the ticks SHALL be exactly 0.1, 1 and 10.
+4. WHILE the Log_Scale is in use, THE axis label SHALL be the Requirement 5.4 unit followed by " (log scale)", and the chart's accessible title SHALL state that the axis uses a log scale where each labeled step is ten times the one before.
+5. IF any plotted Disease has `low` <= 0 (for example a future Disease with zero recruiting MA studies, so `low` = `mid` = `high` = 0), THEN THE Dot_Whisker_Chart SHALL fall back to a linear scale whose domain starts at 0 and ends at the largest plotted `high`, with round linear tick labels starting at 0, and the axis label SHALL carry no " (log scale)" suffix. IF the largest plotted `high` is also 0, THEN every mark SHALL be drawn at the left edge of the plot and the chart SHALL NOT fail.
+6. In both scale modes, for every plotted Disease, THE Dot_Whisker_Chart SHALL place the marks so that `x(low) <= x(mid) <= x(high)`, and every mark SHALL lie within the plot's horizontal range.
+7. THE scale mode, domain and ticks SHALL be a pure function of the plotted entries (the entries left after Requirement 5.9 omission), so the chart and its tests derive the same geometry from the same data.
+8. THE Dot_Whisker_Chart SHALL remain associated with its Text_Alternative through `aria-describedby` pointing at the table's id (Requirement 6.3) in both scale modes.
