@@ -371,6 +371,39 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) Method copy + tests.
 
+- [ ] 21. WHAT view: log scale, readable table, ratio headline
+  - Problem: `chartScale` uses a linear domain starting at min(`low`), so the shipped values (0.23–12.83) squeeze High Cholesterol and Asthma against the left edge and exaggerate the gap between them.
+  - _Requirements: 5.4, 5.6, 5.12-5.14, 6.1-6.9, 22.1-22.8_
+
+  - [ ] 21.1 Confirm the spec reflects the plan (requirements.md + design.md)
+    - Requirement 22 (new); amended Req 5.4, Req 6.1; new Req 5.12-5.14 and 6.6-6.9; glossary Log_Scale, One_Per_N_Range, Headline_Ratio_Range; design chart section (scale, headline, table), Property 6 (amended), Properties 19 and 20, testing strategy.
+    - Spec-change checkpoint: do not start 21.2-21.5 until the spec changes are approved.
+    - _Requirements: 5.12-5.14, 6.1-6.9, 22.1-22.8_
+
+  - [ ] 21.2 Log scale with linear fallback in `chartScale`
+    - Extend `ChartScale` with `kind: "log" | "linear"` and `ticks`. Log mode when every `low > 0`: domain `[10 ** floor(log10(min low)), 1.1 × max high]` (epsilon-safe floor), ticks at every power of ten in the domain. Otherwise linear `[0, max high]` with ticks from `axisTicks(0, max high)`; zero-width domain pins to `rangeMin`.
+    - `DotWhiskerChart`: draw gridlines/labels from `scale.ticks`; axis label gets " (log scale)" in log mode only; add the log-scale sentence to the SVG `<title>` in log mode; keep `aria-describedby={tableId}`. `formatAxisTick` prints "0.1", "1", "10", "1,000".
+    - Update Property 6 in `chartScale.test.ts` (tag `// Feature: dashboard, Property 6: ...`, `numRuns: 100`) to cover both modes: `kind` is `log` iff every `low > 0`; `x(low) <= x(mid) <= x(high)`; positions inside the range; log ticks are powers of ten in the domain. Generators span several decades and sometimes inject `low = 0`.
+    - Unit tests: shipped `what.json` → `log`, ticks exactly `[0.1, 1, 10]`, label ends " (log scale)". Fallback: one entry `low = mid = high = 0` → `linear`, `domainMin` 0, first tick 0, no suffix, chart renders, `aria-describedby` still names the table id; all-zero entries → every mark at `rangeMin`. Update existing axis-label and tick assertions in `DotWhiskerChart.test.tsx` / `axisTicks.test.ts`.
+    - _Requirements: 5.4, 22.1-22.8_
+
+  - [ ] 21.3 Human-readable text-alternative table
+    - Create `web/src/data/whatTable.ts` with `formatNumber` (fixed `Intl.NumberFormat("en-US", { maximumFractionDigits: 2 })`), `roundSig2`, `onePerN(entry)` (exact `{ fewest: 100000/high, most: 100000/low }`, `unknown` when `low <= 0` or `high <= 0`, `unavailable` when missing), and `prevalenceCaption(entries)`.
+    - Table headers exactly "Disease", "Studies counted", "Affected MA adults", "Index range per 100k", "1 recruiting MA study per … adults"; range cell "<low> to <high> (midpoint <mid>)"; drop the `prevalence_year` column; caption from `prevalenceCaption`; `num` class (right-aligned, tabular-nums) on numeric cells and headers. Keep the select buttons and "unavailable" placeholders.
+    - Property 19 test tagged `// Feature: dashboard, Property 19: ...` at `numRuns: 100`: bounds equal `100000/high` and `100000/low`; rendered text uses `roundSig2` + `formatNumber`; rounded bounds have ≤ 2 significant figures and are within 5 % of exact; `low <= 0` → `unknown`.
+    - Unit tests: headers; shipped Diabetes row ("61", "553,588", "9.61 to 12.83 (midpoint 11.02)", "7,800 to 10,000"); caption "Adults 18+, CDC PLACES 2023. Range reflects prevalence uncertainty only." plus mixed-year and missing-year forms; `num` class present; `low = 0` row shows "unknown". Update tests that assert the old raw headers or the `prevalence_year` column.
+    - _Requirements: 6.1, 6.2, 6.5-6.9_
+
+  - [ ] 21.4 Ratio headline above the chart
+    - Create `web/src/data/headlineRatio.ts` with `headlineRatio(entries)` (`null` for < 2 entries, `unknown` when min `low <= 0`, else exact `lower = max(low)/min(high)`, `upper = max(high)/min(low)`), `headlineText(entries)`, and exported `HEADLINE_RANGE_TEMPLATE`, `HEADLINE_UNKNOWN`, `HEADLINE_LIMIT`. Render it in `What.tsx` between the `<h1>` and the chart, from the same sorted valid entries the chart gets.
+    - Property 20 test tagged `// Feature: dashboard, Property 20: ...` at `numRuns: 100`: bounds match the formula; text contains both rounded bounds, `n` and `HEADLINE_LIMIT`, and no Forbidden_Terms; `null` / `unknown` branches as in the design.
+    - Unit tests: shipped data renders "Across these 3 diseases, the highest index is about 36 to 56 times the lowest." plus the limit sentence, before the chart in DOM order; one disease → no headline; `low = 0` → `HEADLINE_UNKNOWN`. Confirm the existing Forbidden_Terms page test (Property 12) covers the What page with the headline.
+    - _Requirements: 5.6, 5.12, 5.13, 5.14, 17.1-17.4_
+
+  - [ ] 21.5 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures. Check the WHAT page at 375 px: no page-level horizontal overflow and the three diseases still visible in the first screen (Req 15.6, 16.1).
+    - Commits: (a) spec; (b) log scale + tests; (c) table + tests; (d) headline + tests.
+
 ## Notes
 
 - Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 14 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
@@ -407,7 +440,10 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     { "id": 20, "tasks": ["20.1"] },
     { "id": 21, "tasks": ["20.2"] },
     { "id": 22, "tasks": ["20.3"] },
-    { "id": 23, "tasks": ["20.4"] }
+    { "id": 23, "tasks": ["20.4"] },
+    { "id": 24, "tasks": ["21.1"] },
+    { "id": 25, "tasks": ["21.2", "21.3", "21.4"] },
+    { "id": 26, "tasks": ["21.5"] }
   ]
 }
 ```
