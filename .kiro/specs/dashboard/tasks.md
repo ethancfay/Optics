@@ -255,6 +255,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
   - [x] 17.3 Rebuild `ncts[]` in `evidence.json` from real records
     - For each `measure_id`, pick up to 3 studies from `pipeline/processed/studies.csv` by exact list-item equality against the disease's MeSH heading (Asthma; Depressive Disorder; Hypertension; Diabetes Mellitus, Type 2; Hypercholesterolemia): a study qualifies when one of its `meshTerms` equals the heading exactly; only if fewer than 3 qualify on `meshTerms`, also admit studies with an exact `ancestorTerms` match. No substring/prefix match — e.g. "Hypertension, Pulmonary" and "Hypertension, Pregnancy-Induced" must NOT match "Hypertension". Prefer `overallStatus` = RECRUITING.
     - Only pick studies with at least one Massachusetts site in `pipeline/processed/sites.csv` (or confirm `studies.csv` is already MA-only and record in the notes how that was checked).
+    - Exclude child-only studies: skip any study whose `stdAges` includes neither `ADULT` nor `OLDER_ADULT` (equivalently `maximumAge` < 18 years), matching Spec 2's inclusion rule.
     - If a disease has 0 qualifying studies, leave its `ncts` empty and add a `missing_data_notes` line saying no qualifying study was found; never invent or substitute.
     - Copy `nctId`, `briefTitle`, `overallStatus`, `studyType`, `phases`, `interventionTypes`, `interventionNames` exactly in ClinicalTrials.gov code form into `nct_id`, `title`, `status`, `study_type`, `phases`, `intervention_types`, `intervention_names`; set `url` = the row's `source_url`. Never write or paraphrase a title.
     - Parse the CSV's JSON-array string encoding for the multi-valued fields (`phases`, `interventionTypes`, `interventionNames`) and split into arrays of individual values.
@@ -269,6 +270,12 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc`, `npm test`, and `npm run build` in `web/`; fix any failures.
     - Commit as three separate commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `formatCtgovLabel` helper plus its tests and the Evidence-page change; (3) the `evidence.json` data change and any updated tests.
     - _Requirements: 18.1, 18.2, 18.6_
+
+  - [ ] 17.6 Exclude child-only studies from the selection
+    - Extend the 17.3 selection to drop any study whose `stdAges` includes neither `ADULT` nor `OLDER_ADULT` (equivalently `maximumAge` < 18 years), matching Spec 2's inclusion rule, then re-run the selection and the verbatim check.
+    - Update `mapping_choices` to note the adult-only (non-child-only) restriction; re-run `tsc`, `npm test`, `npm run build`; update any test whose expected NCT changed.
+    - Commit as two commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `evidence.json` data change and any updated tests.
+    - _Requirements: 18.1, 18.2, 18.4_
 
 ## Notes
 
