@@ -1,0 +1,201 @@
+{
+  "run_started_at": "2026-10-24T18:38:40Z",
+  "run_mode": "offline",
+  "fetch_date": "2026-10-24T18:12:26Z",
+  "files": {
+    "studies.csv": 16079,
+    "sites.csv": 52880,
+    "places_ma.csv": 560
+  },
+  "clinicaltrials_gov": {
+    "q1": {
+      "total_count": 9095,
+      "records_fetched": 9095
+    },
+    "q2": {
+      "total_count": 7110,
+      "records_fetched": 7110
+    },
+    "q2_server_cutoff": true
+  },
+  "urls": {
+    "clinicaltrials_gov": [
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxrYvag1PcW",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxmZPen3vEW",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxuZveh2_QbkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxubfOk1fQakA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxtZ_al3_MTkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxtYvOj2PwfkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxsZPah3_YZkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxsY_Wh3_QYkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxrZPCm3fIekA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxqYvaj2_AW",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxuZPKi3_QfkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxuYvGs3fAfkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxtZvGg2fMfkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxtbfij2f0dkA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxsYPGh1PcakA",
+      "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=COMPLETED&filter.advanced=AREA%5BLastUpdatePostDate%5DRANGE%5B2023-10-23,MAX%5D&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors&pageToken=ZVNj7o2Elu8o3lpzV8ikv62tmpOQJJxrZfml3fEbkA"
+    ],
+    "cdc_places": [
+      "https://data.cdc.gov/resource/swc5-untb.json?$select=locationname,locationid,measureid,measure,data_value,low_confidence_limit,high_confidence_limit,totalpop18plus,geolocation,year,stateabbr,datavaluetypeid&$where=stateabbr%3D'MA'+AND+datavaluetypeid%3D'CrdPrv'&$order=locationname,measureid,:id&$limit=1000&$offset=0"
+    ]
+  },
+  "contact_removals": {
+    "centralContacts": 0,
+    "overallOfficials": 0,
+    "locations[].contacts": 0,
+    "responsibleParty investigator name fields": 0,
+    "locations[] facility/city pattern matches": 544
+  },
+  "missing_geo": {
+    "count": 28,
+    "sites": [
+      {
+        "nctId": "NCT00063882",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT00632853",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT00936390",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT00936390",
+        "facility": "Yale-New Haven Hospital Saint Raphael Campus",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01349322",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01351545",
+        "facility": "Cohen Children's Medical Center of New York",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01351545",
+        "facility": "North Shore University Hospital",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01368588",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01729455",
+        "facility": "GSK Investigational Site",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT01901094",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT02181738",
+        "facility": "Local Institution - 0040",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT03250247",
+        "facility": "New York Presbyterian-Weill Cornell Medicine",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT03414970",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT03695601",
+        "facility": "Northwell Health/ North Shore University Hospital",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04155034",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04166318",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04365374",
+        "facility": "Westchester Medical Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04489225",
+        "facility": "Yale New Haven Hospital",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04498117",
+        "facility": "MetroWest Medical Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT04972942",
+        "facility": "New York Medical College",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT05286892",
+        "facility": "University of Connecticut",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT05329129",
+        "facility": "Central Connecticut Neurosurgery and Spine",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT05544552",
+        "facility": "UMass Memorial Medical Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT05721755",
+        "facility": "Sands Cancer Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT06055608",
+        "facility": "New York Medical College/Boston Children's Health Physicians",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT06827990",
+        "facility": "Westchester Medical Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT07225504",
+        "facility": "U Mass Memorial Medical Center",
+        "location_quality": "missing_geo"
+      },
+      {
+        "nctId": "NCT07768189",
+        "facility": "Yale School of Medicine",
+        "location_quality": "missing_geo"
+      }
+    ]
+  },
+  "invalid_zip_count": 74,
+  "places_duplicates": [],
+  "warnings": []
+}
