@@ -12,6 +12,42 @@
         "chatSessionId": "sess_d3970c62-7d19-41d1-8b9d-f23afae9b3a1",
         "timestamp": 1792861148947
       }
+    ],
+    "3. HTTP_Client": [
+      {
+        "executionId": "2844d9ff-0af0-4b7c-a8ed-d225d02dcbbe",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861261855
+      },
+      {
+        "executionId": "2844d9ff-0af0-4b7c-a8ed-d225d02dcbbe",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861357805
+      }
+    ],
+    "4. Contact_Scrubber and Raw_Store": [
+      {
+        "executionId": "8a07f872-3739-4002-a9ec-31b3598e4722",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861515561
+      },
+      {
+        "executionId": "8a07f872-3739-4002-a9ec-31b3598e4722",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861878054
+      }
+    ],
+    "5. CTGov_Fetcher (Q1 and Q2) and fetch checks": [
+      {
+        "executionId": "d62a3542-95b9-42f6-bc88-9eadb5d8c19d",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861970186
+      },
+      {
+        "executionId": "d62a3542-95b9-42f6-bc88-9eadb5d8c19d",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792862484829
+      }
     ]
   }
 }

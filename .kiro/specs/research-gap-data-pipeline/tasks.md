@@ -43,7 +43,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 13.5, 13.6, 13.7, 14.1, 14.2, 14.5, 14.8_
 
-- [ ] 3. HTTP_Client
+- [x] 3. HTTP_Client
   - Implement `pipeline/data/http_client.py` as specified in design § HTTP_Client:
     - The host allowlist.
     - 4 attempts, with waits of 1, 2, then 4 s.
@@ -60,7 +60,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 9.1–9.5, 9.7, 14.3_
 
-- [ ] 4. Contact_Scrubber and Raw_Store
+- [x] 4. Contact_Scrubber and Raw_Store
   - Implement `pipeline/data/contact_scrubber.py`: an iterative tree walk, `RemovalCounts`, and errors with the page number and URL only (design § Contact_Scrubber).
   - Implement `pipeline/data/raw_store.py`:
     - The file names `ctgov_q1_page_*`, `ctgov_q2_page_*`, and `places_page_*`.
@@ -76,7 +76,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 3.2, 3.4, 3.5, 3.6, 10.1, 10.4, 10.6–10.9, 13.10_
 
-- [ ] 5. CTGov_Fetcher (Q1 and Q2) and fetch checks
+- [x] 5. CTGov_Fetcher (Q1 and Q2) and fetch checks
   - Implement `pipeline/data/ctgov_fetcher.py` as specified in design § CTGov_Fetcher:
     - Q1, then Q2.
     - The `fields` list.
