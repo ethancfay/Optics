@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run vitest on web save",
+      "trigger": "PostFileSave",
+      "description": "When a file under web/src/ is saved, run the web unit tests (vitest) once and report failures.",
+      "matcher": "web/src/.*",
+      "action": {
+        "type": "command",
+        "command": "cd web && npx vitest --run",
+        "timeout": 600
+      }
+    }
+  ]
+}
