@@ -3,8 +3,7 @@
 // Reads the :measureId route param and finds the matching Investigate_Entry in
 // the Investigate_Data provider. It renders the four breakdowns (by overall
 // status, study type, intervention type, phase) from each array's label/count
-// pairs (Req 7.1), the Massachusetts (`ma_studies`) and United States
-// (`us_studies`) counts (Req 7.2), and every finding together with its
+// pairs (Req 7.1), the study counts (Req 7.2, 19; see below), and every finding together with its
 // Evidence_Label badge (Req 7.3) — a causal/uncertain statement is never shown
 // without one of the two labels, which is guaranteed because every Finding in
 // the contract carries a `label` and this component renders the badge for each
@@ -18,11 +17,61 @@
 // Loading / error / empty come from the shared LoadStateView wrapper over the
 // Investigate provider (Req 3.2, 3.3, 3.5).
 
+//
+// Study counts (Req 7.2, 19.3-19.7): the headline is the WHAT `t` for this
+// measure_id, read from What_Data (one source of truth with the WHAT view);
+// `ma_studies` from Investigate_Data comes second; the US row renders only
+// when `us_studies` is a number. The headline and the prevalence-year line
+// depend only on What_Data, so a slow or failed what.json affects just that
+// region while the breakdowns and findings still render (Req 19.6, 3.6).
+
+import type { ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
-import { LoadStateView } from "../components/LoadStateView";
-import { useInvestigateData } from "../data/providers";
-import type { InvestigateEntry, LabelCount } from "../data/types";
+import {
+  DataUnavailable,
+  LoadStateView,
+  LoadingIndicator,
+} from "../components/LoadStateView";
+import { useInvestigateData, useWhatData } from "../data/providers";
+import {
+  selectInvestigateHeadline,
+  type InvestigateHeadline,
+} from "../data/investigateHeadline";
+import type { InvestigateEntry, LabelCount, LoadState, WhatEntry } from "../data/types";
 import "./Investigate.css";
+
+/** Label for the headline count (Req 19.3). */
+export const HEADLINE_LABEL =
+  "Recruiting studies in Massachusetts (used in the index)";
+
+/** Label for the second count, `ma_studies` (Req 19.4). */
+export const MA_STUDIES_LABEL =
+  "Massachusetts studies, all fetched statuses";
+
+/** The "Prevalence data year" line text for a given year (Req 19.7). */
+export function prevalenceYearText(year: string): string {
+  return `Prevalence data year: ${year} (CDC PLACES)`;
+}
+
+/**
+ * Resolve the What_Data state into either a headline (ready/empty) or a node
+ * to show in its place (loading/error naming what.json) (Req 19.5, 19.6).
+ */
+function resolveHeadline(
+  state: LoadState<WhatEntry[]>,
+  measureId: string
+): { headline: InvestigateHeadline } | { pending: ReactNode } {
+  switch (state.status) {
+    case "ready":
+      return { headline: selectInvestigateHeadline(state.data, measureId) };
+    case "empty":
+      return { headline: { t: null, prevalenceYear: null } };
+    case "loading":
+      return { pending: <LoadingIndicator /> };
+    case "error":
+      return { pending: <DataUnavailable file={state.file} /> };
+  }
+}
 
 /**
  * One breakdown table built from an array of {label, count} pairs (Req 7.1).
@@ -77,7 +126,14 @@ export const DRUG_COUNT_CAPTION =
   "Drug means the study lists a drug intervention; it may be an existing drug, comparator or placebo.";
 
 /** The resolved Investigate_Entry view (Req 7.1-7.5). */
-function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
+function InvestigateDetail({
+  entry,
+  whatState,
+}: {
+  entry: InvestigateEntry;
+  whatState: LoadState<WhatEntry[]>;
+}) {
+  const what = resolveHeadline(whatState, entry.measure_id);
   return (
     <article>
       <h1>{entry.condition}</h1>
@@ -91,23 +147,34 @@ function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
       <p className="inv-definition">
         Prevalence means how common a disease is among adults in a place.
       </p>
+      {"headline" in what && what.headline.prevalenceYear !== null && (
+        <p className="inv-prevalence-year">
+          {prevalenceYearText(what.headline.prevalenceYear)}
+        </p>
+      )}
       <ul className="inv-counts">
-        <li>
-          Massachusetts:{" "}
-          <span className="inv-count-value">{entry.ma_studies}</span>{" "}
-          studies across all four fetched statuses (recruiting, not yet
-          recruiting, active not recruiting, and recently updated completed).
-        </li>
-        <li>
-          United States:{" "}
-          {entry.us_studies === null ? (
-            <span className="inv-count-unavailable">
-              National comparison not included in this version
+        <li className="inv-count-headline">
+          {HEADLINE_LABEL}:{" "}
+          {"headline" in what ? (
+            <span className="inv-count-value inv-headline-value">
+              {what.headline.t === null ? "unknown" : what.headline.t}
             </span>
           ) : (
-            <span className="inv-count-value">{entry.us_studies}</span>
+            what.pending
           )}
         </li>
+        <li className="inv-count-ma">
+          {MA_STUDIES_LABEL}:{" "}
+          <span className="inv-count-value">{entry.ma_studies}</span>{" "}
+          (recruiting, not yet recruiting, active not recruiting, and recently
+          updated completed).
+        </li>
+        {entry.us_studies !== null && (
+          <li className="inv-count-us">
+            United States:{" "}
+            <span className="inv-count-value">{entry.us_studies}</span>
+          </li>
+        )}
       </ul>
 
       <h2>How the studies break down</h2>
@@ -180,13 +247,14 @@ function DiseaseNotFound() {
 export default function Investigate() {
   const { measureId } = useParams<{ measureId: string }>();
   const state = useInvestigateData();
+  const whatState = useWhatData();
 
   return (
     <LoadStateView state={state}>
       {(entries) => {
         const entry = entries.find((e) => e.measure_id === measureId);
         return entry ? (
-          <InvestigateDetail entry={entry} />
+          <InvestigateDetail entry={entry} whatState={whatState} />
         ) : (
           <DiseaseNotFound />
         );

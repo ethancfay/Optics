@@ -11,7 +11,8 @@
 //   - the limit that burden is CDC PLACES crude prevalence for adults 18+ with no
 //     disability-adjusted life years or severity measure (Req 11.4);
 //   - the limit that Massachusetts trial activity does not represent all research
-//     relevant to Massachusetts patients (Req 11.5).
+//     relevant to Massachusetts patients (Req 11.5);
+//   - one sentence that a national comparison is planned (Req 11.7).
 //
 // The formula is rendered as plain inline markup (no external math library): the
 // bracketed low-high expression times 100,000, followed by a short legend naming
@@ -41,6 +42,10 @@ export const CRUDE_PREVALENCE_LIMIT =
 
 export const MA_ACTIVITY_LIMIT =
   "This measures Massachusetts trial activity. It does not stand for all research that matters to Massachusetts patients.";
+
+/** The deferred national comparison, stated once (Req 11.7). */
+export const NATIONAL_COMPARISON_PLANNED =
+  "A national (United States) comparison is planned for a later version and is not included here.";
 
 /**
  * Render the Sources section: one named link per Source_Entry to its `url`, each
@@ -153,6 +158,7 @@ export default function Method() {
         <ul>
           <li>{CRUDE_PREVALENCE_LIMIT}</li>
           <li>{MA_ACTIVITY_LIMIT}</li>
+          <li>{NATIONAL_COMPARISON_PLANNED}</li>
         </ul>
       </section>
     </div>

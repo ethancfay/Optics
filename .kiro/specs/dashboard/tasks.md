@@ -285,24 +285,24 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Spec-change checkpoint: do not start 18.2-18.6 until the spec changes are approved.
     - _Requirements: 19.1-19.9_
 
-  - [ ] 18.2 Copy prevalence years from `places_ma.csv`
+  - [x] 18.2 Copy prevalence years from `places_ma.csv`
     - Set `prevalence_year` in `web/public/data/what.json` for each `measure_id` from the `year` column of `pipeline/processed/places_ma.csv` (rows with matching `measureid`); stop and report if a measure has 0 or >1 distinct years. Mirror the same map in `sources.json` `prevalence_years`.
     - Add a fixture test that `sources.json` `prevalence_years` equals the `what.json` `prevalence_year` values.
     - Add a data test tagged `// Feature: dashboard, Property 16: ...` over the shipped files: for every `measure_id`, `what.t <= investigate.ma_studies`. If any measure violates it, report the values and fix the sample numbers, not the test.
     - _Requirements: 2.1, 2.5, 19.1, 19.2, 19.9_
 
-  - [ ] 18.3 Investigate headline from What_Data, ma_studies second, no US row when null
+  - [x] 18.3 Investigate headline from What_Data, ma_studies second, no US row when null
     - Wrap `/investigate/:measureId` in `WhatDataProvider` + `InvestigateDataProvider`. Add pure `selectInvestigateHeadline(whatEntries, measureId)`.
     - Headline: What `t` labeled "Recruiting studies in Massachusetts (used in the index)"; "unknown" when no entry; loading/error for `what.json` in that region only. Then `ma_studies` labeled as all fetched statuses. Render the US row only when `us_studies` is a number.
     - Update the existing `us_studies: null` test to assert the US row is absent; update tests that assume the old count layout.
     - Property test tagged `// Feature: dashboard, Property 15: ...` at `numRuns: 100`: for any generated what/investigate pair, the rendered headline equals `what.t` for that `measure_id` ("unknown" when absent).
     - _Requirements: 7.2, 19.3, 19.4, 19.5, 19.6, 19.8_
 
-  - [ ] 18.4 Show the prevalence data year on Investigate
+  - [x] 18.4 Show the prevalence data year on Investigate
     - Below the prevalence definition, render "Prevalence data year: <year> (CDC PLACES)" from the What_Entry's `prevalence_year`; omit when missing. Unit tests for present and missing.
     - _Requirements: 19.7_
 
-  - [ ] 18.5 Method page: national comparison is planned
+  - [x] 18.5 Method page: national comparison is planned
     - Add the `NATIONAL_COMPARISON_PLANNED` sentence to the Method page and a test for it.
     - _Requirements: 11.7_
 

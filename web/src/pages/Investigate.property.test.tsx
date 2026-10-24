@@ -25,8 +25,10 @@ import type {
 // instead of performing a (forbidden) real fetch. The property holds for the
 // `ready` state carrying the generated entry; the mock is re-pointed per run.
 const useInvestigateDataMock = vi.fn<() => LoadState<InvestigateEntry[]>>();
+// The headline reads What_Data; an empty state is enough for this property.
 vi.mock("../data/providers", () => ({
   useInvestigateData: () => useInvestigateDataMock(),
+  useWhatData: (): LoadState<unknown[]> => ({ status: "empty" }),
 }));
 
 // Import AFTER the mock is registered so Investigate picks up the mocked hook.

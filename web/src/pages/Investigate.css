@@ -80,8 +80,19 @@
   line-height: 1.45;
 }
 
-/* The deferred national-comparison placeholder, shown in place of a US count. */
-.inv-count-unavailable {
+/* CDC PLACES data year, shown under the prevalence definition (Req 19.7). */
+.inv-prevalence-year {
+  margin: 8px 0 0;
   color: var(--muted);
-  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* The headline count (WHAT `t`) leads the counts list (Req 19.3). */
+.inv-count-headline {
+  font-weight: 600;
+}
+
+.inv-count-headline .load-state {
+  display: inline;
+  font-weight: 400;
 }
