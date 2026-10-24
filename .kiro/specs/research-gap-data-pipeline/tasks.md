@@ -27,7 +27,7 @@ Rules for every task:
   - Done when: `probe_results.md`, `requirements.md`, and `tech.md` are updated, there are no core failures, and the owner has reviewed the results. No code is written and no tests run in this task.
   - _Requirements: 1.1, 1.7, 1.9, 1.11, 2.1–2.3, 3.1, 4.1, 4.2, 5.1–5.4, 6.1, 6.5, 6.8_
 
-- [ ] 2. Scaffold the package, version check, and test harness
+- [x] 2. Scaffold the package, version check, and test harness
   - Create the module layout in design § Module layout. This covers the `pipeline/` subpackages `data/`, `transform/`, and `io/`, plus `pipeline/errors.py`, an empty `pipeline/__init__.py`, and `tests/` mirroring `pipeline/` with `__init__.py` files.
   - `pipeline/__main__.py`:
     - The version check, written so any Python 3 can parse it (design § Version check).
