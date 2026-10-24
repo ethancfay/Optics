@@ -69,25 +69,42 @@ const urlPathArb = fc.string({
   maxLength: 30,
 });
 
-// fetched date in YYYY-MM-DD form.
+// fetched date in YYYY-MM-DD form. `noInvalidDate: true` keeps `fc.date` from
+// ever yielding an `Invalid Date`, whose `.toISOString()` throws
+// "RangeError: Invalid time value".
 const fetchedArb = fc
-  .date({ min: new Date("2000-01-01T00:00:00Z"), max: new Date("2099-12-31T00:00:00Z") })
+  .date({
+    min: new Date("2000-01-01T00:00:00Z"),
+    max: new Date("2099-12-31T00:00:00Z"),
+    noInvalidDate: true,
+  })
   .map((d) => d.toISOString().slice(0, 10));
 
 const dataAsOfArb = fc
-  .date({ min: new Date("2000-01-01T00:00:00Z"), max: new Date("2099-12-31T00:00:00Z") })
+  .date({
+    min: new Date("2000-01-01T00:00:00Z"),
+    max: new Date("2099-12-31T00:00:00Z"),
+    noInvalidDate: true,
+  })
   .map((d) => d.toISOString().slice(0, 10));
 
 // A Sources_Data with 1..N sources. URLs are made unique by appending the array
 // index to the generated path so each Source_Entry has a distinct `url` (the
-// components use `url` as the React key).
+// components use `url` as the React key). Source NAMES are also generated unique
+// (via `fc.uniqueArray` keyed by `name`): the real `sources.json` never repeats
+// a source name, and both renderings assert exactly one link per source name,
+// so duplicate names are out of the property's domain.
 const sourcesDataArb: fc.Arbitrary<SourcesData> = fc
   .record({
     data_as_of: dataAsOfArb,
     is_sample: fc.option(fc.boolean(), { nil: undefined }),
-    sources: fc.array(
+    sources: fc.uniqueArray(
       fc.record({ name: nameArb, url: urlPathArb, fetched: fetchedArb }),
-      { minLength: 1, maxLength: 6 }
+      {
+        minLength: 1,
+        maxLength: 6,
+        selector: (s) => s.name,
+      }
     ),
   })
   .map(({ data_as_of, is_sample, sources }) => ({
