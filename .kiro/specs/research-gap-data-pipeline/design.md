@@ -498,6 +498,14 @@ def check(tables: dict[str, EncodedTable]) -> None   # raises PipelineError list
   - Row identifiers: `nctId` for studies, `nctId` plus the 1-based data row position for sites, and `locationname` plus `measureid` for PLACES.
 - Without the `(?<![\d.])` lookbehind, the decimal part of a high-precision coordinate (such as `-71.8123456789`) would match the phone pattern. With it, a run of 10 or more digits right after a decimal point is not treated as a phone number. Phone numbers written straight after a `.` with no space are missed by the guard. In the pipeline's actual fields, the Contact_Scrubber is the main defence, so this risk is accepted.
 
+Implementation details fixed in task 10:
+
+- `find_matches(tables) -> list[str]` returns the match entries without raising. `check` calls it and raises when the list is not empty (Req 8.2, 8.4).
+- A match is counted once per (file, row, field, pattern). A list cell counts once for a pattern even if both the encoded cell and several decoded elements match. The total in the message is the number of entries (Req 8.4).
+- Entries are listed in table order `studies`, `sites`, `places`, then row order as written, then column order, with `email` before `phone`.
+- Each entry reads `<file>: <row identifier>: field <name>: <email|phone>`. Row identifiers are `nctId=<value>` for studies, `nctId=<value>, row <n>` for sites, and `locationname=<value>, measureid=<value>` for PLACES (Req 8.4).
+- If an identifier cell itself matches a pattern, its value is written as `<redacted>`, so the message never carries matched text (Req 8.4, 3.3).
+
 ### Sanity_Checker (`pipeline/transform/sanity_checker.py`), Req 11
 
 ```python
@@ -506,6 +514,12 @@ def check(studies, sites, places) -> list[str]   # warning texts, also printed t
 
 - Warning 1: count the distinct `nctId`s where `studyType == "INTERVENTIONAL"` and some site has a casefolded state of `massachusetts` or `ma` and `siteStatus == "RECRUITING"`. Warn if the count is below 2,000, and state the count and the threshold.
 - Warning 2: warn if the number of distinct `locationname` values is not 14, and state the count and the expected 14.
+
+Implementation details fixed in task 10:
+
+- The signature is `check(studies, sites, places, stream=None) -> list[str]`. `stream` defaults to `sys.stderr`, read at call time. Tests pass a `StringIO` (Req 11.1, 11.2).
+- The inputs are `StudyRow`, `SiteRow`, and `PlacesRow` objects, so the checker runs before encoding and needs no CSV parsing (Req 11.5).
+- The counts are exposed as `ma_recruiting_interventional_count(studies, sites)` and `county_count(places)`. Site state is stripped and casefolded before the comparison, as in Req 5.3.
 
 ### Fetch_Log_Writer (`pipeline/io/fetch_log_writer.py`), Req 12
 
@@ -536,6 +550,15 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
 - `contact_removals`: in a network run, these are the scrubber totals from that run. In Offline_Mode, they are the totals stored in the manifest plus the re-scrub totals. The re-scrub totals are 0 unless the raw files were edited, so offline logs match the network log. If they were edited, the log reports the extra removals.
 - The row counts in `files` are the data row counts of the tables that were encoded and written (Req 12.7).
 - `missing_geo.sites` is sorted by `nctId`, then `facility`. `places_duplicates` is sorted by `locationid`, then `measureid`.
+
+Implementation details fixed in task 10:
+
+- `build_fetch_log(*, run_started_at, run_mode, fetch_date, tables, pages_by_query, q2_server_cutoff, urls, contact_removals, missing_geo, places_duplicates, warnings) -> dict` builds the log object. All arguments are keyword-only.
+- `serialize(log) -> bytes` gives the file bytes. The module does not write files; the atomic output step writes `fetch_log.json` (Req 12.1, 12.10).
+- `tables` is the dict of `EncodedTable`s that will be written, so the `files` counts are the written data row counts (Req 12.2, 12.7).
+- `pages_by_query` is the same `{"q1": [...], "q2": [...]}` dict the fetch checks use. `query_counts(pages_by_query)` reads `totalCount` from each query's page 1 and counts the `studies` elements across its pages, in both network and offline runs (Req 1.9, 12.11). A `totalCount` that is not an `int` is written as `null`. The fetch check stops such runs before the log is built.
+- `run_started_at` and `fetch_date` are written with `format_fetch_date` from `raw_store.py` (Req 12.4).
+- `urls` always has both keys, `clinicaltrials_gov` then `cdc_places` (Req 12.5).
 
 ### Atomic output (`pipeline/io/atomic.py`), Req 7.1, 7.10, 8.2, 9.6, 12.1, 12.9
 

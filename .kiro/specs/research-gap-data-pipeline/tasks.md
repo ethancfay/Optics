@@ -147,7 +147,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 6.1–6.8, 13.11_
 
-- [-] 9. CSV_Writer and CSV_Reader
+- [x] 9. CSV_Writer and CSV_Reader
   - Implement `pipeline/io/csv_writer.py` as specified in design § CSV_Writer:
     - Column order.
     - Sorting with the tie-breakers.
@@ -163,7 +163,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 7.2–7.9, 13.4_
 
-- [ ] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
+- [-] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
   - Implement `pipeline/transform/pii_guard.py` as specified in design § PII_Guard:
     - Scan the encoded cells and each decoded list item.
     - Report every match, with file, row identifier, field, and pattern, but never the matched text.
