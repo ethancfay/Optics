@@ -1,0 +1,582 @@
+{
+  "pbtResults": {
+    "4.2 Write property test for index ordering": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870747985
+    },
+    "4.3 Write property test for prevalence bounds": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870835245
+    },
+    "6.2 Write property test for distinct-count integrity": {
+      "status": "passed",
+      "lastRunTimestamp": 1792871154429
+    },
+    "7.2 Write property test for findings label validity": {
+      "status": "passed",
+      "lastRunTimestamp": 1792871247001
+    },
+    "10.3 Write property test for schema conformance": {
+      "status": "passed",
+      "lastRunTimestamp": 1792871636236
+    }
+  },
+  "executionHistory": {
+    "1.1 Create the `pipeline/scoring/` package and shared data models": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870081941
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870088760
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870180985
+      }
+    ],
+    "1.2 Create the `tests/scoring/` test package and a `study_diseases.csv` fixture": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870081978
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870184007
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870368250
+      }
+    ],
+    "1.3 Extend `tests/strategies.py` with scoring input strategies": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082008
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870185419
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870369185
+      }
+    ],
+    "2.1 Implement `pipeline/scoring/readers.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082034
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870186154
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870370178
+      }
+    ],
+    "2.2 Write unit tests for the Readers": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082061
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870376970
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870555614
+      }
+    ],
+    "3.1 Implement `pipeline/scoring/index.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082103
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870376112
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870556351
+      }
+    ],
+    "3.2 Write unit tests for the MA_Index_Builder": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082127
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870559405
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870672166
+      }
+    ],
+    "4.1 Implement `pipeline/scoring/scoring.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082152
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870560330
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870671465
+      }
+    ],
+    "4.2 Write property test for index ordering": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082182
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870675775
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870852417
+      }
+    ],
+    "4.3 Write property test for prevalence bounds": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082207
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870677226
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870854766
+      }
+    ],
+    "4.4 Write unit tests for null propagation and rounding": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082234
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870678107
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870853907
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082260
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871767144
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871821829
+      }
+    ],
+    "6.1 Implement `pipeline/scoring/decompose.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082285
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870679075
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870851524
+      }
+    ],
+    "6.2 Write property test for distinct-count integrity": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082310
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870980809
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871168258
+      }
+    ],
+    "6.3 Write unit tests for decomposition labels": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082342
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870981773
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871169084
+      }
+    ],
+    "7.1 Implement `pipeline/scoring/findings.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082374
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870979859
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871171175
+      }
+    ],
+    "7.2 Write property test for findings label validity": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082402
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871174435
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871325323
+      }
+    ],
+    "7.3 Write unit tests for the Drug finding and forbidden-term absence": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082433
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871176357
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871326269
+      }
+    ],
+    "8. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082458
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871824321
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871827071
+      }
+    ],
+    "9.1 Implement `pipeline/scoring/evidence.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082484
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870861440
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870975888
+      }
+    ],
+    "9.2 Implement `pipeline/scoring/sources.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082510
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870680117
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870855531
+      }
+    ],
+    "9.3 Write unit tests for Evidence_Builder and Sources_Builder": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082539
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870982851
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871170481
+      }
+    ],
+    "10.1 Implement serialization and PII_Check in `pipeline/scoring/export.py`": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082567
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871175477
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871327310
+      }
+    ],
+    "10.2 Implement atomic `write_all` and the `__main__` entry point": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082591
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871330099
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871528255
+      }
+    ],
+    "10.3 Write property test for schema conformance": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082617
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871532404
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871693207
+      }
+    ],
+    "10.4 Write unit tests for PII_Check, determinism, and atomic rollback": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082642
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871531456
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871693976
+      }
+    ],
+    "11.1 Write an end-to-end integration test wiring all components": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082667
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871533355
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871692168
+      }
+    ],
+    "11.2 Confirm no network access during scoring": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082715
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871696889
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871761984
+      }
+    ],
+    "12. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870082742
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871829553
+      },
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871832396
+      }
+    ],
+    "1. Set up scoring package, shared types, and the study_diseases fixture": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870369220
+      }
+    ],
+    "2. Implement the Readers": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870555655
+      }
+    ],
+    "3. Implement the MA_Index_Builder": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870672201
+      }
+    ],
+    "4. Implement the Scoring_Engine": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792870854798
+      }
+    ],
+    "6. Implement the Decomposer": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871169123
+      }
+    ],
+    "9. Implement the Evidence_Builder and Sources_Builder": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871170513
+      }
+    ],
+    "7. Implement the Findings_Generator": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871326302
+      }
+    ],
+    "10. Implement PII_Check, deterministic serialization, and atomic writing": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871694010
+      }
+    ],
+    "11. Integration wiring and network-block confirmation": [
+      {
+        "executionId": "a5ada9e0-9490-473d-8e68-13123d864eb7",
+        "chatSessionId": "sess_fa54353d-1efe-4e82-a1de-bd38acdf5059",
+        "timestamp": 1792871762027
+      }
+    ]
+  }
+}

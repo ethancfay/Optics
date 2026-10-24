@@ -1,0 +1,11 @@
+nctId,measureid,disease_label,match_status,exclusion_reason,matched_on,matched_term
+NCT00000001,CASTHMA,Asthma,included,,mesh,Asthma
+NCT00000001,DIABETES,Diabetes Mellitus,included,,ancestor,Diabetes Mellitus
+NCT00000002,CASTHMA,Childhood Asthma,excluded,child_only,condition_text,pediatric asthma
+NCT00000002,HIGHCHOL,Hypercholesterolemia,included,,mesh,Hypercholesterolemia
+NCT00000003,DIABETES,Gestational Diabetes,excluded,gestational,mesh,Diabetes Gestational
+NCT00000003,HIGHCHOL,High Cholesterol,questionable,,condition_text,lipid disorder
+NCT00000004,CASTHMA,Reactive Airway Disease,questionable,,ancestor,Respiratory Hypersensitivity
+NCT00000004,DIABETES,Type 2 Diabetes,included,,mesh,Diabetes Mellitus Type 2
+NCT00000005,HIGHCHOL,Healthy Volunteers Lipid Study,excluded,healthy_volunteers_only,condition_text,cholesterol
+NCT00000005,DIABETES,Diabetes,included,,ancestor,Diabetes Mellitus
