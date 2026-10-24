@@ -174,19 +174,22 @@ a:hover {
 /* --- Tables --------------------------------------------------------------- */
 
 /*
- * Shared table styling for the Investigate breakdown tables (.inv-table) and
- * the chart/map text-alternative tables (.dw-table). Full width, --surface
- * header row, 12px cells, --border row rules, numbers right-aligned.
+ * Shared table styling for the Investigate breakdown tables (.inv-table), the
+ * chart text-alternative tables (.dw-table) and the map text alternative
+ * (.county-map__table). Full width, --surface header row, 12px cells,
+ * --border row rules, numbers right-aligned.
  */
 .inv-table,
-.dw-table {
+.dw-table,
+.county-map__table {
   width: 100%;
   border-collapse: collapse;
   margin: 0 0 12px;
 }
 
 .inv-table caption,
-.dw-table caption {
+.dw-table caption,
+.county-map__table caption {
   text-align: left;
   color: var(--ink);
   font-weight: 600;
@@ -194,7 +197,8 @@ a:hover {
 }
 
 .inv-table th,
-.dw-table th {
+.dw-table th,
+.county-map__table th {
   background: var(--surface);
   color: var(--ink);
   font-weight: 600;
@@ -204,7 +208,8 @@ a:hover {
 }
 
 .inv-table td,
-.dw-table td {
+.dw-table td,
+.county-map__table td {
   padding: 12px;
   border-bottom: 1px solid var(--border);
   color: var(--ink);
@@ -312,6 +317,7 @@ a:hover {
 .where-intro {
   color: var(--muted);
   max-width: 70ch;
+  margin-bottom: 24px;
 }
 
 /* --- Method --------------------------------------------------------------- */

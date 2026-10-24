@@ -37,6 +37,7 @@ import {
   type CountyState,
   type DistanceBucket,
 } from "../data/where";
+import "./CountyMap.css";
 
 /** Message shown when there is no Where_Data to drive the map (Req 9.6). */
 export const NO_DISTANCE_DATA_MESSAGE = "No distance data is available";
