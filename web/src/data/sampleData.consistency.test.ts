@@ -1,0 +1,105 @@
+// Cross-file consistency checks over the SHIPPED data files in web/public/data/
+// (Req 2.1, 2.5, 19.1, 19.2, 19.9). These read files from disk; no network.
+//
+// Feature: dashboard, Property 16: The recruiting count never exceeds the all-statuses count
+// Property 16 is an invariant of the shipped data (t_ids ⊆ eligible_ids in the
+// scoring-export design), so it is a data test rather than a fast-check
+// generator. If it fails, fix the sample numbers, not this test (Req 19.9).
+
+import { readFileSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+import type { InvestigateEntry, SourcesData, WhatEntry } from "./types";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = resolve(HERE, "../../public/data");
+const PLACES_CSV = resolve(HERE, "../../../pipeline/processed/places_ma.csv");
+
+function readData<T>(file: string): T {
+  return JSON.parse(readFileSync(resolve(DATA_DIR, file), "utf8")) as T;
+}
+
+const what = readData<WhatEntry[]>("what.json");
+const investigate = readData<InvestigateEntry[]>("investigate.json");
+const sources = readData<SourcesData>("sources.json");
+
+/**
+ * Distinct `year` values per `measureid` in places_ma.csv. Columns are located
+ * by header name; a minimal quote-aware splitter handles quoted `measure` text.
+ */
+function placesYearsByMeasure(): Map<string, Set<string>> {
+  const lines = readFileSync(PLACES_CSV, "utf8").split("\n").filter((l) => l.length > 0);
+  const split = (line: string): string[] => {
+    const cells: string[] = [];
+    let cur = "";
+    let quoted = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (quoted) {
+        if (ch === '"' && line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else if (ch === '"') quoted = false;
+        else cur += ch;
+      } else if (ch === '"') quoted = true;
+      else if (ch === ",") {
+        cells.push(cur);
+        cur = "";
+      } else cur += ch;
+    }
+    cells.push(cur);
+    return cells;
+  };
+  const header = split(lines[0]);
+  const mi = header.indexOf("measureid");
+  const yi = header.indexOf("year");
+  const out = new Map<string, Set<string>>();
+  for (const line of lines.slice(1)) {
+    const cells = split(line);
+    const set = out.get(cells[mi]) ?? new Set<string>();
+    set.add(cells[yi]);
+    out.set(cells[mi], set);
+  }
+  return out;
+}
+
+describe("Prevalence year provenance (Req 2.1, 2.5, 19.1, 19.2)", () => {
+  it("each what.json prevalence_year is the single PLACES `year` for that measure", () => {
+    const years = placesYearsByMeasure();
+    for (const entry of what) {
+      const set = years.get(entry.measure_id);
+      expect(set, `no PLACES rows for ${entry.measure_id}`).toBeDefined();
+      expect([...set!], `${entry.measure_id} years`).toHaveLength(1);
+      expect(entry.prevalence_year, entry.measure_id).toBe([...set!][0]);
+    }
+  });
+
+  it("sources.json prevalence_years mirrors what.json exactly", () => {
+    const expected: Record<string, string> = {};
+    for (const entry of what) {
+      if (entry.prevalence_year) expected[entry.measure_id] = entry.prevalence_year;
+    }
+    expect(sources.prevalence_years).toEqual(expected);
+  });
+});
+
+describe("Property 16: what.t <= investigate.ma_studies for every measure (Req 19.9)", () => {
+  it("recruiting MA studies never exceed all fetched MA studies", () => {
+    const byId = new Map(investigate.map((e) => [e.measure_id, e]));
+    const violations: string[] = [];
+    for (const entry of what) {
+      const inv = byId.get(entry.measure_id);
+      if (inv === undefined) continue;
+      if (!(entry.t <= inv.ma_studies)) {
+        violations.push(`${entry.measure_id}: t=${entry.t} > ma_studies=${inv.ma_studies}`);
+      }
+    }
+    expect(violations).toEqual([]);
+  });
+
+  it("every what.json measure has an investigate.json entry to compare against", () => {
+    const ids = new Set(investigate.map((e) => e.measure_id));
+    expect(what.map((e) => e.measure_id).filter((id) => !ids.has(id))).toEqual([]);
+  });
+});

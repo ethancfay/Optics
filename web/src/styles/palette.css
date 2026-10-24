@@ -1,0 +1,51 @@
+/*
+ * Colour-blind-safe palette (single source of truth).
+ *
+ * All colours below are verified for WCAG AA contrast against a white
+ * (#FFFFFF) page background: >= 4.5:1 for normal text (--ink, --accent,
+ * --focus) and >= 3:1 for large text / graphical objects (chart marks,
+ * focus rings). (Req 15.1)
+ *
+ * The sequential blue ramp (--seq-1 .. --seq-5, light -> dark) is a
+ * single-hue choropleth scale chosen so it stays distinguishable under all
+ * common colour-vision deficiencies. It deliberately avoids any red/green
+ * pairing, so hue is never the sole carrier of meaning. (Req 9.5, 15.2)
+ *
+ * --unknown is the fill for counties in the Unknown_Distance state. It is
+ * always paired with an SVG hatch pattern (and "unknown" legend/table text),
+ * so the unknown state is never distinguished by colour alone. (Req 5.8, 15.2)
+ */
+:root {
+  --bg: #FFFFFF;
+  --ink: #1A1A1A;             /* body text, ~16:1 on white */
+  --accent: #0F6CBD;          /* links, chart dot/whisker; AA on white */
+  --focus: #B54708;           /* visible focus ring, AA on white */
+
+  /* Sequential blue choropleth ramp (light -> dark), colour-blind safe */
+  --seq-1: #DEEBF7;
+  --seq-2: #9ECAE1;
+  --seq-3: #4292C6;
+  --seq-4: #2171B5;
+  --seq-5: #08519C;
+
+  --unknown: #BDBDBD;         /* "unknown" fill, paired with a hatch pattern */
+
+  /*
+   * Visual-design surface tokens (web/src/styles/visual-design steering). These
+   * drive the dashboard "chrome" — page background, cards, borders, secondary
+   * text, and the soft accent tint — and are verified for WCAG AA contrast:
+   * --ink on --surface and on --card stays >= 4.5:1, and --muted on --card and
+   * on --surface stays >= 4.5:1 for normal text.
+   */
+  --surface: #F6F8FB;         /* page background */
+  --card: #FFFFFF;            /* card / panel background */
+  --border: #E3E8EF;          /* hairline borders and table rules */
+  --muted: #5B6573;           /* secondary text, >= 4.5:1 on --card/--surface */
+  --accent-soft: #E8F1FB;     /* soft accent tint, e.g. the sample banner */
+
+  /* Elevation + radii + shadow used across cards, buttons, and badges. */
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06),
+    0 1px 3px rgba(16, 24, 40, 0.08);
+}
