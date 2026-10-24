@@ -277,6 +277,43 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Commit as two commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `evidence.json` data change and any updated tests.
     - _Requirements: 18.1, 18.2, 18.4_
 
+- [ ] 18. Consistent counts, visible prevalence year, cleanup
+  - _Requirements: 2.1, 2.5, 7.2, 11.7, 19.1-19.9_
+
+  - [x] 18.1 Confirm the spec reflects the plan (requirements.md + design.md)
+    - Requirement 19 (new, incl. 19.9 t <= ma_studies), amended Req 2.1, 2.5, 7.2, 11.7; design Investigate/Method page notes, sample-data plan, Error Handling rows, Properties 15 and 16, generator-hygiene note.
+    - Spec-change checkpoint: do not start 18.2-18.6 until the spec changes are approved.
+    - _Requirements: 19.1-19.9_
+
+  - [ ] 18.2 Copy prevalence years from `places_ma.csv`
+    - Set `prevalence_year` in `web/public/data/what.json` for each `measure_id` from the `year` column of `pipeline/processed/places_ma.csv` (rows with matching `measureid`); stop and report if a measure has 0 or >1 distinct years. Mirror the same map in `sources.json` `prevalence_years`.
+    - Add a fixture test that `sources.json` `prevalence_years` equals the `what.json` `prevalence_year` values.
+    - Add a data test tagged `// Feature: dashboard, Property 16: ...` over the shipped files: for every `measure_id`, `what.t <= investigate.ma_studies`. If any measure violates it, report the values and fix the sample numbers, not the test.
+    - _Requirements: 2.1, 2.5, 19.1, 19.2, 19.9_
+
+  - [ ] 18.3 Investigate headline from What_Data, ma_studies second, no US row when null
+    - Wrap `/investigate/:measureId` in `WhatDataProvider` + `InvestigateDataProvider`. Add pure `selectInvestigateHeadline(whatEntries, measureId)`.
+    - Headline: What `t` labeled "Recruiting studies in Massachusetts (used in the index)"; "unknown" when no entry; loading/error for `what.json` in that region only. Then `ma_studies` labeled as all fetched statuses. Render the US row only when `us_studies` is a number.
+    - Update the existing `us_studies: null` test to assert the US row is absent; update tests that assume the old count layout.
+    - Property test tagged `// Feature: dashboard, Property 15: ...` at `numRuns: 100`: for any generated what/investigate pair, the rendered headline equals `what.t` for that `measure_id` ("unknown" when absent).
+    - _Requirements: 7.2, 19.3, 19.4, 19.5, 19.6, 19.8_
+
+  - [ ] 18.4 Show the prevalence data year on Investigate
+    - Below the prevalence definition, render "Prevalence data year: <year> (CDC PLACES)" from the What_Entry's `prevalence_year`; omit when missing. Unit tests for present and missing.
+    - _Requirements: 19.7_
+
+  - [ ] 18.5 Method page: national comparison is planned
+    - Add the `NATIONAL_COMPARISON_PLANNED` sentence to the Method page and a test for it.
+    - _Requirements: 11.7_
+
+  - [ ] 18.6 Test hygiene: unique generated labels
+    - Build keyed generated arrays (breakdown labels, What `measure_id`s) with `fc.uniqueArray` + `selector` in the Investigate and Forbidden_Terms property tests (and any other generator that feeds a keyed list), like the Property 8 fix. The full run must print no duplicate-key warning.
+    - _Requirements: testing strategy (design "Generator hygiene")_
+
+  - [ ] 18.7 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
+    - Commits: (a) spec; (b) data (`what.json`, `sources.json` + fixture test); (c) Investigate + Method changes with tests; (d) test hygiene.
+
 ## Notes
 
 - Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 14 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
@@ -301,7 +338,11 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     { "id": 8, "tasks": ["17.1"] },
     { "id": 9, "tasks": ["17.2", "17.3"] },
     { "id": 10, "tasks": ["17.4"] },
-    { "id": 11, "tasks": ["17.5"] }
+    { "id": 11, "tasks": ["17.5"] },
+    { "id": 12, "tasks": ["18.1"] },
+    { "id": 13, "tasks": ["18.2", "18.5", "18.6"] },
+    { "id": 14, "tasks": ["18.3", "18.4"] },
+    { "id": 15, "tasks": ["18.7"] }
   ]
 }
 ```
