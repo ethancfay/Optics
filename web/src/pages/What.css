@@ -1,0 +1,69 @@
+/*
+ * Styles for the WHAT view's two cards (Req 8.1, 8.2, 10).
+ *
+ * Presentational only. The chart card holds the DotWhiskerChart plus the two
+ * mandatory caveats beside it; the picker card holds a labelled disease select.
+ * All colours reference the palette custom properties in
+ * `src/styles/palette.css` (single source of truth); this file introduces no
+ * raw colour values. Content sits on light inner panels so text stays legible
+ * on the navy card and keeps WCAG AA contrast (Req 2.5).
+ */
+
+/* The chart + caveats block inside the chart card. */
+.what-chart-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/*
+ * The caveats sit beside the chart (not inside the SVG). On a light inner panel
+ * so the text reads at AA contrast on the navy card.
+ */
+.what-caveats {
+  background-color: var(--panel, var(--accent-soft));
+  color: var(--ink);
+  border-radius: var(--radius-control);
+  padding: 16px;
+}
+
+.what-caveat {
+  margin: 0;
+  color: var(--ink);
+}
+
+.what-caveat + .what-caveat {
+  margin-top: 8px;
+}
+
+/* The no-disease-data message shown in place of the chart/picker. */
+.what-no-data {
+  margin: 0;
+  color: var(--ink-on-card, var(--ink));
+}
+
+/* The disease picker inside the picker card. */
+.what-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.what-picker-label {
+  color: var(--ink-on-card, var(--ink));
+}
+
+.what-picker-select {
+  max-width: 420px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--panel, var(--accent-soft));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+
+.what-picker-select:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}

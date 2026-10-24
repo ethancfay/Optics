@@ -15,6 +15,12 @@
 // (Req 12.3, 17).
 //
 // This is a static route component: it reads no providers and loads no data.
+//
+// Restyle (Req 12.1): the page content is wrapped in a single reusable Card
+// titled exactly "How we built it with Kiro"; all existing copy and links are
+// preserved unchanged.
+
+import Card from "../components/Card";
 
 /** Base for every GitHub blob link; the repo's default branch is `main`. */
 const REPO_BLOB_BASE = "https://github.com/ethancfay/research-gap-index/blob/main";
@@ -79,8 +85,7 @@ function LinkList({ links }: { links: readonly RepoLink[] }) {
 export default function Build() {
   return (
     <div className="build-page">
-      <h1>How we built it with Kiro</h1>
-
+      <Card title="How we built it with Kiro" className="build-page__card">
       <p className="build-page__intro">
         We built this site with Kiro, an AI coding tool. We started by writing
         the requirements, the design, and a task list, then let Kiro work
@@ -109,6 +114,7 @@ export default function Build() {
           </li>
         </ul>
       </section>
+      </Card>
     </div>
   );
 }

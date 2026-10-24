@@ -105,6 +105,33 @@ describe("DotWhiskerChart", () => {
     expect(cells[2]).toHaveTextContent("3"); // high
   });
 
+  it("renders a direct low-high value label adjacent to every disease's whisker (Req 9.2, 9.3)", () => {
+    const entries = [
+      makeEntry({ condition: "Asthma", measure_id: "CASTHMA", low: 1, mid: 2, high: 3 }),
+      makeEntry({ condition: "Diabetes", measure_id: "DIABETES", low: 4, mid: 5, high: 6 }),
+      makeEntry({ condition: "High Cholesterol", measure_id: "HIGHCHOL", low: 2, mid: 3, high: 5 }),
+    ];
+    renderChart(entries);
+
+    const svg = screen.getByRole("img");
+    const labels = Array.from(
+      svg.querySelectorAll(".dw-value-label")
+    ).map((node) => node.textContent);
+
+    // One direct value label per disease, each spelling out that disease's own
+    // low-high range (en dash between the bounds).
+    expect(labels).toEqual(["1\u20133", "4\u20136", "2\u20135"]);
+  });
+
+  it("falls back to \"unavailable\" in a whisker's value label when a bound is non-finite (Req 6.5, 9.2)", () => {
+    const entry = makeEntry({ high: undefined as unknown as number });
+    renderChart([entry]);
+
+    const svg = screen.getByRole("img");
+    const label = svg.querySelector(".dw-value-label");
+    expect(label?.textContent).toBe("1\u2013unavailable");
+  });
+
   it("navigates to /investigate/:measureId when a row's condition button is activated (Req 5.5, 6.3)", () => {
     const entry = makeEntry({ condition: "High Cholesterol", measure_id: "HIGHCHOL" });
     renderChart([entry]);

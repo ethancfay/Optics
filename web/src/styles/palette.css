@@ -1,25 +1,92 @@
 /*
  * Colour-blind-safe palette (single source of truth).
  *
- * All colours below are verified for WCAG AA contrast against a white
- * (#FFFFFF) page background: >= 4.5:1 for normal text (--ink, --accent,
- * --focus) and >= 3:1 for large text / graphical objects (chart marks,
- * focus rings). (Req 15.1)
+ * --------------------------------------------------------------------------
+ * PALETTE RECONCILIATION (frontend-redesign, Req 3.1, 3.2)
+ * --------------------------------------------------------------------------
+ * These Palette_Tokens are the AUTHORITATIVE palette for the frontend-redesign
+ * feature and DELIBERATELY SUPERSEDE the token palette defined in
+ * `.kiro/steering/visual-design.md` (Visual_Design_Steering), which specified a
+ * lighter chrome (`--surface: #F6F8FB`, white `--card`, etc.). The redesign
+ * mockups call for a cream page, dark navy cards, and light-blue inner panels;
+ * that mockup palette wins for this feature. This comment is the committed
+ * record of that conscious decision (Req 3.2); the design doc Architecture note
+ * records it too. WCAG AA contrast (Req 2.5) and the non-colour encoding rule
+ * (Req 2.6) are preserved — see the contrast notes on each pair below and the
+ * unit contrast check in app-integration.test.tsx.
  *
- * The sequential blue ramp (--seq-1 .. --seq-5, light -> dark) is a
- * single-hue choropleth scale chosen so it stays distinguishable under all
- * common colour-vision deficiencies. It deliberately avoids any red/green
- * pairing, so hue is never the sole carrier of meaning. (Req 9.5, 15.2)
+ * Palette_Tokens (Req 2.1):
+ *   cream page background  #FBF8F3  (--surface, --bg)
+ *   dark navy cards        #263342  (--card) with light text (--ink-on-card)
+ *   light-blue nav + inner #E3EEFB  (--nav, --panel)
+ *   blue accents           #2F5C9A  (--accent)      and #2E4A6E (--accent-deep)
  *
- * --unknown is the fill for counties in the Unknown_Distance state. It is
- * always paired with an SVG hatch pattern (and "unknown" legend/table text),
- * so the unknown state is never distinguished by colour alone. (Req 5.8, 15.2)
+ * The sequential blue ramp (--seq-1 .. --seq-5, light -> dark) is a single-hue
+ * choropleth scale chosen so it stays distinguishable under all common
+ * colour-vision deficiencies. It avoids any red/green pairing, so hue is never
+ * the sole carrier of meaning. (Req 2.6)
+ *
+ * --unknown is the fill for counties in the Unknown_Distance state. It is always
+ * paired with an SVG hatch pattern (and "unknown" legend/table text), so the
+ * unknown state is never distinguished by colour alone. (Req 2.6)
  */
 :root {
-  --bg: #FFFFFF;
-  --ink: #1A1A1A;             /* body text, ~16:1 on white */
-  --accent: #0F6CBD;          /* links, chart dot/whisker; AA on white */
-  --focus: #B54708;           /* visible focus ring, AA on white */
+  /* --- Palette_Tokens: page + card surfaces (Req 2.1, 2.2) --------------- */
+  --surface: #FBF8F3;         /* cream page background */
+  --bg: #FBF8F3;              /* alias of the page background for chart SVGs */
+  --card: #263342;            /* dark navy card / panel background */
+  --nav: #E3EEFB;             /* light-blue top navigation bar */
+  --panel: #E3EEFB;           /* light-blue inner panels inside navy cards */
+  --accent-soft: #E3EEFB;     /* soft accent tint (e.g. sample banner, panels) */
+
+  /*
+   * Text colours.
+   * --ink is the default dark text used on the cream page and on light-blue
+   * panels; --ink-on-card is the light text used directly on navy cards.
+   */
+  --ink: #1A1A1A;             /* dark text on cream / light-blue (~16:1) */
+  --ink-on-card: #F4F7FB;     /* light text on navy --card (~13:1 on #263342) */
+  --muted: #5B6573;           /* secondary text on cream / light-blue, >=4.5:1 */
+  --muted-on-card: #C3CDDA;   /* secondary text on navy --card, >=4.5:1 */
+
+  /*
+   * frontend-redesign text-contrast fix (navy cards #263342).
+   * Card.css references var(--card-ink) / var(--card-muted); define them here
+   * so navy-card text is legible at WCAG AA. --card-link is the link colour on
+   * navy cards. Contrast on #263342: --card-ink ~13:1, --card-muted ~8.6:1,
+   * --card-link ~7.6:1 (all >= 4.5:1).
+   */
+  --card-ink: #F4F7FB;        /* primary text on navy --card (~13:1) */
+  --card-muted: #C9D3E0;      /* secondary text on navy --card (~8.6:1) */
+  --card-link: #9EC5FF;       /* links on navy --card (~7.6:1) */
+
+  /*
+   * Accents. --accent (#2F5C9A) is AA for normal text on the cream page and on
+   * light-blue panels (>=4.5:1). --accent-deep (#2E4A6E) is a darker blue for
+   * stronger emphasis / active states, higher contrast still.
+   */
+  --accent: #2F5C9A;          /* links, primary buttons; AA on cream/panel */
+  --accent-deep: #2E4A6E;     /* deep blue for emphasis / active nav state */
+  --focus: #B54708;           /* visible focus ring, AA on cream + light-blue */
+
+  /*
+   * Borders.
+   * --border is the hairline on light surfaces (cream page, light-blue panels).
+   * --border-on-card is a lighter hairline that reads on the navy card.
+   */
+  --border: #D8CFC2;          /* hairline on cream / light-blue surfaces */
+  --border-on-card: #3C4A5C;  /* hairline on navy --card */
+
+  /*
+   * Chart marks. On navy cards the dot/whisker must stay legible, so chart
+   * marks use a light tint rather than the dark --accent. --chart-ink (light)
+   * is the mark colour on navy; it is a graphical object so AA needs >=3:1 and
+   * #9ECAE1 on #263342 is ~6:1. Non-colour encoding (position of dot, length of
+   * whisker, and the direct value labels + text-alt table) is preserved, so
+   * colour never carries meaning alone. (Req 2.5, 2.6)
+   */
+  --chart-ink: #9ECAE1;       /* dot/whisker on navy card, ~6:1 (graphical) */
+  --chart-axis: #8793A3;      /* axis lines / ticks on navy card */
 
   /* Sequential blue choropleth ramp (light -> dark), colour-blind safe */
   --seq-1: #DEEBF7;
@@ -30,22 +97,9 @@
 
   --unknown: #BDBDBD;         /* "unknown" fill, paired with a hatch pattern */
 
-  /*
-   * Visual-design surface tokens (web/src/styles/visual-design steering). These
-   * drive the dashboard "chrome" — page background, cards, borders, secondary
-   * text, and the soft accent tint — and are verified for WCAG AA contrast:
-   * --ink on --surface and on --card stays >= 4.5:1, and --muted on --card and
-   * on --surface stays >= 4.5:1 for normal text.
-   */
-  --surface: #F6F8FB;         /* page background */
-  --card: #FFFFFF;            /* card / panel background */
-  --border: #E3E8EF;          /* hairline borders and table rules */
-  --muted: #5B6573;           /* secondary text, >= 4.5:1 on --card/--surface */
-  --accent-soft: #E8F1FB;     /* soft accent tint, e.g. the sample banner */
-
   /* Elevation + radii + shadow used across cards, buttons, and badges. */
-  --radius-card: 12px;
-  --radius-control: 8px;
-  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06),
-    0 1px 3px rgba(16, 24, 40, 0.08);
+  --radius-card: 16px;        /* large rounded corners (>= 12px per Req 2.2) */
+  --radius-control: 10px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.10),
+    0 4px 12px rgba(16, 24, 40, 0.12);
 }

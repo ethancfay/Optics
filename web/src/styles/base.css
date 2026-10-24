@@ -413,3 +413,107 @@ a:hover {
 .footer__data-as-of {
   margin: 0;
 }
+
+/* ---------------------------------------------------------------------------
+ * Navy page-container text contrast (frontend-redesign fix)
+ * ---------------------------------------------------------------------------
+ * The rule above paints each top-level page block (.home-page, .method-page,
+ * .build-page, .not-found-page, and bare <section>/<article>) with the navy
+ * --card background. Text placed DIRECTLY in those containers (page <h1>/<h2>,
+ * intros, the Investigate findings list and evidence link, the NotFound and
+ * Evidence copy) would otherwise take the dark --ink colour from the global
+ * type rules and be unreadable on navy. These rules make that direct text use
+ * the light --card-ink / --card-muted tokens and card links use --card-link, so
+ * every text/background pair on a navy container passes WCAG AA.
+ *
+ * Light plates nested inside (cream .inv-finding, --surface tables, the
+ * monospace formula box, the .inv-badge pill, and anything inside a .card-body
+ * or .card-panel) keep their own dark-on-light colours and are excluded, so
+ * their contrast is preserved.
+ */
+.layout__main > .home-page,
+.layout__main > .method-page,
+.layout__main > .build-page,
+.layout__main > .not-found-page,
+.layout__main > section,
+.layout__main > article,
+.layout__main > .home-page > h1,
+.layout__main > .home-page > h2,
+.layout__main > .home-page > h3,
+.layout__main > .home-page > p,
+.layout__main > .home-page > ul > li,
+.layout__main > .not-found-page > h1,
+.layout__main > .not-found-page > h2,
+.layout__main > .not-found-page > p,
+.layout__main > section > h1,
+.layout__main > section > h2,
+.layout__main > section > h3,
+.layout__main > section > p,
+.layout__main > article > h1,
+.layout__main > article > h2,
+.layout__main > article > h3,
+.layout__main > article > p,
+.layout__main > article > .inv-intro,
+.layout__main > article > ul > li {
+  color: var(--card-ink);
+}
+
+/* Secondary copy placed directly on a navy container reads as --card-muted. */
+.layout__main > article > .inv-intro,
+.layout__main > .home-page > .home-problem-statement,
+.layout__main > section > .where-intro {
+  color: var(--card-muted);
+}
+
+/* Links placed directly on a navy container use the on-navy link colour. */
+.layout__main > .home-page > p a,
+.layout__main > .not-found-page > p a,
+.layout__main > .not-found-page a,
+.layout__main > section > p a,
+.layout__main > article > p a,
+.layout__main > article > .inv-findings a,
+.layout__main > article .inv-evidence-link,
+.layout__main > section .inv-back-link {
+  color: var(--card-link);
+}
+
+/*
+ * Preserve dark-on-light plates nested inside navy containers: the cream
+ * Investigate finding cards, the --surface tables and formula box, and the
+ * light-blue badge pill. These set their own light backgrounds, so their text
+ * must stay dark (they are unaffected by the card-level light text above, but
+ * these rules make the intent explicit and guard against inheritance).
+ */
+.layout__main > article .inv-finding,
+.layout__main > article .inv-finding p,
+.layout__main .method-page__equation,
+.layout__main .inv-table caption,
+.layout__main .inv-table th,
+.layout__main .inv-table td,
+.layout__main .dw-table caption,
+.layout__main .dw-table th,
+.layout__main .dw-table td,
+.layout__main .county-map__table caption,
+.layout__main .county-map__table th,
+.layout__main .county-map__table td,
+.layout__main .evidence-table caption,
+.layout__main .evidence-table th,
+.layout__main .evidence-table td {
+  color: var(--ink);
+}
+
+/*
+ * Home "Top Finding" stat numbers sit inside the navy Top Finding card. The
+ * hero rules above colour the range <strong> with --accent and the disease
+ * <strong> with --ink, both of which fail AA on navy. Re-point them to the
+ * on-navy tokens (range -> --card-link as the light focal accent, ~7.6:1;
+ * disease name -> --card-ink, ~13:1). Specificity here is raised with
+ * .card-body so these win over the hero rules; copy and sizing are unchanged.
+ */
+.card-body .home-top-finding p:first-of-type strong {
+  color: var(--card-link);
+}
+
+.card-body .home-top-finding p:first-of-type strong:first-of-type {
+  color: var(--card-ink);
+}

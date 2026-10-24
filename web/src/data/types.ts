@@ -50,6 +50,7 @@ export interface InvestigateEntry {
   by_study_type: LabelCount[];
   by_intervention_type: LabelCount[];
   by_phase: LabelCount[];
+  phase_overlap_studies?: number; // studies listing >1 phase (optional extra key)
   findings: Finding[];
 }
 

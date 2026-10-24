@@ -58,13 +58,17 @@ export function AppRoutes() {
         <Route path="/" element={withProvider(WhatDataProvider, <Home />)} />
         <Route path="/what" element={withProvider(WhatDataProvider, <What />)} />
 
-        {/* Investigate reads Investigate_Data by :measureId, plus What_Data
-            for the headline `t` and prevalence_year (Req 19.3, 19.7). */}
+        {/* Investigate reads Investigate_Data by :measureId, What_Data for the
+            headline `t` and prevalence_year (Req 19.3, 19.7), and Evidence_Data
+            for the client-side No_Intervention_Count (Flag F1, Req 16.1). */}
         <Route
           path="/investigate/:measureId"
           element={withProvider(
             WhatDataProvider,
-            withProvider(InvestigateDataProvider, <Investigate />)
+            withProvider(
+              InvestigateDataProvider,
+              withProvider(EvidenceDataProvider, <Investigate />)
+            )
           )}
         />
 

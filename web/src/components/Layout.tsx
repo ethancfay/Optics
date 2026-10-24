@@ -29,17 +29,84 @@ import "./Layout.css";
 export const SAMPLE_DATA_LABEL = "Sample data — not real figures";
 
 /**
- * The top-level destinations in the persistent nav (Req 14.1). The WHERE view
- * is hidden in this version: county shapes would need a data source outside
- * clinicaltrials.gov / data.cdc.gov, so it is not routed or linked (data
- * contract: where.json / ma_counties.geojson deferred). The Where component
- * code is kept but unused.
+ * Inline SVG icons for the Nav_Icon_Buttons (Req 4.2). Each icon is marked
+ * `aria-hidden` and `focusable={false}` so it is ignored by assistive tech: the
+ * accessible name comes from the button's `aria-label` and its visible text
+ * label, never from the icon shape (Req 4.3). `currentColor` lets the icon
+ * inherit the link colour so the active/hover/focus styles apply to it too.
  */
-const NAV_LINKS: ReadonlyArray<{ to: string; label: string }> = [
-  { to: "/", label: "Home" },
-  { to: "/what", label: "WHAT" },
-  { to: "/method", label: "Method" },
-  { to: "/build", label: "Build" },
+const ICON_PROPS = {
+  className: "nav__icon",
+  width: 20,
+  height: 20,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+  focusable: false,
+};
+
+/** Home icon: a simple house outline. */
+function HomeIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.5V21h14V9.5" />
+    </svg>
+  );
+}
+
+/** WHAT icon: a bar chart (Req 4.2). */
+function ChartIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M3 21h18" />
+      <rect x="5" y="12" width="3.5" height="6" />
+      <rect x="10.25" y="8" width="3.5" height="10" />
+      <rect x="15.5" y="4" width="3.5" height="14" />
+    </svg>
+  );
+}
+
+/** Method icon: a square-root-of-x radical sign (Req 4.2). */
+function SquareRootIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M3 13l2.5 5L9 5h11" />
+    </svg>
+  );
+}
+
+/** Build icon: a wrench/tool outline. */
+function BuildIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M14.5 5.5a3.5 3.5 0 0 0 4.6 4.6L21 12l-8 8-2-2-5.5 5.5" />
+      <path d="M4 20l5.5-5.5" />
+    </svg>
+  );
+}
+
+/**
+ * The top-level destinations in the persistent nav (Req 14.1, 4.1). Each entry
+ * is a Nav_Icon_Button: an icon (Req 4.2) plus a visible text label and a
+ * non-empty `aria-label` (Req 4.3). The WHERE view is hidden in this version:
+ * county shapes would need a data source outside clinicaltrials.gov /
+ * data.cdc.gov, so it is not routed or linked (data contract: where.json /
+ * ma_counties.geojson deferred). The Where component code is kept but unused.
+ */
+const NAV_LINKS: ReadonlyArray<{
+  to: string;
+  label: string;
+  icon: () => ReactNode;
+}> = [
+  { to: "/", label: "Home", icon: HomeIcon },
+  { to: "/what", label: "WHAT", icon: ChartIcon },
+  { to: "/method", label: "Method", icon: SquareRootIcon },
+  { to: "/build", label: "Build", icon: BuildIcon },
 ];
 
 /**
@@ -56,27 +123,39 @@ export function SkipLink() {
 }
 
 /**
- * Persistent primary navigation (Req 14.1, 14.2, 14.4). Each link is a
- * react-router <NavLink> so navigation is client-side with no full-document
- * reload. NavLink sets `aria-current="page"` on the active link by default
- * (Req 14.2); we add an `is-active` class for a visible active style (Req 14.4).
- * The Home link uses `end` so it is only active on the exact "/" route rather
- * than on every path.
+ * Persistent primary navigation (Req 4.1, 4.3-4.6). Each destination is a
+ * Nav_Icon_Button: a react-router <NavLink> so activation by click, Enter, or
+ * Space navigates client-side with no full-document reload (Req 4.4). Each
+ * button carries an icon (Req 4.2), a visible text label AND a title tooltip,
+ * plus a non-empty `aria-label` (Req 4.3) — the label text matches the
+ * aria-label so the accessible name is stable regardless of the icon shape.
+ *
+ * Active state (Req 4.5): NavLink sets `aria-current="page"` on the active link
+ * by default; we add an `is-active` class whose active cue is NOT colour alone
+ * — a bold label, an underline, and a leading "active" marker dot rendered via
+ * CSS carry the state in addition to colour. The Home link uses `end` so it is
+ * only active on the exact "/" route rather than on every path.
+ *
+ * Visible focus (Req 4.6) is provided by the `.nav__link:focus-visible` ring in
+ * Layout.css.
  */
 export function Nav() {
   return (
     <nav className="nav" aria-label="Primary">
       <ul className="nav__list">
-        {NAV_LINKS.map(({ to, label }) => (
+        {NAV_LINKS.map(({ to, label, icon: Icon }) => (
           <li key={to} className="nav__item">
             <NavLink
               to={to}
               end={to === "/"}
+              aria-label={label}
+              title={label}
               className={({ isActive }) =>
                 isActive ? "nav__link is-active" : "nav__link"
               }
             >
-              {label}
+              <Icon />
+              <span className="nav__label">{label}</span>
             </NavLink>
           </li>
         ))}
@@ -136,7 +215,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
       <header className="site-header">
         <div className="site-header__inner">
           <Link to="/" className="site-header__brand">
-            Research Gap Index
+            Optics
           </Link>
           <Nav />
         </div>

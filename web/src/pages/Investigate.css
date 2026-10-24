@@ -96,3 +96,47 @@
   display: inline;
   font-weight: 400;
 }
+
+/*
+ * One-phrase definition shown inline beneath a count (Req 14.4). Muted helper
+ * text; meaning is carried by the words, never colour alone.
+ */
+.inv-definition-inline {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+/*
+ * F2 traceability note shown next to Index_Numerator_T (Req 17.1). Plain muted
+ * helper text, never colour-only.
+ */
+.inv-f2-note {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+/*
+ * Overlap disclosure notes (Req 15.1, 15.2) and the client-side
+ * No_Intervention_Count line (Req 16.2). Muted helper text; meaning is carried
+ * by the words, never colour alone.
+ */
+.inv-overlap-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.inv-no-intervention {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 0.875rem;
+}

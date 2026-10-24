@@ -2,11 +2,15 @@
 // (Req 21) and the national-comparison note (Req 11.7).
 // No network: the Sources hook is mocked.
 
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import type { LoadState, SourcesData } from "../data/types";
 
+// The Sources provider hook is the single data input; a module-level `state`
+// lets each test drive the loading/ready/error case without a network request.
+let sourcesState: LoadState<SourcesData> = { status: "loading" };
 vi.mock("../data/providers", () => ({
-  useSources: () => ({ status: "loading" }),
+  useSources: () => sourcesState,
 }));
 
 import Method, {
@@ -43,6 +47,68 @@ const MATCHING_SENTENCES = [
   HIGHCHOL_HEART_DISEASE_NOTE,
   QUESTIONABLE_NOT_COUNTED,
 ];
+
+/** A ready Sources_Data fixture with two named sources, each with a fetched date. */
+const READY_SOURCES: SourcesData = {
+  data_as_of: "2026-10-24",
+  is_sample: false,
+  sources: [
+    {
+      name: "ClinicalTrials.gov",
+      url: "https://clinicaltrials.gov/",
+      fetched: "2026-10-24",
+    },
+    {
+      name: "CDC PLACES 2025 county release",
+      url: "https://data.cdc.gov/d/swc5-untb",
+      fetched: "2026-10-20",
+    },
+  ],
+};
+
+function readySources(data: SourcesData): LoadState<SourcesData> {
+  return { status: "ready", data, omittedCount: 0, isSample: false };
+}
+
+afterEach(() => {
+  cleanup();
+  sourcesState = { status: "loading" };
+});
+
+describe("Method page — single card (Req 11.1)", () => {
+  it("renders exactly one card titled 'Method and Sources'", () => {
+    sourcesState = readySources(READY_SOURCES);
+    render(<Method />);
+    expect(
+      screen.getAllByRole("heading", { name: "Method and Sources" })
+    ).toHaveLength(1);
+  });
+});
+
+describe("Method page — sources wiring (Req 11.2, 11.3)", () => {
+  it("renders one named source link per entry, each with its fetched date", () => {
+    sourcesState = readySources(READY_SOURCES);
+    render(<Method />);
+    for (const source of READY_SOURCES.sources) {
+      const link = screen.getByRole("link", { name: source.name });
+      expect(link).toHaveAttribute("href", source.url);
+      // The fetched date is shown next to the link in the same list item.
+      const listItem = link.closest("li");
+      expect(listItem).not.toBeNull();
+      expect(listItem!.textContent).toContain(`fetched ${source.fetched}`);
+    }
+  });
+
+  it("renders the data-unavailable component naming sources.json when Sources_Data fails", () => {
+    sourcesState = { status: "error", reason: "network", file: "sources.json" };
+    render(<Method />);
+    const alert = screen.getByRole("alert");
+    expect(alert.textContent).toContain("This data is currently unavailable");
+    expect(alert.textContent).toContain("sources.json");
+    // No source links render while the file is unavailable.
+    expect(screen.queryByRole("link", { name: "ClinicalTrials.gov" })).toBeNull();
+  });
+});
 
 describe("Method page — three-disease scope (Req 20.6)", () => {
   it("states the three diseases and how the deferred two can be added", () => {

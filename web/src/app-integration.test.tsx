@@ -129,7 +129,7 @@ describe("Routing (Req 14, 15.7)", () => {
 
     // Home resolves.
     expect(
-      await screen.findByRole("heading", { name: "Research Gap Index" })
+      await screen.findByRole("heading", { name: "Optics" })
     ).toBeInTheDocument();
 
     // Each click is client-side (react-router <NavLink>); the target page's
@@ -146,7 +146,7 @@ describe("Routing (Req 14, 15.7)", () => {
 
     fireEvent.click(screen.getByRole("link", { name: "Method" }));
     expect(
-      await screen.findByRole("heading", { name: "Method and sources" })
+      await screen.findByRole("heading", { name: "Method and Sources" })
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("link", { name: "Build" }));
@@ -156,15 +156,15 @@ describe("Routing (Req 14, 15.7)", () => {
 
     fireEvent.click(screen.getByRole("link", { name: "Home" }));
     expect(
-      await screen.findByRole("heading", { name: "Research Gap Index" })
+      await screen.findByRole("heading", { name: "Optics" })
     ).toBeInTheDocument();
   });
 
   it("direct-URL entry renders each static route", async () => {
     const cases: Array<{ path: string; heading: string }> = [
-      { path: "/", heading: "Research Gap Index" },
+      { path: "/", heading: "Optics" },
       { path: "/what", heading: "Burden versus research activity by disease" },
-      { path: "/method", heading: "Method and sources" },
+      { path: "/method", heading: "Method and Sources" },
       { path: "/build", heading: "How we built it with Kiro" },
       { path: "/does-not-exist", heading: "Page not found" },
       // The hidden WHERE view has no route: a direct hit falls through to NotFound.
@@ -580,6 +580,107 @@ describe("Accessibility and layout (Req 15, 16)", () => {
       "--unknown",
     ]) {
       expect(css).toContain(`${token}:`);
+    }
+  });
+
+  // --- frontend-redesign Palette_Tokens (Req 2.1, 2.2, 2.5, 3.1-3.3) ------
+  //
+  // The redesign retheme sets a cream page, navy cards with light text,
+  // light-blue nav/panels, and two blue accents. These checks assert the
+  // tokens are declared with the mockup values, that the card radius is large
+  // (>= 12px), that the reconciliation with the visual-design steering palette
+  // is recorded in the file, and that the foreground/background token pairs
+  // meet WCAG AA contrast. The CSS is the single source of truth, so we read
+  // the declared hex values straight from palette.css.
+
+  // Tiny self-contained WCAG relative-luminance + contrast-ratio helper.
+  // (No new dependency; jsdom cannot compute contrast for us.)
+  const srgbToLinear = (c: number): number => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  const relLuminance = (hex: string): number => {
+    const m = /^#?([0-9a-fA-F]{6})$/.exec(hex.trim());
+    if (!m) throw new Error(`not a 6-digit hex colour: ${hex}`);
+    const n = parseInt(m[1], 16);
+    const r = srgbToLinear((n >> 16) & 0xff);
+    const g = srgbToLinear((n >> 8) & 0xff);
+    const b = srgbToLinear(n & 0xff);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const contrastRatio = (fg: string, bg: string): number => {
+    const l1 = relLuminance(fg);
+    const l2 = relLuminance(bg);
+    const [hi, lo] = l1 >= l2 ? [l1, l2] : [l2, l1];
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  // Strip /* ... */ comments so a token mentioned in the reconciliation
+  // comment (e.g. the old steering value) is never read as the declaration.
+  const stripComments = (css: string): string =>
+    css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const readToken = (rawCss: string, token: string): string => {
+    const css = stripComments(rawCss);
+    // Matches e.g. `--accent: #2F5C9A;` on a declaration line.
+    const re = new RegExp(`${token}\\s*:\\s*(#[0-9a-fA-F]{6})\\b`);
+    const m = re.exec(css);
+    if (!m) throw new Error(`token ${token} not found with a hex value`);
+    return m[1];
+  };
+
+  it("defines the redesign Palette_Tokens with the mockup values (Req 2.1)", () => {
+    const css = readFileSync(resolve(HERE, "./styles/palette.css"), "utf8");
+    const expected: Record<string, string> = {
+      "--surface": "#FBF8F3", // cream page background
+      "--card": "#263342", // dark navy cards
+      "--nav": "#E3EEFB", // light-blue nav bar
+      "--panel": "#E3EEFB", // light-blue inner panels
+      "--accent": "#2F5C9A", // blue accent
+      "--accent-deep": "#2E4A6E", // deep blue accent
+    };
+    for (const [token, value] of Object.entries(expected)) {
+      expect(readToken(css, token).toUpperCase()).toBe(value.toUpperCase());
+    }
+  });
+
+  it("sets the card corner radius to at least 12px (Req 2.2)", () => {
+    const css = readFileSync(resolve(HERE, "./styles/palette.css"), "utf8");
+    const m = /--radius-card\s*:\s*(\d+)px/.exec(css);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBeGreaterThanOrEqual(12);
+  });
+
+  it("records the palette reconciliation with the steering file (Req 3.2)", () => {
+    const css = readFileSync(resolve(HERE, "./styles/palette.css"), "utf8");
+    expect(css).toContain("visual-design.md");
+    expect(/supersede/i.test(css)).toBe(true);
+  });
+
+  it("meets WCAG AA contrast on the redesign token pairs (Req 2.5, 3.3)", () => {
+    const css = readFileSync(resolve(HERE, "./styles/palette.css"), "utf8");
+    const t = (name: string) => readToken(css, name);
+
+    // [foreground, background, minRatio, description]
+    // 4.5:1 for normal text/interactive; 3:1 for large text + graphical marks.
+    const pairs: Array<[string, string, number, string]> = [
+      [t("--ink"), t("--surface"), 4.5, "dark text on cream page"],
+      [t("--muted"), t("--surface"), 4.5, "muted text on cream page"],
+      [t("--accent"), t("--surface"), 4.5, "accent (links) on cream page"],
+      [t("--ink"), t("--panel"), 4.5, "dark text on light-blue panel"],
+      [t("--accent"), t("--panel"), 4.5, "accent on light-blue panel"],
+      [t("--accent-deep"), t("--nav"), 4.5, "deep accent on light-blue nav"],
+      [t("--ink-on-card"), t("--card"), 4.5, "light text on navy card"],
+      [t("--muted-on-card"), t("--card"), 4.5, "muted text on navy card"],
+      [t("--focus"), t("--surface"), 3, "focus ring on cream (graphical)"],
+      [t("--focus"), t("--panel"), 3, "focus ring on light-blue (graphical)"],
+      [t("--chart-ink"), t("--card"), 3, "chart mark on navy card (graphical)"],
+    ];
+
+    for (const [fg, bg, min, desc] of pairs) {
+      const ratio = contrastRatio(fg, bg);
+      expect(
+        ratio,
+        `${desc}: ${fg} on ${bg} = ${ratio.toFixed(2)}:1 (need >= ${min}:1)`
+      ).toBeGreaterThanOrEqual(min);
     }
   });
 

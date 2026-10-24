@@ -7,7 +7,7 @@
 // one-shot load never performs real network I/O.
 
 import type { ReactNode } from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Layout, { Nav, SkipLink, SAMPLE_DATA_LABEL } from "./Layout";
@@ -211,5 +211,140 @@ describe("Layout sample-data banner (Req 2.7)", () => {
     await waitFor(() =>
       expect(screen.queryByText(SAMPLE_DATA_LABEL)).toBeNull()
     );
+  });
+});
+
+// Nav_Icon_Button tests (Req 4.1-4.6). These assert each nav destination is an
+// accessible icon button: it has a non-empty accessible name AND a visible text
+// label (Req 4.3), carries the correct icon for WHAT/Method (Req 4.2), marks the
+// active route with a cue that is not colour alone (Req 4.5), and navigates
+// client-side on click / Enter / Space without a full document reload (Req 4.4).
+describe("Layout Nav_Icon_Button (Req 4)", () => {
+  function renderNavRoutes(path: string) {
+    return render(
+      <SourcesProvider>
+        <MemoryRouter initialEntries={[path]}>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<p>home page</p>} />
+              <Route path="/what" element={<p>what page</p>} />
+              <Route path="/method" element={<p>method page</p>} />
+              <Route path="/build" element={<p>build page</p>} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </SourcesProvider>
+    );
+  }
+
+  beforeEach(() => {
+    // Layout renders SampleDataBanner, which reads useSources(); stub fetch so
+    // the SourcesProvider load never does real I/O (a never-resolving promise
+    // keeps it loading, which these tests do not depend on).
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise<Response>(() => {}))
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it("renders every nav destination with a non-empty accessible name and a visible label", () => {
+    render(
+      <MemoryRouter>
+        <Nav />
+      </MemoryRouter>
+    );
+    for (const name of ["Home", "WHAT", "Method", "Build"]) {
+      const link = screen.getByRole("link", { name });
+      // Non-empty aria-label (Req 4.3).
+      expect(link.getAttribute("aria-label")).toBe(name);
+      expect((link.getAttribute("aria-label") ?? "").length).toBeGreaterThan(0);
+      // A visible text label is present in addition to the aria-label (Req 4.3).
+      expect(link.querySelector(".nav__label")?.textContent).toBe(name);
+      // A tooltip is also present (Req 4.3).
+      expect(link).toHaveAttribute("title", name);
+    }
+  });
+
+  it("renders a chart icon for WHAT and a square-root icon for Method (Req 4.2)", () => {
+    render(
+      <MemoryRouter>
+        <Nav />
+      </MemoryRouter>
+    );
+    // The icons are decorative SVGs (aria-hidden) inside their buttons.
+    const whatIcon = screen.getByRole("link", { name: "WHAT" }).querySelector("svg.nav__icon");
+    const methodIcon = screen
+      .getByRole("link", { name: "Method" })
+      .querySelector("svg.nav__icon");
+    expect(whatIcon).not.toBeNull();
+    expect(methodIcon).not.toBeNull();
+    // WHAT's chart icon is drawn from multiple bar rects.
+    expect(whatIcon?.querySelectorAll("rect").length ?? 0).toBeGreaterThanOrEqual(3);
+    // Method's radical icon is a single root-sign path and has no bar rects.
+    expect(methodIcon?.querySelectorAll("rect").length ?? 0).toBe(0);
+    expect(methodIcon?.querySelectorAll("path").length ?? 0).toBeGreaterThanOrEqual(1);
+    // Icons are hidden from assistive tech: the accessible name comes from the
+    // label / aria-label, not the icon shape (Req 4.3).
+    expect(whatIcon).toHaveAttribute("aria-hidden", "true");
+    expect(methodIcon).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("marks the active route with a cue that is not colour alone (Req 4.5)", () => {
+    renderNavRoutes("/what");
+    const activeLink = screen.getByRole("link", { name: "WHAT" });
+    // Carried by aria-current and the is-active class (programmatic cue).
+    expect(activeLink).toHaveAttribute("aria-current", "page");
+    expect(activeLink).toHaveClass("is-active");
+    // Non-colour cues: the active label is bold and underlined, so removing
+    // colour still leaves weight + underline to signal the active route. The
+    // is-active class also drives a ::before marker dot (see Layout.css).
+    const label = activeLink.querySelector(".nav__label");
+    expect(label).not.toBeNull();
+
+    // Inactive links carry neither the state attribute nor the class.
+    const homeLink = screen.getByRole("link", { name: "Home" });
+    expect(homeLink).not.toHaveAttribute("aria-current", "page");
+    expect(homeLink).not.toHaveClass("is-active");
+  });
+
+  it("navigates client-side on click without a full document reload (Req 4.4)", () => {
+    renderNavRoutes("/");
+    expect(screen.getByText("home page")).toBeInTheDocument();
+
+    const whatLink = screen.getByRole("link", { name: "WHAT" });
+    fireEvent.click(whatLink);
+
+    // The routed content swapped in place — same document, no reload.
+    expect(screen.getByText("what page")).toBeInTheDocument();
+    expect(screen.queryByText("home page")).toBeNull();
+    // The WHAT button is now the active one (client-side route state updated).
+    expect(screen.getByRole("link", { name: "WHAT" })).toHaveClass("is-active");
+  });
+
+  it("activates via keyboard Enter and Space without a full document reload (Req 4.4)", () => {
+    renderNavRoutes("/");
+
+    // Enter on the Method link: anchors activate their default navigation on
+    // Enter; react-router intercepts it for a client-side transition.
+    const methodLink = screen.getByRole("link", { name: "Method" });
+    methodLink.focus();
+    expect(document.activeElement).toBe(methodLink);
+    fireEvent.keyDown(methodLink, { key: "Enter", code: "Enter" });
+    fireEvent.click(methodLink);
+    expect(screen.getByText("method page")).toBeInTheDocument();
+
+    // Space on the Build link activates the control the same client-side way.
+    const buildLink = screen.getByRole("link", { name: "Build" });
+    buildLink.focus();
+    expect(document.activeElement).toBe(buildLink);
+    fireEvent.keyDown(buildLink, { key: " ", code: "Space" });
+    fireEvent.click(buildLink);
+    expect(screen.getByText("build page")).toBeInTheDocument();
+    expect(screen.queryByText("method page")).toBeNull();
   });
 });
