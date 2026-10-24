@@ -12,10 +12,16 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Investigate, {
   DRUG_COUNT_CAPTION,
   HEADLINE_LABEL,
+  INTRO_REAL_SENTENCE,
+  INTRO_SAMPLE_SENTENCE,
   MA_STUDIES_LABEL,
   prevalenceYearText,
 } from "./Investigate";
-import { InvestigateDataProvider, WhatDataProvider } from "../data/providers";
+import {
+  InvestigateDataProvider,
+  SourcesProvider,
+  WhatDataProvider,
+} from "../data/providers";
 import { EVIDENCE_LABELS } from "../data/evidenceLabels";
 import type { InvestigateEntry, WhatEntry } from "../data/types";
 
@@ -96,12 +102,34 @@ const WHAT_CASTHMA: WhatEntry = {
  * Route the mocked fetch by path. `what` may be an Error to simulate a failed
  * what.json load (Req 19.6).
  */
+/** A sources.json payload; `is_sample` is set per scenario (Req 20.5). */
+function sourcesPayload(isSample: boolean | undefined): unknown {
+  return {
+    data_as_of: "2026-10-24",
+    ...(isSample === undefined ? {} : { is_sample: isSample }),
+    sources: [
+      { name: "ClinicalTrials.gov", url: "https://clinicaltrials.gov/", fetched: "2026-10-24" },
+    ],
+  };
+}
+
+/**
+ * `sources` controls sources.json: a payload, an Error (load fails), or the
+ * string "pending" (the fetch never resolves, so Sources_Data stays loading).
+ */
 function stubData(
   investigate: unknown = PAYLOAD,
-  what: unknown | Error = [WHAT_CASTHMA]
+  what: unknown | Error = [WHAT_CASTHMA],
+  sources: unknown | Error | "pending" = sourcesPayload(false)
 ): void {
   (fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
     (input: string) => {
+      if (input.endsWith("/data/sources.json")) {
+        if (sources === "pending") return new Promise<Response>(() => {});
+        return sources instanceof Error
+          ? Promise.reject(sources)
+          : Promise.resolve(jsonResponse(sources));
+      }
       if (input.endsWith("/data/investigate.json"))
         return Promise.resolve(jsonResponse(investigate));
       if (input.endsWith("/data/what.json"))
@@ -119,15 +147,17 @@ function stubData(
  */
 function renderInvestigate(measureId: string) {
   return render(
-    <MemoryRouter initialEntries={[`/investigate/${measureId}`]}>
-      <WhatDataProvider>
-        <InvestigateDataProvider>
-          <Routes>
-            <Route path="/investigate/:measureId" element={<Investigate />} />
-          </Routes>
-        </InvestigateDataProvider>
-      </WhatDataProvider>
-    </MemoryRouter>
+    <SourcesProvider>
+      <MemoryRouter initialEntries={[`/investigate/${measureId}`]}>
+        <WhatDataProvider>
+          <InvestigateDataProvider>
+            <Routes>
+              <Route path="/investigate/:measureId" element={<Investigate />} />
+            </Routes>
+          </InvestigateDataProvider>
+        </WhatDataProvider>
+      </MemoryRouter>
+    </SourcesProvider>
   );
 }
 
@@ -380,5 +410,47 @@ describe("Investigate page — Drug intervention caption (Req 7.1)", () => {
     expect(within(block as HTMLElement).getByText(DRUG_COUNT_CAPTION)).toBeInTheDocument();
     // Confirm the Drug row is in that same block.
     expect(within(block as HTMLElement).getByText("Drug")).toBeInTheDocument();
+  });
+});
+
+describe("Investigate page — intro sentence follows the sample flag (Req 20.5)", () => {
+  /** The intro paragraph once the page has rendered. */
+  async function intro(): Promise<HTMLElement> {
+    await screen.findByRole("heading", { name: "Asthma" });
+    return document.querySelector<HTMLElement>(".inv-intro")!;
+  }
+
+  it("shows the real-data sentence only when sources.json has is_sample: false", async () => {
+    stubData(PAYLOAD, [WHAT_CASTHMA], sourcesPayload(false));
+    renderInvestigate("CASTHMA");
+    const p = await intro();
+    await waitFor(() => expect(p).toHaveTextContent(INTRO_REAL_SENTENCE));
+    expect(p).not.toHaveTextContent(INTRO_SAMPLE_SENTENCE);
+  });
+
+  it("shows the sample sentence when sources.json has is_sample: true", async () => {
+    stubData(PAYLOAD, [WHAT_CASTHMA], sourcesPayload(true));
+    renderInvestigate("CASTHMA");
+    const p = await intro();
+    expect(p).toHaveTextContent(INTRO_SAMPLE_SENTENCE);
+    expect(p).not.toHaveTextContent(INTRO_REAL_SENTENCE);
+  });
+
+  it("shows the sample sentence while sources.json is not loaded", async () => {
+    stubData(PAYLOAD, [WHAT_CASTHMA], "pending");
+    renderInvestigate("CASTHMA");
+    const p = await intro();
+    expect(p).toHaveTextContent(INTRO_SAMPLE_SENTENCE);
+    expect(p).not.toHaveTextContent(INTRO_REAL_SENTENCE);
+  });
+
+  it("shows the sample sentence when sources.json fails to load", async () => {
+    stubData(PAYLOAD, [WHAT_CASTHMA], new Error("network down"));
+    renderInvestigate("CASTHMA");
+    const p = await intro();
+    // Give the failed sources fetch time to settle; the sentence must not flip.
+    await new Promise((r) => setTimeout(r, 0));
+    expect(p).toHaveTextContent(INTRO_SAMPLE_SENTENCE);
+    expect(p).not.toHaveTextContent(INTRO_REAL_SENTENCE);
   });
 });

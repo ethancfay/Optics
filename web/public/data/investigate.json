@@ -10,8 +10,8 @@
       { "label": "Completed", "count": 58 }
     ],
     "by_study_type": [
-      { "label": "Interventional", "count": 44 },
-      { "label": "Observational", "count": 11 }
+      { "label": "Interventional", "count": 86 },
+      { "label": "Observational", "count": 21 }
     ],
     "by_intervention_type": [
       { "label": "Drug", "count": 29 },
@@ -36,78 +36,6 @@
     ]
   },
   {
-    "measure_id": "DEPRESSION",
-    "condition": "Depression",
-    "ma_studies": 174,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 58 },
-      { "label": "Active, not recruiting", "count": 20 },
-      { "label": "Completed", "count": 96 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 63 },
-      { "label": "Observational", "count": 15 }
-    ],
-    "by_intervention_type": [
-      { "label": "Drug", "count": 34 },
-      { "label": "Behavioral", "count": 22 },
-      { "label": "Device", "count": 7 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 21 },
-      { "label": "Phase 3", "count": 14 },
-      { "label": "Not applicable", "count": 23 }
-    ],
-    "phase_overlap_studies": 6,
-    "findings": [
-      {
-        "text": "A large share of studies are behavioral rather than drug trials, which may explain the mix observed here.",
-        "label": "possible explanation from available records"
-      },
-      {
-        "text": "The reasons behind the balance of behavioral and drug studies cannot be determined from public data.",
-        "label": "cannot determine from public data"
-      }
-    ]
-  },
-  {
-    "measure_id": "BPHIGH",
-    "condition": "High Blood Pressure",
-    "ma_studies": 390,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 142 },
-      { "label": "Active, not recruiting", "count": 38 },
-      { "label": "Completed", "count": 210 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 158 },
-      { "label": "Observational", "count": 22 }
-    ],
-    "by_intervention_type": [
-      { "label": "Drug", "count": 101 },
-      { "label": "Device", "count": 24 },
-      { "label": "Behavioral", "count": 33 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 48 },
-      { "label": "Phase 3", "count": 36 },
-      { "label": "Not applicable", "count": 58 }
-    ],
-    "phase_overlap_studies": 11,
-    "findings": [
-      {
-        "text": "The high count of recruiting studies may be explained by the large affected population recorded for this condition.",
-        "label": "possible explanation from available records"
-      },
-      {
-        "text": "Whether activity is evenly distributed across the state cannot be determined from public data.",
-        "label": "cannot determine from public data"
-      }
-    ]
-  },
-  {
     "measure_id": "DIABETES",
     "condition": "Diabetes",
     "ma_studies": 272,
@@ -118,8 +46,8 @@
       { "label": "Completed", "count": 149 }
     ],
     "by_study_type": [
-      { "label": "Interventional", "count": 108 },
-      { "label": "Observational", "count": 15 }
+      { "label": "Interventional", "count": 239 },
+      { "label": "Observational", "count": 33 }
     ],
     "by_intervention_type": [
       { "label": "Drug", "count": 72 },
@@ -154,8 +82,8 @@
       { "label": "Completed", "count": 77 }
     ],
     "by_study_type": [
-      { "label": "Interventional", "count": 47 },
-      { "label": "Observational", "count": 8 }
+      { "label": "Interventional", "count": 113 },
+      { "label": "Observational", "count": 19 }
     ],
     "by_intervention_type": [
       { "label": "Drug", "count": 38 },

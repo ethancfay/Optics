@@ -47,12 +47,12 @@ const asthma: EvidenceEntry = {
 
 /** A known Evidence_Entry with NO contributing studies (empty `ncts`). */
 const noStudies: EvidenceEntry = {
-  measure_id: "DEPRESSION",
-  condition: "Depression",
+  measure_id: "HIGHCHOL",
+  condition: "High cholesterol",
   ncts: [],
   filters: ["Recruiting status only"],
   mapping_choices: ["Behavioral and drug interventions both included"],
-  missing_data_notes: ["Broader mental-health terms are not counted."],
+  missing_data_notes: ["Heart-disease-only studies are not counted."],
 };
 
 /**
@@ -143,8 +143,8 @@ describe("Evidence page — empty ncts (Req 8.4)", () => {
   });
 
   it("shows the no-studies message and renders NO link (no broken link)", async () => {
-    renderAt("DEPRESSION");
-    await screen.findByText("Depression");
+    renderAt("HIGHCHOL");
+    await screen.findByText("High cholesterol");
 
     expect(
       screen.getByText("No contributing studies are available.")

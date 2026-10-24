@@ -35,3 +35,9 @@ Tightened sites.zip validation to accept only `^\d{5}(-?\d{4})?$` (5 digits or 5
 - Updated __main__.py to wire the invalid_zip_count through
 - Added tests for zip validation, deduplication interaction, and phone pattern non-matching for valid zips
 - All 238 tests pass
+
+## Dashboard task 19: three-disease scope (2026-10-24)
+- Spec first (Req 20), approved with two changes: `useIsSample()` is cautious (false only for a loaded `is_sample: false`), and the "questionable" TODO is code-only.
+- The sample banner now reads `useSources()` directly so Req 2.7 is unchanged; Investigate test harnesses wrap `SourcesProvider` instead of loosening the hook.
+- Sample `by_study_type` summed to about half of `ma_studies`; rescaled keeping each ratio. New data tests (Properties 17, 18) lock the measure_id set and the sums.
+- web: 160 tests pass, tsc and build clean.

@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import type { InvestigateEntry, SourcesData, WhatEntry } from "./types";
+import type { EvidenceEntry, InvestigateEntry, SourcesData, WhatEntry } from "./types";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = resolve(HERE, "../../public/data");
@@ -22,6 +22,7 @@ function readData<T>(file: string): T {
 
 const what = readData<WhatEntry[]>("what.json");
 const investigate = readData<InvestigateEntry[]>("investigate.json");
+const evidence = readData<EvidenceEntry[]>("evidence.json");
 const sources = readData<SourcesData>("sources.json");
 
 /**
@@ -101,5 +102,46 @@ describe("Property 16: what.t <= investigate.ma_studies for every measure (Req 1
   it("every what.json measure has an investigate.json entry to compare against", () => {
     const ids = new Set(investigate.map((e) => e.measure_id));
     expect(what.map((e) => e.measure_id).filter((id) => !ids.has(id))).toEqual([]);
+  });
+});
+
+// Feature: dashboard, Property 17: Every shipped data file covers the same measure_id set
+// Data test over the shipped files (Req 2.8-2.10, 20.1). Fix the data, not this test.
+describe("Property 17: shipped files cover exactly the same measure_id set (Req 20.1)", () => {
+  const IN_SCOPE = ["CASTHMA", "DIABETES", "HIGHCHOL"];
+  const sets: Record<string, string[]> = {
+    "what.json": what.map((e) => e.measure_id),
+    "investigate.json": investigate.map((e) => e.measure_id),
+    "evidence.json": evidence.map((e) => e.measure_id),
+    "sources.json prevalence_years": Object.keys(sources.prevalence_years ?? {}),
+  };
+
+  for (const [file, ids] of Object.entries(sets)) {
+    it(`${file} has no duplicate measure_id`, () => {
+      expect(new Set(ids).size).toBe(ids.length);
+    });
+    it(`${file} has exactly {CASTHMA, DIABETES, HIGHCHOL}`, () => {
+      expect([...ids].sort()).toEqual(IN_SCOPE);
+    });
+  }
+});
+
+// Feature: dashboard, Property 18: Study-type and status breakdowns sum to ma_studies
+// Data test over the shipped files (Req 20.2). Fix the data, not this test.
+describe("Property 18: by_study_type and by_overall_status sum to ma_studies (Req 20.2)", () => {
+  const sum = (items: { count: number }[]) => items.reduce((acc, i) => acc + i.count, 0);
+
+  it("by_study_type sums to ma_studies for every disease", () => {
+    const violations = investigate
+      .filter((e) => sum(e.by_study_type) !== e.ma_studies)
+      .map((e) => `${e.measure_id}: by_study_type=${sum(e.by_study_type)} ma_studies=${e.ma_studies}`);
+    expect(violations).toEqual([]);
+  });
+
+  it("by_overall_status sums to ma_studies for every disease", () => {
+    const violations = investigate
+      .filter((e) => sum(e.by_overall_status) !== e.ma_studies)
+      .map((e) => `${e.measure_id}: by_overall_status=${sum(e.by_overall_status)} ma_studies=${e.ma_studies}`);
+    expect(violations).toEqual([]);
   });
 });

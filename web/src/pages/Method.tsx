@@ -47,6 +47,19 @@ export const MA_ACTIVITY_LIMIT =
 export const NATIONAL_COMPARISON_PLANNED =
   "A national (United States) comparison is planned for a later version and is not included here.";
 
+/** Disease scope today and how deferred diseases can be added (Req 20.6a). */
+export const DISEASE_SCOPE =
+  "This version covers three diseases: asthma, diabetes and high cholesterol. " +
+  "High blood pressure and depression can be added later by editing the rules file, after review.";
+
+/**
+ * High-cholesterol exclusion of heart-disease-only studies (Req 20.6b). Mirrors
+ * Spec 2's `ascvd_only` exclusion in pipeline/mapping/rules.py.
+ */
+export const HIGHCHOL_HEART_DISEASE_NOTE =
+  "For high cholesterol, we do not count studies that only target heart disease, such as heart attack trials. " +
+  "This makes its count lower.";
+
 /**
  * Render the Sources section: one named link per Source_Entry to its `url`, each
  * paired with that source's `fetched` date (Req 11.3). This is the only part of
@@ -138,6 +151,13 @@ export default function Method() {
             The study condition matches the crosswalk terms for the disease.
           </li>
         </ul>
+        <p className="method-page__scope">{DISEASE_SCOPE}</p>
+        <p className="method-page__highchol">{HIGHCHOL_HEART_DISEASE_NOTE}</p>
+        {/*
+          TODO(scoring-export): explain how studies marked "questionable" by
+          Spec 2 are treated (counted, excluded, or shown separately) once the
+          scoring-export spec decides. Code-only; nothing is rendered (Req 20.6).
+        */}
       </section>
 
       {/* --- Sources, each with its fetched date (Req 11.3) --- */}
