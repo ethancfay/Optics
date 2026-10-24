@@ -272,17 +272,24 @@ class RemovalCounts:
     locations_contacts: int = 0          # reported as "locations[].contacts"
     responsibleParty_investigator: int = 0
     def __add__(self, other) -> "RemovalCounts": ...
+    def to_log_dict(self) -> dict[str, int]: ...
+    @classmethod
+    def from_log_dict(cls, data: object) -> "RemovalCounts": ...
 
-def scrub(page: dict) -> tuple[dict, RemovalCounts]   # returns a new object; input not reused
+def scrub(page: object, page_number: int | None = None, url: str | None = None
+          ) -> tuple[dict, RemovalCounts]
 ```
 
-The scrubber walks the whole JSON tree recursively, so it handles any nesting depth:
+The scrubber walks the whole JSON tree iteratively (explicit stack), so it handles any nesting depth without recursion limits. It returns a new tree and never mutates or reuses its input (Req 3.2).
 
-- It removes any key named `centralContacts` or `overallOfficials`, wherever it appears, and counts one per removed key.
-- For any key named `locations` whose value is a list, it removes `contacts` from each dict element and counts one per removed `contacts` key.
-- For any key named `responsibleParty` whose value is a dict, it removes `investigatorFullName`, `investigatorTitle`, `investigatorAffiliation`, and `oldNameTitle`, counting one per removed field. `oldNameTitle` is the legacy name field.
-- The walk is iterative (explicit stack) to avoid recursion limits on deep generated inputs.
-- If the walk raises anything, the error is re-raised as a `PipelineError` with the page number and URL only (Req 3.5).
+Removed structures (Req 3.4):
+- Any key named `centralContacts` or `overallOfficials`, wherever it appears, counting one per removed key.
+- `contacts` from each dict element of any list stored under a key named `locations`, counting one per removed `contacts` key.
+- The investigator name fields (`investigatorFullName`, `investigatorTitle`, `investigatorAffiliation`, `oldNameTitle`) of any dict stored under a key named `responsibleParty`, counting one per removed field. `oldNameTitle` is the legacy name field.
+
+Error handling (Req 3.5): `scrub` raises `PipelineError` if the page is not a dict, if any key is not a string, or if any value is not a JSON type. The `page_number` and `url` arguments are used only in the error message, which names only the page number and URL, never page content.
+
+`RemovalCounts` has `to_log_dict` and `from_log_dict` methods that map the fields to their log names (`centralContacts`, `overallOfficials`, `locations[].contacts`, `responsibleParty investigator name fields`). These log names appear in `manifest.json` and `fetch_log.json`.
 
 Offline_Mode re-scrubs every stored page (Req 3.6). See the Fetch log section for how the counts are reported.
 
@@ -300,7 +307,7 @@ manifest.json                                      # written last; it marks a co
 `manifest.json` holds:
 
 ```json
-{"fetch_date": "...Z",
+{"fetch_date": "2026-10-24T15:00:00Z",
  "q2_server_cutoff": true,
  "urls": {"clinicaltrials_gov": [...], "cdc_places": [...]},
  "pages": {"ctgov_q1": N1, "ctgov_q2": N2, "cdc_places": M},
@@ -308,20 +315,25 @@ manifest.json                                      # written last; it marks a co
                       "locations[].contacts": 0, "responsibleParty investigator name fields": 0}}
 ```
 
+The `fetch_date` is stored as `YYYY-MM-DDTHH:MM:SSZ` in UTC. The `urls` object has one list per source: `clinicaltrials_gov` holds the Q1 and Q2 URLs in order, and `cdc_places` holds the PLACES URLs. The `pages` object counts by raw file prefix (`ctgov_q1`, `ctgov_q2`, `cdc_places`).
+
 Network run:
 
-1. `begin_network_run()` deletes `manifest.json` first, then every `ctgov_*page_*.json` and `places_page_*.json` (Req 10.8). From this point the store counts as incomplete. A failed run therefore leaves no usable offline cache (Req 10.9). This is the trade-off the requirements choose over keeping the previous cache.
-2. `write_page(source, n, obj)` writes `json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` to a temporary name, then calls `os.replace`. A write failure stops the run and names the file (Req 10.9).
-3. `finish_network_run(fetch_date, urls, removal_counts)` writes `manifest.json` after both sources have finished (Req 10.7).
+1. `begin_network_run()` deletes `manifest.json` first, then every `ctgov_*_page_*.json`, `places_page_*.json`, and leftover `.*tmp` file (Req 10.8). From this point the store counts as incomplete. A failed run therefore leaves no usable offline cache (Req 10.9). This is the trade-off the requirements choose over keeping the previous cache.
+2. `write_page(source, n, obj)` raises `PipelineError` if pages are written out of order (n must be previous + 1, starting at 1). It writes `json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` to `.<name>.tmp`, calls `fsync`, then calls `os.replace`. A write failure names the file and removes the temp file (Req 10.9).
+3. `finish_network_run(fetch_date: datetime, q2_server_cutoff: bool, urls: dict[str, list[str]], removal_counts: RemovalCounts)` writes `manifest.json` after both sources have finished (Req 10.7). Page counts come from what `write_page` recorded. The call refuses to write the manifest if any source has no pages or if the URL counts do not match the page counts.
 
-`load()` (Offline_Mode) requires all of the following:
+`load() -> RawCache` (Offline_Mode) requires all of the following:
 
-- `manifest.json` parses.
+- `manifest.json` parses and contains valid `fetch_date`, `q2_server_cutoff`, and `contact_removals`.
 - Every page listed in the manifest exists for Q1, Q2, and PLACES.
-- The last page of each CTGov query has no `nextPageToken`.
+- The saved URL counts match the page counts for both sources.
+- The last page of each CTGov query has no `nextPageToken` or an empty string.
 - The last PLACES page has fewer than 1,000 records.
 
-If any condition fails, the run stops with an error naming "ClinicalTrials.gov", "PLACES", or both (Req 10.4). In Offline_Mode, the HTTP_Client is never constructed, which guarantees zero network requests (Req 10.3, 14.4).
+If any condition fails, the run stops with an error naming "ClinicalTrials.gov", "PLACES", or both (Req 10.4). The error includes details for each failing condition.
+
+`RawCache` holds `fetch_date`, `q2_server_cutoff`, `urls`, `ctgov_q1_pages`, `ctgov_q2_pages`, `places_pages`, and `contact_removals`. The pages are the parsed JSON objects, not the raw bytes. In Offline_Mode, the HTTP_Client is never constructed, which guarantees zero network requests (Req 10.3, 14.4). `load` does not re-scrub; `__main__` re-scrubs in Offline_Mode (Req 3.6).
 
 ### Study_Transformer (`pipeline/transform/study_transformer.py`), Req 4, 5
 
