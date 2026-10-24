@@ -1,21 +1,21 @@
 {
   "data_as_of": "2026-10-24",
-  "is_sample": true,
-  "sources": [
-    {
-      "name": "ClinicalTrials.gov",
-      "url": "https://clinicaltrials.gov/",
-      "fetched": "2026-10-24"
-    },
-    {
-      "name": "CDC PLACES 2025 county release",
-      "url": "https://data.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-County-Data-20/swc5-untb",
-      "fetched": "2026-10-24"
-    }
-  ],
+  "is_sample": false,
   "prevalence_years": {
     "CASTHMA": "2023",
     "DIABETES": "2023",
     "HIGHCHOL": "2023"
-  }
+  },
+  "sources": [
+    {
+      "fetched": "2026-10-24",
+      "name": "ClinicalTrials.gov",
+      "url": "https://clinicaltrials.gov/api/v2/studies?filter.geo=distance(42.3,-71.8,150mi)&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&pageSize=1000&countTotal=true&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.statusModule.overallStatus,protocolSection.statusModule.lastUpdatePostDateStruct,protocolSection.designModule.studyType,protocolSection.designModule.phases,protocolSection.eligibilityModule.healthyVolunteers,protocolSection.eligibilityModule.minimumAge,protocolSection.eligibilityModule.maximumAge,protocolSection.eligibilityModule.stdAges,protocolSection.conditionsModule.conditions,protocolSection.armsInterventionsModule.interventions.type,protocolSection.armsInterventionsModule.interventions.name,protocolSection.contactsLocationsModule.locations.facility,protocolSection.contactsLocationsModule.locations.city,protocolSection.contactsLocationsModule.locations.state,protocolSection.contactsLocationsModule.locations.zip,protocolSection.contactsLocationsModule.locations.status,protocolSection.contactsLocationsModule.locations.geoPoint,derivedSection.conditionBrowseModule.meshes,derivedSection.conditionBrowseModule.ancestors"
+    },
+    {
+      "fetched": "2026-10-24",
+      "name": "CDC PLACES county release",
+      "url": "https://data.cdc.gov/resource/swc5-untb.json?$select=locationname,locationid,measureid,measure,data_value,low_confidence_limit,high_confidence_limit,totalpop18plus,geolocation,year,stateabbr,datavaluetypeid&$where=stateabbr%3D'MA'+AND+datavaluetypeid%3D'CrdPrv'&$order=locationname,measureid,:id&$limit=1000&$offset=0"
+    }
+  ]
 }
