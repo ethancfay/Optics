@@ -4,38 +4,48 @@
     "condition": "Asthma",
     "ncts": [
       {
-        "nct_id": "NCT04123456",
-        "url": "https://clinicaltrials.gov/study/NCT04123456",
-        "title": "Inhaled Corticosteroid Step-Down in Adults With Mild Asthma",
-        "status": "Recruiting",
-        "study_type": "Interventional",
-        "phases": ["PHASE3"],
-        "intervention_types": ["Drug"],
-        "intervention_names": ["Budesonide", "Placebo"]
+        "nct_id": "NCT00595491",
+        "url": "https://clinicaltrials.gov/study/NCT00595491",
+        "title": "Pilot Study to Identify the Mediators and Inflammatory Cell Surface Receptors Involved in Allergic Airway Inflammation",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE1"],
+        "intervention_types": ["BIOLOGICAL"],
+        "intervention_names": [
+          "Bronchoscopy, Segmental Allergen Challenge, and Broncheoalveolar Lavage"
+        ]
       },
       {
-        "nct_id": "NCT05234567",
-        "url": "https://clinicaltrials.gov/study/NCT05234567",
-        "title": "Digital Coaching for Asthma Self-Management",
-        "status": "Active, not recruiting",
-        "study_type": "Interventional",
+        "nct_id": "NCT03524222",
+        "url": "https://clinicaltrials.gov/study/NCT03524222",
+        "title": "Home Hospital for Suddenly Ill Adults",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
         "phases": ["NA"],
-        "intervention_types": ["Behavioral"],
-        "intervention_names": ["Self-management coaching app"]
+        "intervention_types": ["OTHER"],
+        "intervention_names": ["Home Hospitalization"]
+      },
+      {
+        "nct_id": "NCT05272241",
+        "url": "https://clinicaltrials.gov/study/NCT05272241",
+        "title": "Registry of Asthma Characterization and Recruitment 3 (RACR3)",
+        "status": "RECRUITING",
+        "study_type": "OBSERVATIONAL",
+        "phases": [],
+        "intervention_types": [],
+        "intervention_names": []
       }
     ],
     "filters": [
-      "Recruiting status only",
       "Located in Massachusetts",
-      "Adult participants (18 and older)"
+      "Fetched 2026-10-24"
     ],
     "mapping_choices": [
-      "CDC PLACES measure CASTHMA mapped to asthma condition terms",
-      "Distinct NCT IDs counted once per study"
+      "Selected studies whose meshTerms list contains the MeSH heading \"Asthma\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
     ],
     "missing_data_notes": [
-      "Some studies list multiple conditions and may also appear under related entries.",
-      "Trials without a recorded Massachusetts site are excluded."
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     ]
   },
   {
@@ -43,47 +53,46 @@
     "condition": "Depression",
     "ncts": [
       {
-        "nct_id": "NCT04987654",
-        "url": "https://clinicaltrials.gov/study/NCT04987654",
-        "title": "Adjunctive Therapy for Treatment-Resistant Depression",
-        "status": "Recruiting",
-        "study_type": "Interventional",
-        "phases": ["PHASE2", "PHASE3"],
-        "intervention_types": ["Drug"],
-        "intervention_names": ["Investigational agent", "Placebo"]
-      },
-      {
-        "nct_id": "NCT05112233",
-        "url": "https://clinicaltrials.gov/study/NCT05112233",
-        "title": "Group Cognitive Behavioral Therapy for Adults With Depression",
-        "status": "Recruiting",
-        "study_type": "Interventional",
+        "nct_id": "NCT05962879",
+        "url": "https://clinicaltrials.gov/study/NCT05962879",
+        "title": "Development of a Transdiagnostic Intervention for Adolescents at Risk for Serious Mental Illness",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
         "phases": ["NA"],
-        "intervention_types": ["Behavioral"],
-        "intervention_names": ["Group CBT"]
+        "intervention_types": ["BEHAVIORAL"],
+        "intervention_names": ["Resilience Training for Teens"]
       },
       {
-        "nct_id": "NCT06009988",
-        "url": "https://clinicaltrials.gov/study/NCT06009988",
-        "title": "Observational Cohort of Depression Care Pathways",
-        "status": "Completed",
-        "study_type": "Observational",
-        "phases": [],
-        "intervention_types": [],
-        "intervention_names": []
+        "nct_id": "NCT06524830",
+        "url": "https://clinicaltrials.gov/study/NCT06524830",
+        "title": "A Study to Assess the Efficacy, Safety and Tolerability of VLS-01 Buccal Film, Compared to Placebo in Patients With Treatment Resistant Depression (ELUMINA)",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE2"],
+        "intervention_types": ["DRUG", "DRUG"],
+        "intervention_names": ["VLS-01-203 BU", "VLS-01-BU Placebo"]
+      },
+      {
+        "nct_id": "NCT07065240",
+        "url": "https://clinicaltrials.gov/study/NCT07065240",
+        "title": "A Study to Evaluate the Efficacy and Safety of SPT-300 (GlyphAllo) in Participants With Major Depressive Disorder, With or Without Anxious Distress (BUOY-1 Study)",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE2"],
+        "intervention_types": ["DRUG", "DRUG"],
+        "intervention_names": ["SPT-300", "Placebo"]
       }
     ],
     "filters": [
-      "Recruiting status only",
       "Located in Massachusetts",
-      "Adult participants (18 and older)"
+      "Fetched 2026-10-24"
     ],
     "mapping_choices": [
-      "CDC PLACES measure DEPRESSION mapped to depressive disorder terms",
-      "Behavioral and drug interventions both included"
+      "Selected studies whose meshTerms list contains the MeSH heading \"Depressive Disorder\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
     ],
     "missing_data_notes": [
-      "Studies tagged only with broader mental-health terms are not counted."
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     ]
   },
   {
@@ -91,37 +100,49 @@
     "condition": "High Blood Pressure",
     "ncts": [
       {
-        "nct_id": "NCT04776655",
-        "url": "https://clinicaltrials.gov/study/NCT04776655",
-        "title": "Fixed-Dose Combination Therapy for Hypertension Control",
-        "status": "Recruiting",
-        "study_type": "Interventional",
-        "phases": ["PHASE3"],
-        "intervention_types": ["Drug"],
-        "intervention_names": ["Combination antihypertensive", "Active comparator"]
+        "nct_id": "NCT04278404",
+        "url": "https://clinicaltrials.gov/study/NCT04278404",
+        "title": "Pharmacokinetics, Pharmacodynamics, and Safety Profile of Understudied Drugs Administered to Children Per Standard of Care (POPS)",
+        "status": "RECRUITING",
+        "study_type": "OBSERVATIONAL",
+        "phases": [],
+        "intervention_types": ["DRUG"],
+        "intervention_names": [
+          "The POP02 study is collecting bodily fluid samples (i.e., whole blood, effluent samples) of children prescribed the following drugs of interest per standard of care:"
+        ]
       },
       {
-        "nct_id": "NCT05443322",
-        "url": "https://clinicaltrials.gov/study/NCT05443322",
-        "title": "Renal Denervation Device for Resistant Hypertension",
-        "status": "Active, not recruiting",
-        "study_type": "Interventional",
-        "phases": ["NA"],
-        "intervention_types": ["Device"],
-        "intervention_names": ["Renal denervation system"]
+        "nct_id": "NCT04835857",
+        "url": "https://clinicaltrials.gov/study/NCT04835857",
+        "title": "Comparison of Cuff-Less Wrist Wearable Blood Pressure Device to Cuff Based Blood Pressure Measuring Devices",
+        "status": "RECRUITING",
+        "study_type": "OBSERVATIONAL",
+        "phases": [],
+        "intervention_types": ["DEVICE", "DEVICE", "DEVICE"],
+        "intervention_names": ["ViTrack", "Oscillometric BP Device", "Auscultatory cuff"]
+      },
+      {
+        "nct_id": "NCT05030545",
+        "url": "https://clinicaltrials.gov/study/NCT05030545",
+        "title": "Cardiovascular Manifestations of MR Activation in Primary Aldosteronism: Pilot Clinical Study",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE4"],
+        "intervention_types": ["DRUG"],
+        "intervention_names": ["Eplerenone"]
       }
     ],
     "filters": [
-      "Recruiting status only",
       "Located in Massachusetts",
-      "Adult participants (18 and older)"
+      "Fetched 2026-10-24"
     ],
     "mapping_choices": [
-      "CDC PLACES measure BPHIGH mapped to hypertension condition terms",
-      "Distinct NCT IDs counted once per study"
+      "Selected studies whose meshTerms list contains the MeSH heading \"Hypertension\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Exact-match only: terms such as \"Hypertension, Pulmonary\" and \"Hypertension, Pregnancy-Induced\" are not treated as matching \"Hypertension\".",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
     ],
     "missing_data_notes": [
-      "Combined cardiovascular studies may overlap with other conditions."
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     ]
   },
   {
@@ -129,37 +150,52 @@
     "condition": "Diabetes",
     "ncts": [
       {
-        "nct_id": "NCT04332211",
-        "url": "https://clinicaltrials.gov/study/NCT04332211",
-        "title": "GLP-1 Receptor Agonist in Adults With Type 2 Diabetes",
-        "status": "Recruiting",
-        "study_type": "Interventional",
-        "phases": ["PHASE3"],
-        "intervention_types": ["Drug"],
-        "intervention_names": ["GLP-1 receptor agonist", "Placebo"]
+        "nct_id": "NCT04101669",
+        "url": "https://clinicaltrials.gov/study/NCT04101669",
+        "title": "The RESET System Pivotal Clinical Trial (Protocol Revision K)",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["DEVICE", "OTHER"],
+        "intervention_names": ["RESET Liner", "Sham"]
       },
       {
-        "nct_id": "NCT05667788",
-        "url": "https://clinicaltrials.gov/study/NCT05667788",
-        "title": "Continuous Glucose Monitoring and Lifestyle Support",
-        "status": "Completed",
-        "study_type": "Interventional",
+        "nct_id": "NCT05317585",
+        "url": "https://clinicaltrials.gov/study/NCT05317585",
+        "title": "Continuous Glucose Monitor Use in Pregnancy",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
         "phases": ["NA"],
-        "intervention_types": ["Device", "Behavioral"],
-        "intervention_names": ["Continuous glucose monitor", "Lifestyle program"]
+        "intervention_types": ["DEVICE", "DEVICE"],
+        "intervention_names": [
+          "Continuous Glucose Monitor",
+          "Routine Capillary Blood Glucose Monitoring (Fingerstick Glucose)"
+        ]
+      },
+      {
+        "nct_id": "NCT05420051",
+        "url": "https://clinicaltrials.gov/study/NCT05420051",
+        "title": "Boosting Emotional Well-being and Happiness in Outpatients Living With Diabetes",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["BEHAVIORAL", "BEHAVIORAL"],
+        "intervention_names": [
+          "Positive Psychology + Motivational Interviewing",
+          "Motivational Interviewing"
+        ]
       }
     ],
     "filters": [
-      "Recruiting status only",
       "Located in Massachusetts",
-      "Adult participants (18 and older)"
+      "Fetched 2026-10-24"
     ],
     "mapping_choices": [
-      "CDC PLACES measure DIABETES mapped to type 2 diabetes terms",
-      "Type 1 diabetes studies excluded where separable"
+      "Selected studies whose meshTerms list contains the MeSH heading \"Diabetes Mellitus, Type 2\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
     ],
     "missing_data_notes": [
-      "Studies covering both diabetes types are counted once under diabetes."
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     ]
   },
   {
@@ -167,27 +203,46 @@
     "condition": "High Cholesterol",
     "ncts": [
       {
-        "nct_id": "NCT04221100",
-        "url": "https://clinicaltrials.gov/study/NCT04221100",
-        "title": "PCSK9 Inhibitor for Adults With High Cholesterol",
-        "status": "Recruiting",
-        "study_type": "Interventional",
-        "phases": ["PHASE2"],
-        "intervention_types": ["Drug"],
-        "intervention_names": ["PCSK9 inhibitor", "Placebo"]
+        "nct_id": "NCT06743659",
+        "url": "https://clinicaltrials.gov/study/NCT06743659",
+        "title": "Computerized Decision Support for Identification and Management of Familial Hypercholesterolemia",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["DEVICE"],
+        "intervention_names": ["Alert-based computerized decision support"]
+      },
+      {
+        "nct_id": "NCT06988462",
+        "url": "https://clinicaltrials.gov/study/NCT06988462",
+        "title": "Pilot Study of \"Bottarga\" Supplementation: A Little-known, Sustainable \"Blue\" Food",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["OTHER", "OTHER"],
+        "intervention_names": ["Bottarga", "Comparator"]
+      },
+      {
+        "nct_id": "NCT01764633",
+        "url": "https://clinicaltrials.gov/study/NCT01764633",
+        "title": "Further Cardiovascular Outcomes Research With PCSK9 Inhibition in Subjects With Elevated Risk",
+        "status": "COMPLETED",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE3"],
+        "intervention_types": ["BIOLOGICAL", "DRUG"],
+        "intervention_names": ["Evolocumab", "Placebo"]
       }
     ],
     "filters": [
-      "Recruiting status only",
       "Located in Massachusetts",
-      "Adult participants (18 and older)"
+      "Fetched 2026-10-24"
     ],
     "mapping_choices": [
-      "CDC PLACES measure HIGHCHOL mapped to hyperlipidemia terms",
-      "Distinct NCT IDs counted once per study"
+      "Selected studies whose meshTerms list contains the MeSH heading \"Hypercholesterolemia\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred."
     ],
     "missing_data_notes": [
-      "Lipid studies are sometimes recorded under broader cardiovascular labels."
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     ]
   }
 ]

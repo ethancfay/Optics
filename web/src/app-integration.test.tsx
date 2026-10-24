@@ -193,7 +193,7 @@ describe("Routing (Req 14, 15.7)", () => {
     renderApp(`/evidence/${DESIGNATED_MEASURE_ID}`);
     // The first NCT for CASTHMA in the real evidence.json renders as a link.
     expect(
-      await screen.findByRole("link", { name: "NCT04123456" })
+      await screen.findByRole("link", { name: "NCT00595491" })
     ).toBeInTheDocument();
   });
 

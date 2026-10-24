@@ -237,22 +237,22 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
   - Keep all existing tests passing; add tests for the `null` us_studies message, the Drug caption, and the sample-data banner; update the WHERE/geojson-dependent tests for the hidden view.
   - _Requirements: 1.2, 2.1, 2.2, 2.3, 2.5, 2.6, 2.7, 6.1, 7.2, 7.8, 8.1, 9 (hidden), 13.1, 14.1_
 
-- [ ] 17. Replace invented sample NCTs with real records
+- [x] 17. Replace invented sample NCTs with real records
   - Replace the hand-written NCTs in `web/public/data/evidence.json` (4 of 10 are real but unrelated trials — NCT05234567, NCT04776655, NCT04332211, NCT04221100 — and the other 6 do not exist) with real records copied verbatim from `pipeline/processed/studies.csv`, and make the Evidence page render ClinicalTrials.gov codes as readable labels. Spec docs (requirements.md Req 18, design.md sample-data plan + Evidence_Page section + Property 14) are already updated; this task implements them.
   - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5, 18.6, 18.7, 18.8, 8.1_
 
-  - [ ] 17.1 Confirm the spec reflects the plan (design.md + requirements.md)
+  - [x] 17.1 Confirm the spec reflects the plan (design.md + requirements.md)
     - Verify requirements.md Requirement 18 and design.md state: (a) `evidence.json` `ncts` are copied verbatim from `pipeline/processed/studies.csv` and never invented; (b) the Evidence page shows readable labels for ClinicalTrials.gov codes (RECRUITING→Recruiting, ACTIVE_NOT_RECRUITING→Active, not recruiting, PHASE2→Phase 2, NA→Not applicable, INTERVENTIONAL→Interventional, DRUG→Drug) and shows unknown codes unchanged.
     - This is the spec-change checkpoint: do not start 17.2-17.5 until the spec changes are approved.
     - _Requirements: 18.1, 18.2, 18.6, 18.7_
 
-  - [ ] 17.2 Add `formatCtgovLabel` and use it on the Evidence page
+  - [x] 17.2 Add `formatCtgovLabel` and use it on the Evidence page
     - Create a pure `formatCtgovLabel(code: string): string` in `web/src/data/` with a fixed lookup table for the known status, study-type, phase, and intervention-type codes (at least RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED, INTERVENTIONAL, OBSERVATIONAL, PHASE1-4, NA, DRUG, BIOLOGICAL, DEVICE, BEHAVIORAL, PROCEDURE); return a non-empty string for every input and return any unknown code unchanged.
     - Use it in `web/src/pages/Evidence.tsx` for `status`, `study_type`, `phases`, and `intervention_types` (mapping each array element), keeping the existing "unknown" placeholder for omitted details.
     - Add unit tests (each known code maps to its label; an unknown code is returned unchanged) plus a property-based test tagged `// Feature: dashboard, Property 14: ...` at `numRuns: 100` asserting the output is never empty, known codes map to labels, and unknown codes are returned unchanged.
     - _Requirements: 18.6, 18.7, 18.8_
 
-  - [ ] 17.3 Rebuild `ncts[]` in `evidence.json` from real records
+  - [x] 17.3 Rebuild `ncts[]` in `evidence.json` from real records
     - For each `measure_id`, pick up to 3 studies from `pipeline/processed/studies.csv` by exact list-item equality against the disease's MeSH heading (Asthma; Depressive Disorder; Hypertension; Diabetes Mellitus, Type 2; Hypercholesterolemia): a study qualifies when one of its `meshTerms` equals the heading exactly; only if fewer than 3 qualify on `meshTerms`, also admit studies with an exact `ancestorTerms` match. No substring/prefix match — e.g. "Hypertension, Pulmonary" and "Hypertension, Pregnancy-Induced" must NOT match "Hypertension". Prefer `overallStatus` = RECRUITING.
     - Only pick studies with at least one Massachusetts site in `pipeline/processed/sites.csv` (or confirm `studies.csv` is already MA-only and record in the notes how that was checked).
     - If a disease has 0 qualifying studies, leave its `ncts` empty and add a `missing_data_notes` line saying no qualifying study was found; never invent or substitute.
@@ -261,11 +261,11 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Set each entry's `mapping_choices` to describe the exact-match MeSH-heading selection rule, and add the `missing_data_notes` entry "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
     - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5_
 
-  - [ ] 17.4 Update tests that reference specific NCT IDs
+  - [x] 17.4 Update tests that reference specific NCT IDs
     - Find and update any test that asserts a now-removed NCT ID (e.g. NCT04123456) so tests reference the real records now in `evidence.json`; keep the existing Evidence-page and sample-fixture tests passing.
     - _Requirements: 8.1, 18.1_
 
-  - [ ] 17.5 Verify and commit in three separate commits
+  - [x] 17.5 Verify and commit in three separate commits
     - Run `tsc`, `npm test`, and `npm run build` in `web/`; fix any failures.
     - Commit as three separate commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `formatCtgovLabel` helper plus its tests and the Evidence-page change; (3) the `evidence.json` data change and any updated tests.
     - _Requirements: 18.1, 18.2, 18.6_
