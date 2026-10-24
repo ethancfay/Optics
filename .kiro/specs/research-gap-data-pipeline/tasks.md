@@ -43,7 +43,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 13.5, 13.6, 13.7, 14.1, 14.2, 14.5, 14.8_
 
-- [ ] 3. HTTP_Client
+- [x] 3. HTTP_Client
   - Implement `pipeline/data/http_client.py` as specified in design § HTTP_Client:
     - The host allowlist.
     - 4 attempts, with waits of 1, 2, then 4 s.
@@ -60,7 +60,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 9.1–9.5, 9.7, 14.3_
 
-- [ ] 4. Contact_Scrubber and Raw_Store
+- [x] 4. Contact_Scrubber and Raw_Store
   - Implement `pipeline/data/contact_scrubber.py`: an iterative tree walk, `RemovalCounts`, and errors with the page number and URL only (design § Contact_Scrubber).
   - Implement `pipeline/data/raw_store.py`:
     - The file names `ctgov_q1_page_*`, `ctgov_q2_page_*`, and `places_page_*`.
@@ -76,7 +76,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 3.2, 3.4, 3.5, 3.6, 10.1, 10.4, 10.6–10.9, 13.10_
 
-- [ ] 5. CTGov_Fetcher (Q1 and Q2) and fetch checks
+- [x] 5. CTGov_Fetcher (Q1 and Q2) and fetch checks
   - Implement `pipeline/data/ctgov_fetcher.py` as specified in design § CTGov_Fetcher:
     - Q1, then Q2.
     - The `fields` list.
@@ -98,7 +98,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 1.1–1.12 (as amended), 3.1, 3.3, 3.5_
 
-- [ ] 6. PLACES_Fetcher
+- [x] 6. PLACES_Fetcher
   - Implement `pipeline/data/places_fetcher.py` as specified in design § PLACES_Fetcher: `$select`, `$where`, and `$order`, with or without `:id` depending on V9, plus `$limit=1000` and the `$offset` sequence.
   - Error handling: stop on an empty first page, an invalid body, or the 100-page limit.
   - Each page is written to the Raw_Store before the next request.
@@ -106,7 +106,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 2.1–2.9, 10.1_
 
-- [ ] 7. Study_Transformer
+- [x] 7. Study_Transformer
   - Implement `pipeline/transform/study_transformer.py` following design § Study_Transformer steps 1–7:
     - Q1-then-Q2 order.
     - `nctId` deduplication before the status filter.
@@ -125,12 +125,13 @@ Rules for every task:
     - Every `studyType` is kept, including an empty one.
     - Every site status is kept.
     - `healthyVolunteers` is written as `true`, `false`, or empty.
+    - `minimumAge` and `maximumAge` are copied verbatim or left empty, and `stdAges` keeps source order or is `[]`.
     - `missing_geo` versus `out_of_range`.
     - A study in both Q1 and Q2 keeps the Q1 copy.
   - Done when: `pytest` passes.
   - _Requirements: 4.1–4.9, 5.1–5.11, 13.2, 13.3, 13.12_
 
-- [ ] 8. PLACES_Transformer
+- [x] 8. PLACES_Transformer
   - Implement `pipeline/transform/places_transformer.py` as specified in design § PLACES_Transformer:
     - The MA + `CrdPrv` filter.
     - Identifier validation, and `locationid` converted to a 5-character FIPS string.
@@ -146,7 +147,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 6.1–6.8, 13.11_
 
-- [ ] 9. CSV_Writer and CSV_Reader
+- [x] 9. CSV_Writer and CSV_Reader
   - Implement `pipeline/io/csv_writer.py` as specified in design § CSV_Writer:
     - Column order.
     - Sorting with the tie-breakers.
@@ -162,7 +163,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 7.2–7.9, 13.4_
 
-- [ ] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
+- [x] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
   - Implement `pipeline/transform/pii_guard.py` as specified in design § PII_Guard:
     - Scan the encoded cells and each decoded list item.
     - Report every match, with file, row identifier, field, and pattern, but never the matched text.
@@ -178,7 +179,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 8.1, 8.2, 8.4, 8.5, 11.1–11.6, 12.2–12.8, 12.11, 12.12_
 
-- [ ] 11. Atomic output, end-to-end run, and first live fetch
+- [x] 11. Atomic output, end-to-end run, and first live fetch
   - Implement `pipeline/io/atomic.py`: a staging directory under `pipeline/`, three CSVs then `os.replace`, then `fetch_log.json`, with cleanup in `finally` (design § Atomic output).
   - Wire up `run()` in `__main__.py` in the order shown in design § Data flow:
     - The network path and the offline path. The offline path never builds an HTTP_Client.
@@ -209,3 +210,9 @@ Rules for every task:
   - If this task is skipped, Req 10.5 is covered only by the design (stored Fetch_Date and stored URLs) and is not tested.
   - Done when: `pytest` passes.
   - _Requirements: 10.5, 12.4, 12.5_
+- [x] Step 1 (2025-01-XX): Tighten Req 8.7 (sites.zip validation)
+  - User decision: sites.zip must match `^\d{5}(-?\d{4})?$`, else blanked and counted
+  - Updated requirements.md (Req 5.1, 8.7, 12.3), design.md
+  - Updated study_transformer.py, pii_guard.py, fetch_log_writer.py, __main__.py
+  - Added tests for zip validation, deduplication, and phone pattern non-matching
+  - All 238 tests pass

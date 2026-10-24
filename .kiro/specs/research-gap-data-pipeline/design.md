@@ -51,6 +51,7 @@ pipeline/
   __init__.py              # empty; must parse on old Pythons (see Version check)
   __main__.py              # entry point: version check, argument parsing, run orchestration
   errors.py                # PipelineError (shared by all subpackages)
+  patterns.py              # Email_Pattern, Phone_Pattern (Contact_Scrubber + PII_Guard)
   data/
     __init__.py
     http_client.py         # HTTP_Client
@@ -146,14 +147,13 @@ The "Common commands" section of `tech.md` lists these commands.
 ## Components and Interfaces
 
 ### HTTP_Client (`pipeline/data/http_client.py`), Req 9, 14.3
-
 ```python
 class HttpClient:
-    def __init__(self, sleep=time.sleep, opener=urllib.request.urlopen, clock=time.monotonic): ...
+    def __init__(self, sleep=time.sleep, opener=None, clock=time.monotonic): ...
     def get(self, url: str) -> bytes: ...
 ```
-
-- Host allowlist: the client raises `PipelineError` before sending anything if the URL host is not `clinicaltrials.gov` or `data.cdc.gov` (Req 14.3).
+- Host allowlist: the client raises `PipelineError` before sending anything if the URL is not https or the host is not exactly `clinicaltrials.gov` or `data.cdc.gov` (Req 14.3).
+- Redirect allowlist: `opener=None` means the client builds a urllib opener on each call with an `HTTPRedirectHandler` subclass that runs the same allowlist check on the redirect target, so a redirect to a host outside the allowlist (or to non-https) raises `PipelineError` and is not followed (Req 14.3). The opener is built per call rather than bound as a default argument, so the test-time network block in `tests/conftest.py` applies to it. Tests inject their own `opener`.
 - Attempts: 1 initial attempt plus up to 3 retries, waiting 1, 2, then 4 s (Req 9.1). Each `get` call has its own counter (Req 9.2).
 - Retried failures: `URLError` / `ConnectionError`, timeouts, HTTP 429, and HTTP 5xx. `Retry-After` is ignored because the requirements fix the waits.
 - Other 4xx: raises `HttpStatusError(url, status)` (a `PipelineError` subclass) with no retry (Req 9.4). The CTGov_Fetcher turns status 400 into the Req 1.11 message.
@@ -161,6 +161,8 @@ class HttpClient:
 - 60 s total per attempt (Req 9.5): urllib's `timeout` applies to each socket operation, not to the whole response. The client therefore records a deadline when it sends the request, reads the body in 64 KiB chunks, and resets the socket timeout to the remaining time before each read. Passing the deadline raises a timeout failure.
 - Headers: `User-Agent: research-gap-index-pipeline` and `Accept: application/json`. No API keys.
 - The client returns the raw bytes. It never logs bodies.
+- Socket closed at end of body (fixed in task 11): `http.client` closes the socket as soon as the whole body has been read, before the last `read` returns `b""`. Calling `settimeout` on that socket raised `OSError` EBADF, which the first live run reported as "connection error (OSError) after 4 attempts". The client now resets the timeout only while `sock.fileno() != -1`. The deadline check between chunks is unchanged.
+- No HTTP 400 was seen in the first live run, so the optional "name the rejected parameter from the 400 body" change was not made. The 400 message still gives the `filter.geo` / `filter.advanced` hint (Req 1.11).
 
 ### CTGov_Fetcher (`pipeline/data/ctgov_fetcher.py`), Req 1, 3.1
 
@@ -180,7 +182,16 @@ class CtgovFetchResult:
     removal_counts: RemovalCounts
 
 def fetch_ctgov(client: HttpClient, raw_store, fetch_date: datetime) -> CtgovFetchResult
+
+def recent_completed_cutoff(fetch_date: datetime) -> date
+def q2_lower_bound(fetch_date: datetime) -> date     # cutoff minus 1 day
+def is_allowed_state(state: object) -> bool          # Req 5.3 comparison
+ALLOWED_STATES: frozenset[str]                        # casefolded names and abbreviations
 ```
+
+- `recent_completed_cutoff`, `ALLOWED_STATES`, and `is_allowed_state` live in this module because the fetcher (Q2 lower bound) and the fetch checks use them first. The Study_Transformer imports them from here (steps 4 and 5), so the cutoff and the state comparison are defined once.
+- `QueryResult.total_count` is `None` when page 1 has no `totalCount`, or a value that is not an `int` (a `bool` counts as not an `int`).
+- `Q2_SERVER_CUTOFF` is read when the Q2 parameters are built, so tests can set it to `False` with `monkeypatch`.
 
 The fetcher runs Q1 to completion, then Q2. Each query builds its parameters once, and only `pageToken` changes between pages of the same query (Req 1.2):
 
@@ -209,6 +220,9 @@ protocolSection.statusModule.lastUpdatePostDateStruct
 protocolSection.designModule.studyType
 protocolSection.designModule.phases
 protocolSection.eligibilityModule.healthyVolunteers
+protocolSection.eligibilityModule.minimumAge
+protocolSection.eligibilityModule.maximumAge
+protocolSection.eligibilityModule.stdAges
 protocolSection.conditionsModule.conditions
 protocolSection.armsInterventionsModule.interventions.type
 protocolSection.armsInterventionsModule.interventions.name
@@ -230,8 +244,10 @@ Per-page loop, run separately for each query. Page numbers, seen tokens, and the
 2. Parse with `json.loads`. If parsing fails, or the result has no `studies` list, stop with the URL and page number (Req 1.6, 3.5). Nothing from the page is written.
 3. Scrub the page (Contact_Scrubber), then call `raw_store.write_page("ctgov_q1" or "ctgov_q2", n, page)` (Req 10.1). This happens before the next request.
 4. On the query's page 1, read `totalCount`. A non-integer or `bool` value fails the check in Req 1.10, which runs after the fetch.
-5. Read `nextPageToken`. If the field is absent, null, or `""`, stop paging this query (Req 1.3). If the token was seen earlier in this query, stop with an error naming the token and the query (Req 1.5). If this is the query's page 100 and a token is present, stop with an error stating the 100-page limit (Req 1.7).
-6. HTTP 400 from `HttpStatusError`: stop with the URL, status 400, and the hint "check parameter filter.geo". For Q2 the hint is "check parameter filter.geo or filter.advanced" (Req 1.11).
+5. Read `nextPageToken`. If the field is absent, null, or `""`, stop paging this query (Req 1.3). A token that is present but not a string stops the run with the URL and page number. If the token was seen earlier in this query, stop with an error naming the token and the query (Req 1.5). If this is the query's page 100 and a token is present, stop with an error stating the 100-page limit (Req 1.7).
+6. HTTP 400 from `HttpStatusError`: stop with the URL, status 400, and the hint "check parameter filter.geo". For Q2 the hint is "check parameter filter.geo or filter.advanced" (Req 1.11). Any other `HttpStatusError` is passed on unchanged (Req 9.4).
+
+Error messages name the query as `Q1` or `Q2` together with the per-query page number, for example "Q2 page 3 of <URL>".
 
 Merge: the transformers receive the Q1 pages followed by the Q2 pages. Deduplication by `nctId` happens in the Study_Transformer (Req 4.5). A study can appear in both queries if its status changes between the two queries. In that case the Q1 copy is kept.
 
@@ -240,6 +256,13 @@ The Fetch_Date is captured as `datetime.now(timezone.utc)` once, before the firs
 ### Fetch checks (in `__main__.py`), Req 1.10, 1.12
 
 These checks run after the CTGov pages are available (network or offline) and before transformation:
+
+```python
+def check_total_counts(pages_by_query: dict[str, list[dict]]) -> None     # Req 1.10
+def check_allowed_states(pages_by_query: dict[str, list[dict]]) -> None   # Req 1.12
+```
+
+Both take `{"q1": [...pages], "q2": [...pages]}`, built from `CtgovFetchResult.queries` in a network run or from `RawCache.ctgov_q1_pages` and `ctgov_q2_pages` in Offline_Mode. Both modes read `totalCount` from the query's page 1, so the check is the same code path in each. Each raises `PipelineError` on failure.
 
 - Req 1.10, per query: page 1 of each query must have an integer `totalCount`, and that query's total number of `studies` elements across its pages must equal it. Duplicates and records without an `nctId` are counted at this stage, because the count is of records as received. Studies that appear in both queries count once in each query. On failure, the message names the query and gives both numbers. In Offline_Mode, `totalCount` is read from each query's stored page 1, which keeps that field.
 - Req 1.12: at least one record must have a location whose state matches Allowed_States, using the Req 5.3 comparison. Otherwise the run stops with a message that names `filter.geo`.
@@ -273,17 +296,26 @@ class RemovalCounts:
     locations_contacts: int = 0          # reported as "locations[].contacts"
     responsibleParty_investigator: int = 0
     def __add__(self, other) -> "RemovalCounts": ...
+    def to_log_dict(self) -> dict[str, int]: ...
+    @classmethod
+    def from_log_dict(cls, data: object) -> "RemovalCounts": ...
 
-def scrub(page: dict) -> tuple[dict, RemovalCounts]   # returns a new object; input not reused
+def scrub(page: object, page_number: int | None = None, url: str | None = None
+          ) -> tuple[dict, RemovalCounts]
 ```
 
-The scrubber walks the whole JSON tree recursively, so it handles any nesting depth:
+The scrubber walks the whole JSON tree iteratively (explicit stack), so it handles any nesting depth without recursion limits. It returns a new tree and never mutates or reuses its input (Req 3.2).
 
-- It removes any key named `centralContacts` or `overallOfficials`, wherever it appears, and counts one per removed key.
-- For any key named `locations` whose value is a list, it removes `contacts` from each dict element and counts one per removed `contacts` key.
-- For any key named `responsibleParty` whose value is a dict, it removes `investigatorFullName`, `investigatorTitle`, `investigatorAffiliation`, and `oldNameTitle`, counting one per removed field. `oldNameTitle` is the legacy name field.
-- The walk is iterative (explicit stack) to avoid recursion limits on deep generated inputs.
-- If the walk raises anything, the error is re-raised as a `PipelineError` with the page number and URL only (Req 3.5).
+Removed structures (Req 3.4):
+- Any key named `centralContacts` or `overallOfficials`, wherever it appears, counting one per removed key.
+- `contacts` from each dict element of any list stored under a key named `locations`, counting one per removed `contacts` key.
+- The investigator name fields (`investigatorFullName`, `investigatorTitle`, `investigatorAffiliation`, `oldNameTitle`) of any dict stored under a key named `responsibleParty`, counting one per removed field. `oldNameTitle` is the legacy name field.
+
+Replaced text (Req 3.2 as amended in task 11): inside each dict element of a `locations` list, every Email_Pattern match and then every Phone_Pattern match in a string `facility` or `city` value is replaced with `[removed]`, counting one per replaced match (`RemovalCounts.locations_text`, log name `locations[] facility/city pattern matches`). The first live run found a Massachusetts site whose 232-character facility text contained two phone numbers. Before this rule the Raw_Store stored them and the PII_Guard stopped the run. The patterns come from `pipeline/patterns.py`, which the PII_Guard also uses, so both apply the same definitions. Other location fields are not rewritten. `zip` is excluded on purpose (see PII_Guard).
+
+Error handling (Req 3.5): `scrub` raises `PipelineError` if the page is not a dict, if any key is not a string, or if any value is not a JSON type. The `page_number` and `url` arguments are used only in the error message, which names only the page number and URL, never page content.
+
+`RemovalCounts` has `to_log_dict` and `from_log_dict` methods that map the fields to their log names (`centralContacts`, `overallOfficials`, `locations[].contacts`, `responsibleParty investigator name fields`). These log names appear in `manifest.json` and `fetch_log.json`.
 
 Offline_Mode re-scrubs every stored page (Req 3.6). See the Fetch log section for how the counts are reported.
 
@@ -301,28 +333,34 @@ manifest.json                                      # written last; it marks a co
 `manifest.json` holds:
 
 ```json
-{"fetch_date": "...Z",
+{"fetch_date": "2026-10-24T15:00:00Z",
  "q2_server_cutoff": true,
  "urls": {"clinicaltrials_gov": [...], "cdc_places": [...]},
  "pages": {"ctgov_q1": N1, "ctgov_q2": N2, "cdc_places": M},
  "contact_removals": {"centralContacts": 0, "overallOfficials": 0,
-                      "locations[].contacts": 0, "responsibleParty investigator name fields": 0}}
+                      "locations[].contacts": 0, "responsibleParty investigator name fields": 0,
+                      "locations[] facility/city pattern matches": 0}}
 ```
+
+The `fetch_date` is stored as `YYYY-MM-DDTHH:MM:SSZ` in UTC. The `urls` object has one list per source: `clinicaltrials_gov` holds the Q1 and Q2 URLs in order, and `cdc_places` holds the PLACES URLs. The `pages` object counts by raw file prefix (`ctgov_q1`, `ctgov_q2`, `cdc_places`).
 
 Network run:
 
-1. `begin_network_run()` deletes `manifest.json` first, then every `ctgov_*page_*.json` and `places_page_*.json` (Req 10.8). From this point the store counts as incomplete. A failed run therefore leaves no usable offline cache (Req 10.9). This is the trade-off the requirements choose over keeping the previous cache.
-2. `write_page(source, n, obj)` writes `json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` to a temporary name, then calls `os.replace`. A write failure stops the run and names the file (Req 10.9).
-3. `finish_network_run(fetch_date, urls, removal_counts)` writes `manifest.json` after both sources have finished (Req 10.7).
+1. `begin_network_run()` deletes `manifest.json` first, then every `ctgov_*_page_*.json`, `places_page_*.json`, and leftover `.*tmp` file (Req 10.8). From this point the store counts as incomplete. A failed run therefore leaves no usable offline cache (Req 10.9). This is the trade-off the requirements choose over keeping the previous cache.
+2. `write_page(source, n, obj)` raises `PipelineError` if pages are written out of order (n must be previous + 1, starting at 1). It writes `json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` to `.<name>.tmp`, calls `fsync`, then calls `os.replace`. A write failure names the file and removes the temp file (Req 10.9).
+3. `finish_network_run(fetch_date: datetime, q2_server_cutoff: bool, urls: dict[str, list[str]], removal_counts: RemovalCounts)` writes `manifest.json` after both sources have finished (Req 10.7). Page counts come from what `write_page` recorded. The call refuses to write the manifest if any source has no pages or if the URL counts do not match the page counts.
 
-`load()` (Offline_Mode) requires all of the following:
+`load() -> RawCache` (Offline_Mode) requires all of the following:
 
-- `manifest.json` parses.
+- `manifest.json` parses and contains valid `fetch_date`, `q2_server_cutoff`, and `contact_removals`.
 - Every page listed in the manifest exists for Q1, Q2, and PLACES.
-- The last page of each CTGov query has no `nextPageToken`.
+- The saved URL counts match the page counts for both sources.
+- The last page of each CTGov query has no `nextPageToken` or an empty string.
 - The last PLACES page has fewer than 1,000 records.
 
-If any condition fails, the run stops with an error naming "ClinicalTrials.gov", "PLACES", or both (Req 10.4). In Offline_Mode, the HTTP_Client is never constructed, which guarantees zero network requests (Req 10.3, 14.4).
+If any condition fails, the run stops with an error naming "ClinicalTrials.gov", "PLACES", or both (Req 10.4). The error includes details for each failing condition.
+
+`RawCache` holds `fetch_date`, `q2_server_cutoff`, `urls`, `ctgov_q1_pages`, `ctgov_q2_pages`, `places_pages`, and `contact_removals`. The pages are the parsed JSON objects, not the raw bytes. In Offline_Mode, the HTTP_Client is never constructed, which guarantees zero network requests (Req 10.3, 14.4). `load` does not re-scrub; `__main__` re-scrubs in Offline_Mode (Req 3.6).
 
 ### Study_Transformer (`pipeline/transform/study_transformer.py`), Req 4, 5
 
@@ -336,11 +374,12 @@ Steps, in this order:
 1. Flatten the Q1 records, then the Q2 records. Within each query, records are ordered by page, then by position within the page.
 2. Drop records with an absent or empty `nctId` (Req 4.9).
 3. Deduplicate by `nctId` across both queries, keeping the first record. The later records and their sites are discarded (Req 4.5). This step runs before the status filter, so "first record" means first in the Q1-then-Q2 order.
-4. Apply the status filter (Req 4.1). Keep records with `overallStatus` in `{RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED}`, compared exactly. A `COMPLETED` record is kept only if `lastUpdatePostDateStruct.date` matches `^\d{4}-\d{2}-\d{2}$`, parses with `date.fromisoformat`, and is on or after the cutoff. The cutoff is `recent_completed_cutoff(fetch_date)`: the UTC date minus 3 years, with 29 February mapped to 28 February. Offline_Mode uses the stored Fetch_Date, so offline output stays byte-identical (Req 10.5). Every `studyType` is kept, including an empty or absent one.
-5. Build sites (Req 5). Keep a location only if its stripped, casefolded `state` is one of `massachusetts, ma, rhode island, ri, new hampshire, nh, connecticut, ct, new york, ny, vermont, vt` (Req 5.3). Each kept location becomes a Site_Row with stripped text values. A missing or empty value becomes `""`.
+4. Apply the status filter (Req 4.1). Keep records with `overallStatus` in `{RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED}`, compared exactly. A `COMPLETED` record is kept only if `lastUpdatePostDateStruct.date` matches `^\d{4}-\d{2}-\d{2}$`, parses with `date.fromisoformat`, and is on or after the cutoff. The cutoff is `recent_completed_cutoff(fetch_date)` from `ctgov_fetcher.py`: the UTC date minus 3 years, with 29 February mapped to 28 February. Offline_Mode uses the stored Fetch_Date, so offline output stays byte-identical (Req 10.5). Every `studyType` is kept, including an empty or absent one.
+5. Build sites (Req 5). Keep a location only if `is_allowed_state` from `ctgov_fetcher.py` accepts it, that is, its stripped, casefolded `state` is one of `massachusetts, ma, rhode island, ri, new hampshire, nh, connecticut, ct, new york, ny, vermont, vt` (Req 5.3). Each kept location becomes a Site_Row with stripped text values. A missing or empty value becomes `""`.
    - `siteStatus` is the location `status`, stripped. All statuses are kept (Req 5.2).
    - Geo: if `geoPoint.lat` and `geoPoint.lon` are both `int` or `float` (not `bool`) and finite, they are range-checked. Within range gives `ok`. Out of range gives `out_of_range` with empty coordinates (Req 5.7). Anything else gives `missing_geo` with empty coordinates (Req 5.4).
-   - Deduplicate on (`nctId`, `facility`, `city`, `state`, `zip`), comparing the stripped values and keeping the first (Req 5.10).
+   - Deduplicate on (`nctId`, `facility`, `city`, `state`, `zip`), comparing the stripped values and keeping the first (Req 5.10). The stripped source zip is used in the deduplication key.
+   - Zip validation (Req 5.1): after deduplication, each Site_Row's `zip` is checked against `^\d{5}(-?\d{4})?$`. An invalid zip becomes `""` and is counted for `fetch_log.json`. Valid zips are written as stripped, with or without hyphen.
 6. Drop any study left with zero Site_Rows (Req 4.3).
 7. Build the missing-geo list from the remaining Site_Rows whose quality is not `ok`. Each entry is (`nctId`, `facility`, `location_quality`). After deduplication, each site appears at most once (Req 5.11).
 
@@ -354,6 +393,9 @@ Study_Row columns, in this order (Req 4.2, 7.2). "list" marks multi-valued field
 | `studyType` | `designModule.studyType` | scalar |
 | `phases` | `designModule.phases` | list |
 | `healthyVolunteers` | `eligibilityModule.healthyVolunteers` → `true` / `false` / `""` | scalar |
+| `minimumAge` | `eligibilityModule.minimumAge` | scalar |
+| `maximumAge` | `eligibilityModule.maximumAge` | scalar |
+| `stdAges` | `eligibilityModule.stdAges` | list |
 | `conditions` | `conditionsModule.conditions` | list |
 | `interventionTypes` | `interventions[].type` | list |
 | `interventionNames` | `interventions[].name` | list |
@@ -364,7 +406,12 @@ Study_Row columns, in this order (Req 4.2, 7.2). "list" marks multi-valued field
 | `lastUpdatePostDate` | `statusModule.lastUpdatePostDateStruct.date` | scalar |
 | `source_url` | `https://clinicaltrials.gov/study/<nctId>` | scalar |
 
-Paired lists (intervention type and name, MeSH term and id) are built in a single pass over the source list. A missing element value becomes `""`, so the paired lists always have equal length (Req 4.7). Req 4.7 states this rule for interventions; I apply the same rule to the MeSH pairs. Non-string list elements are converted with `str()`, so every element is a string (Req 7.7).
+`minimumAge` and `maximumAge` are written as the source text verbatim (for example `18 Years`, `6 Months`), with no parsing or unit conversion, and empty when missing or empty; interpretation (for example maximumAge less than 18 years) happens in scoring, not in this pipeline, in the same spirit as the studyType note in criterion 1.
+
+Paired lists (intervention type and name, MeSH term and id) are built in a single pass over the source list. A missing element value becomes `""`, so the paired lists always have equal length (Req 4.7). Req 4.7 states this rule for interventions; I apply the same rule to the MeSH pairs. Non-string list elements are converted with `str()`, so every element is a string (Req 7.7). A `null` list element becomes `""` rather than the text `None`, following the same missing-value rule (Req 4.4, 4.7).
+
+- `pages` is the Q1 pages followed by the Q2 pages, each in page order (Req 4.5). `__main__` builds it from `CtgovFetchResult.queries` or from `RawCache.ctgov_q1_pages + ctgov_q2_pages`.
+- `MissingGeo` is a frozen dataclass with `nctId`, `facility`, and `location_quality` (Req 5.11, 12.3).
 
 Site_Row columns, in this order: `nctId, facility, city, state, zip, latitude, longitude, siteStatus, location_quality`. Coordinates are written with `repr(float(x))`, the shortest round-trip form. Raw pages are stored with the same `json` float handling, so network and offline runs produce the same strings.
 
@@ -384,14 +431,43 @@ PLACES_Row columns, in this order: `locationname, locationid, measureid, measure
 
 Socrata leaves null fields out of the JSON entirely. The transformer treats an absent key the same as an empty value.
 
+Implementation details fixed in task 8:
+
+- `PlacesDuplicate` is a frozen dataclass with `locationid` (the County_FIPS), `measureid`, `kept_year`, and `discarded`. Duplicates are returned in order of first appearance; the Fetch_Log_Writer sorts them (Req 6.3, 12.12).
+- The filter in step 1 compares `stateabbr` and `datavaluetypeid` exactly. A record that is not a JSON object is dropped by the filter (Req 6.2).
+- Step 2 runs on every retained record, before duplicates are resolved, so a bad identifier stops the run even when a valid duplicate exists (Req 6.6).
+- A whitespace-only `locationname` or `measureid` counts as empty. A non-string `locationname` or `measureid` also stops the run, with a message saying the field is not a string (Req 6.6).
+- `locationid` must fully match ASCII `[0-9]{1,5}`. Trailing newlines, spaces, signs, and non-ASCII digits are rejected (Req 6.6, 6.8).
+- A numeric string counts as numeric only if it is plain decimal text: an optional sign, digits with an optional point, and an optional exponent. Whitespace, underscores, `NaN`, and `Infinity` are rejected, so the kept source text is always a plain number (Req 6.1, 6.4).
+- A JSON number keeps its text as `str(int)` or `repr(float)`. A `bool` is never numeric (Req 6.1).
+- The same numeric rule applies to `year` in duplicate resolution. The `year` cell is the source text, or empty when it is not a string or number (Req 6.1, 6.3).
+- PLACES coordinates keep the source text of the WKT tokens, or `repr(float)` for GeoJSON floats. If either coordinate is missing, non-numeric, or out of range, both are empty. A GeoJSON value must have `type` `Point` and exactly 2 coordinates (Req 6.5).
+- Error messages name the field and give `locationname` and `measureid` only when they are non-empty strings. The bad value itself is never included (Req 3.3, 6.6).
+
 **PLACES measures do not all share one data year.** Probe V5 found 490 MA crude prevalence rows from 2023 and 70 from 2022, all in the same 2025 release. These are different measures, not duplicates: no (`locationname`, `measureid`) pair repeats. Each PLACES_Row therefore keeps its own `year` column, and code must never assume one year for the whole release. Downstream outputs (Spec 2 grouping, Spec 3 scoring and `web/public/data/*.json`, Spec 4 display) must carry the data year for each measure alongside the prevalence values. They must not show one release-wide year in its place.
 
 ### CSV_Writer (`pipeline/io/csv_writer.py`), Req 7
 
 ```python
-def encode_rows(kind: Literal["studies","sites","places"], rows) -> EncodedTable  # header + list[list[str]]
+@dataclass(frozen=True)
+class EncodedTable:
+    kind: str                  # "studies", "sites" or "places"
+    header: tuple[str, ...]
+    rows: list[list[str]]      # cell strings, in sorted order
+    file_name: str             # property: studies.csv, sites.csv or places_ma.csv
+
+def encode_rows(kind: Literal["studies","sites","places"], rows) -> EncodedTable
 def serialize(table: EncodedTable) -> bytes
+COLUMNS: dict[str, tuple[str, ...]]      # from the dataclass field order
+LIST_COLUMNS: dict[str, frozenset[str]]  # shared with the CSV_Reader
+FILE_NAMES: dict[str, str]
 ```
+
+Implementation details fixed in task 9:
+
+- `EncodedTable` carries its `kind`, so the PII_Guard can find the list columns and the file name of each table without a second argument (Req 8.1, 8.4).
+- `COLUMNS` comes from the field order of `StudyRow`, `SiteRow`, and `PlacesRow` (Req 7.2). The `studies` list columns are `phases`, `stdAges`, `conditions`, `interventionTypes`, `interventionNames`, `meshTerms`, `meshIds`, `ancestorTerms`, and `ancestorIds` (Req 4.7, 7.4). `sites` and `places` have no list columns.
+- `csv_writer.py` does not write files. The atomic output step writes the bytes from `serialize` and names the file on failure (Req 7.10).
 
 - Sorting (Req 7.8) uses plain `str` comparison, which is Unicode code point order:
   - Studies: `nctId`.
@@ -408,6 +484,13 @@ def serialize(table: EncodedTable) -> bytes
 
 The reader opens the file with `newline=""` and parses it with `csv.reader`. It maps each data line to a dict keyed by the header. Cells in the known list columns of each table are decoded with `json.loads`, and `[]` decodes to an empty list. The set of list columns is defined once in `csv_writer.py` and shared with the reader.
 
+```python
+def read_csv(path, kind: Literal["studies","sites","places"]) -> list[dict[str, object]]
+```
+
+- The caller passes the table `kind`, which selects the list columns (Req 7.6).
+- The reader raises `PipelineError` if the header row differs from `COLUMNS[kind]`, if a line has the wrong number of cells, or if a list cell is not a JSON array of strings. Messages name the file, line, and column only, never cell text (Req 3.3).
+
 ### PII_Guard (`pipeline/transform/pii_guard.py`), Req 8
 
 ```python
@@ -422,6 +505,19 @@ def check(tables: dict[str, EncodedTable]) -> None   # raises PipelineError list
   - Row identifiers: `nctId` for studies, `nctId` plus the 1-based data row position for sites, and `locationname` plus `measureid` for PLACES.
 - Without the `(?<![\d.])` lookbehind, the decimal part of a high-precision coordinate (such as `-71.8123456789`) would match the phone pattern. With it, a run of 10 or more digits right after a decimal point is not treated as a phone number. Phone numbers written straight after a `.` with no space are missed by the guard. In the pipeline's actual fields, the Contact_Scrubber is the main defence, so this risk is accepted.
 
+Implementation details fixed in task 10:
+
+- `find_matches(tables) -> list[str]` returns the match entries without raising. `check` calls it and raises when the list is not empty (Req 8.2, 8.4).
+- A match is counted once per (file, row, field, pattern). A list cell counts once for a pattern even if both the encoded cell and several decoded elements match. The total in the message is the number of entries (Req 8.4).
+- Entries are listed in table order `studies`, `sites`, `places`, then row order as written, then column order, with `email` before `phone`.
+- Each entry reads `<file>: <row identifier>: field <name>: <email|phone>`. Row identifiers are `nctId=<value>` for studies, `nctId=<value>, row <n>` for sites, and `locationname=<value>, measureid=<value>` for PLACES (Req 8.4).
+- If an identifier cell itself matches a pattern, its value is written as `<redacted>`, so the message never carries matched text (Req 8.4, 3.3).
+
+Changes from task 11 (first live run):
+
+- `EMAIL`, `PHONE`, and `PATTERNS` now live in `pipeline/patterns.py`. `pii_guard` re-exports `EMAIL` and `PHONE`.
+- `EMAIL_ONLY_FIELDS = {"sites": {"zip"}}`: `sites.zip` is checked against the Email_Pattern only (Req 8.7). The live run found a Massachusetts site with a 10-digit zip, a ZIP+4 written without its hyphen, and it matched the Phone_Pattern. The P1 test applies the same exemption.
+
 ### Sanity_Checker (`pipeline/transform/sanity_checker.py`), Req 11
 
 ```python
@@ -430,6 +526,12 @@ def check(studies, sites, places) -> list[str]   # warning texts, also printed t
 
 - Warning 1: count the distinct `nctId`s where `studyType == "INTERVENTIONAL"` and some site has a casefolded state of `massachusetts` or `ma` and `siteStatus == "RECRUITING"`. Warn if the count is below 2,000, and state the count and the threshold.
 - Warning 2: warn if the number of distinct `locationname` values is not 14, and state the count and the expected 14.
+
+Implementation details fixed in task 10:
+
+- The signature is `check(studies, sites, places, stream=None) -> list[str]`. `stream` defaults to `sys.stderr`, read at call time. Tests pass a `StringIO` (Req 11.1, 11.2).
+- The inputs are `StudyRow`, `SiteRow`, and `PlacesRow` objects, so the checker runs before encoding and needs no CSV parsing (Req 11.5).
+- The counts are exposed as `ma_recruiting_interventional_count(studies, sites)` and `county_count(places)`. Site state is stripped and casefolded before the comparison, as in Req 5.3.
 
 ### Fetch_Log_Writer (`pipeline/io/fetch_log_writer.py`), Req 12
 
@@ -447,8 +549,10 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
   "urls": {"clinicaltrials_gov": [], "cdc_places": []},
   "contact_removals": {"centralContacts": 0, "overallOfficials": 0,
                        "locations[].contacts": 0,
-                       "responsibleParty investigator name fields": 0},
+                       "responsibleParty investigator name fields": 0,
+                       "locations[] facility/city pattern matches": 0},
   "missing_geo": {"count": 0, "sites": [{"nctId": "", "facility": "", "location_quality": ""}]},
+  "invalid_zip_count": 0,
   "places_duplicates": [{"locationid": "", "measureid": "", "kept_year": "", "discarded": 0}],
   "warnings": []
 }
@@ -460,6 +564,16 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
 - `contact_removals`: in a network run, these are the scrubber totals from that run. In Offline_Mode, they are the totals stored in the manifest plus the re-scrub totals. The re-scrub totals are 0 unless the raw files were edited, so offline logs match the network log. If they were edited, the log reports the extra removals.
 - The row counts in `files` are the data row counts of the tables that were encoded and written (Req 12.7).
 - `missing_geo.sites` is sorted by `nctId`, then `facility`. `places_duplicates` is sorted by `locationid`, then `measureid`.
+- `invalid_zip_count` is the count of sites whose zip did not match `^\d{5}(-?\d{4})?$` and was written as empty (Req 5.1, 12.3).
+
+Implementation details fixed in task 10:
+
+- `build_fetch_log(*, run_started_at, run_mode, fetch_date, tables, pages_by_query, q2_server_cutoff, urls, contact_removals, missing_geo, places_duplicates, warnings) -> dict` builds the log object. All arguments are keyword-only.
+- `serialize(log) -> bytes` gives the file bytes. The module does not write files; the atomic output step writes `fetch_log.json` (Req 12.1, 12.10).
+- `tables` is the dict of `EncodedTable`s that will be written, so the `files` counts are the written data row counts (Req 12.2, 12.7).
+- `pages_by_query` is the same `{"q1": [...], "q2": [...]}` dict the fetch checks use. `query_counts(pages_by_query)` reads `totalCount` from each query's page 1 and counts the `studies` elements across its pages, in both network and offline runs (Req 1.9, 12.11). A `totalCount` that is not an `int` is written as `null`. The fetch check stops such runs before the log is built.
+- `run_started_at` and `fetch_date` are written with `format_fetch_date` from `raw_store.py` (Req 12.4).
+- `urls` always has both keys, `clinicaltrials_gov` then `cdc_places` (Req 12.5).
 
 ### Atomic output (`pipeline/io/atomic.py`), Req 7.1, 7.10, 8.2, 9.6, 12.1, 12.9
 
@@ -470,6 +584,12 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
 5. It writes `fetch_log.json` to staging, then moves it with `os.replace` (Req 12.1).
 6. It removes the staging directory. A `finally` block also removes it on failure.
 
+Implementation details fixed in task 11:
+
+- `write_outputs(pipeline_dir, processed_dir, csv_files, fetch_log)` takes `[(file_name, bytes), ...]` for the three CSVs and the `fetch_log.json` bytes. `processed/` is created only after all three CSVs are staged.
+- Staged files are written by `_write_bytes` (write, flush, fsync). Tests patch it to simulate disk errors. An `OSError` becomes `PipelineError("could not write <file> (<ErrorType>: <strerror>)")` (Req 7.10, 12.10).
+- `__main__._run_stages` follows design § Data flow. The network path is `begin_network_run` → `fetch_ctgov` → `fetch_places` → `finish_network_run`. The offline path is `RawStore.load` plus a re-scrub of every CTGov page, with the re-scrub counts added to the stored totals, and it never builds an `HttpClient`. Both paths then run the fetch checks, the transformers, `encode_rows`, the PII_Guard, the Sanity_Checker, `build_fetch_log`, and `write_outputs`. The `<file>: <n> rows` summary goes to stdout only after `write_outputs` returns (Req 14.6, 14.8). In a network run, `run_started_at` and the Fetch_Date are the same timestamp, captured once at the start.
+
 Remaining risk: if the second or third `os.replace` fails (for example, a disk error), the CSVs already moved are new while the rest are old. Making the whole set atomic would need a directory swap with a `processed` symlink. I consider that out of proportion for a laptop tool. If the user reports the problem, it can be added later. `.gitignore` excludes `pipeline/.staging-*/`.
 
 ## Data Models
@@ -477,7 +597,8 @@ Remaining risk: if the second or third `os.replace` fails (for example, a disk e
 ```python
 @dataclass(frozen=True)
 class StudyRow:  nctId: str; briefTitle: str; overallStatus: str; studyType: str
-                 phases: list[str]; healthyVolunteers: str; conditions: list[str]
+                 phases: list[str]; healthyVolunteers: str; minimumAge: str; maximumAge: str
+                 stdAges: list[str]; conditions: list[str]
                  interventionTypes: list[str]; interventionNames: list[str]
                  meshTerms: list[str]; meshIds: list[str]
                  ancestorTerms: list[str]; ancestorIds: list[str]
@@ -620,6 +741,8 @@ P=https://data.cdc.gov/resource/swc5-untb.json
 - **Assumed:**
   - `lastUpdatePostDateStruct.date` is `YYYY-MM-DD`.
   - `eligibilityModule.healthyVolunteers` is a JSON boolean.
+  - `eligibilityModule.minimumAge` and `maximumAge` are strings (for example `18 Years`).
+  - `eligibilityModule.stdAges` is a list of strings.
   - `geoPoint` is `{lat, lon}` with numeric values.
   - The location site status key is `status`.
   - `state` is a full name such as "Massachusetts".

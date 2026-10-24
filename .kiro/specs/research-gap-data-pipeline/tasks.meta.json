@@ -12,6 +12,114 @@
         "chatSessionId": "sess_d3970c62-7d19-41d1-8b9d-f23afae9b3a1",
         "timestamp": 1792861148947
       }
+    ],
+    "3. HTTP_Client": [
+      {
+        "executionId": "2844d9ff-0af0-4b7c-a8ed-d225d02dcbbe",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861261855
+      },
+      {
+        "executionId": "2844d9ff-0af0-4b7c-a8ed-d225d02dcbbe",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861357805
+      }
+    ],
+    "4. Contact_Scrubber and Raw_Store": [
+      {
+        "executionId": "8a07f872-3739-4002-a9ec-31b3598e4722",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861515561
+      },
+      {
+        "executionId": "8a07f872-3739-4002-a9ec-31b3598e4722",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861878054
+      }
+    ],
+    "5. CTGov_Fetcher (Q1 and Q2) and fetch checks": [
+      {
+        "executionId": "d62a3542-95b9-42f6-bc88-9eadb5d8c19d",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792861970186
+      },
+      {
+        "executionId": "d62a3542-95b9-42f6-bc88-9eadb5d8c19d",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792862484829
+      }
+    ],
+    "6. PLACES_Fetcher": [
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792863673942
+      },
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792863764664
+      }
+    ],
+    "7. Study_Transformer": [
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792863765399
+      },
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792863942548
+      }
+    ],
+    "8. PLACES_Transformer": [
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792863945537
+      },
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864118975
+      }
+    ],
+    "9. CSV_Writer and CSV_Reader": [
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864121636
+      },
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864283080
+      }
+    ],
+    "10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer": [
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864286389
+      },
+      {
+        "executionId": "86a5d637-3f6d-446c-90ae-0d82754d138b",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864487178
+      }
+    ],
+    "11. Atomic output, end-to-end run, and first live fetch": [
+      {
+        "executionId": "88a7522a-979c-4d7e-9ef9-6475df368dc2",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792864595313
+      },
+      {
+        "executionId": "88a7522a-979c-4d7e-9ef9-6475df368dc2",
+        "chatSessionId": "sess_2a13b9b1-8a4d-44eb-8616-b07378afd722",
+        "timestamp": 1792865922061
+      }
     ]
   }
 }
