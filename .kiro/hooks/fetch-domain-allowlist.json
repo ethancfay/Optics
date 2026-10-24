@@ -4,8 +4,8 @@
     {
       "name": "Restrict fetch MCP to allowed sources",
       "trigger": "PreToolUse",
-      "description": "Blocks fetch MCP calls to any host other than clinicaltrials.gov and data.cdc.gov (cdc.gov), per health-safety steering. Exits 2 to block disallowed domains.",
-      "matcher": "fetch",
+      "description": "Blocks fetch MCP calls to any host other than clinicaltrials.gov and data.cdc.gov (cdc.gov), per health-safety steering. Exits 2 to block disallowed domains. Matcher targets the MCP fetch tool (e.g. fetch::fetch, mcp_fetch_fetch) and deliberately excludes the built-in web_fetch tool.",
+      "matcher": "fetch[^a-z]*fetch|^fetch$|mcp[^a-z]*fetch",
       "action": {
         "type": "command",
         "command": "python3 \"$(git rev-parse --show-toplevel 2>/dev/null || echo .)/.kiro/hooks/allow_fetch_domains.py\"",
