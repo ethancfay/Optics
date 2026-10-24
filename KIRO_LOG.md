@@ -36,3 +36,4 @@ Tightened sites.zip validation to accept only `^\d{5}(-?\d{4})?$` (5 digits or 5
 - Added tests for zip validation, deduplication interaction, and phone pattern non-matching for valid zips
 - All 238 tests pass
 | 19:57 | Ethan | Spec task execution (scoring-export) | Kiro ran all 38 Spec 3 tasks incl. optional tests: 8 scoring modules, 5 property tests at 100+ examples, integration + network-block test. Full suite 353 passed. Kiro scoped the prevalence-bounds property to fully populated inputs after finding the shared generator blanks CI cells on purpose. | |
+| 2026-10-24T20:56Z | Kiro | Stop hook | Checked session-changed files (app-integration.test.tsx edited this turn; the four web/public/data/*.json were pre-existing real Spec 3 output, not touched this turn): no forbidden claim terms and no email/phone contact data found. | |
