@@ -217,6 +217,9 @@ protocolSection.statusModule.lastUpdatePostDateStruct
 protocolSection.designModule.studyType
 protocolSection.designModule.phases
 protocolSection.eligibilityModule.healthyVolunteers
+protocolSection.eligibilityModule.minimumAge
+protocolSection.eligibilityModule.maximumAge
+protocolSection.eligibilityModule.stdAges
 protocolSection.conditionsModule.conditions
 protocolSection.armsInterventionsModule.interventions.type
 protocolSection.armsInterventionsModule.interventions.name
@@ -383,6 +386,9 @@ Study_Row columns, in this order (Req 4.2, 7.2). "list" marks multi-valued field
 | `studyType` | `designModule.studyType` | scalar |
 | `phases` | `designModule.phases` | list |
 | `healthyVolunteers` | `eligibilityModule.healthyVolunteers` → `true` / `false` / `""` | scalar |
+| `minimumAge` | `eligibilityModule.minimumAge` | scalar |
+| `maximumAge` | `eligibilityModule.maximumAge` | scalar |
+| `stdAges` | `eligibilityModule.stdAges` | list |
 | `conditions` | `conditionsModule.conditions` | list |
 | `interventionTypes` | `interventions[].type` | list |
 | `interventionNames` | `interventions[].name` | list |
@@ -392,6 +398,8 @@ Study_Row columns, in this order (Req 4.2, 7.2). "list" marks multi-valued field
 | `ancestorIds` | `conditionBrowseModule.ancestors[].id` | list |
 | `lastUpdatePostDate` | `statusModule.lastUpdatePostDateStruct.date` | scalar |
 | `source_url` | `https://clinicaltrials.gov/study/<nctId>` | scalar |
+
+`minimumAge` and `maximumAge` are written as the source text verbatim (for example `18 Years`, `6 Months`), with no parsing or unit conversion, and empty when missing or empty; interpretation (for example maximumAge less than 18 years) happens in scoring, not in this pipeline, in the same spirit as the studyType note in criterion 1.
 
 Paired lists (intervention type and name, MeSH term and id) are built in a single pass over the source list. A missing element value becomes `""`, so the paired lists always have equal length (Req 4.7). Req 4.7 states this rule for interventions; I apply the same rule to the MeSH pairs. Non-string list elements are converted with `str()`, so every element is a string (Req 7.7).
 
@@ -506,7 +514,8 @@ Remaining risk: if the second or third `os.replace` fails (for example, a disk e
 ```python
 @dataclass(frozen=True)
 class StudyRow:  nctId: str; briefTitle: str; overallStatus: str; studyType: str
-                 phases: list[str]; healthyVolunteers: str; conditions: list[str]
+                 phases: list[str]; healthyVolunteers: str; minimumAge: str; maximumAge: str
+                 stdAges: list[str]; conditions: list[str]
                  interventionTypes: list[str]; interventionNames: list[str]
                  meshTerms: list[str]; meshIds: list[str]
                  ancestorTerms: list[str]; ancestorIds: list[str]
@@ -649,6 +658,8 @@ P=https://data.cdc.gov/resource/swc5-untb.json
 - **Assumed:**
   - `lastUpdatePostDateStruct.date` is `YYYY-MM-DD`.
   - `eligibilityModule.healthyVolunteers` is a JSON boolean.
+  - `eligibilityModule.minimumAge` and `maximumAge` are strings (for example `18 Years`).
+  - `eligibilityModule.stdAges` is a list of strings.
   - `geoPoint` is `{lat, lon}` with numeric values.
   - The location site status key is `status`.
   - `state` is a full name such as "Massachusetts".

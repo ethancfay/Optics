@@ -125,6 +125,7 @@ Rules for every task:
     - Every `studyType` is kept, including an empty one.
     - Every site status is kept.
     - `healthyVolunteers` is written as `true`, `false`, or empty.
+    - `minimumAge` and `maximumAge` are copied verbatim or left empty, and `stdAges` keeps source order or is `[]`.
     - `missing_geo` versus `out_of_range`.
     - A study in both Q1 and Q2 keeps the Q1 copy.
   - Done when: `pytest` passes.

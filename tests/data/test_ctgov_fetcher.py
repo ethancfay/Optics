@@ -99,6 +99,12 @@ def test_params_identical_across_pages_except_page_token(tmp_path):
     segments = {seg for path in FIELDS for seg in path.split(".")}
     for banned in ("centralContacts", "overallOfficials", "contacts", "responsibleParty"):
         assert banned not in segments
+    # Req 4.2, 4.4, 4.7: age eligibility fields in order after healthyVolunteers
+    fields_list = list(FIELDS)
+    hv_idx = fields_list.index("protocolSection.eligibilityModule.healthyVolunteers")
+    assert fields_list[hv_idx + 1] == "protocolSection.eligibilityModule.minimumAge"
+    assert fields_list[hv_idx + 2] == "protocolSection.eligibilityModule.maximumAge"
+    assert fields_list[hv_idx + 3] == "protocolSection.eligibilityModule.stdAges"
     assert dict(params(q2.urls[0]))["filter.overallStatus"] == "COMPLETED"
 
     assert q1.total_count == 3 and q2.total_count == 1
