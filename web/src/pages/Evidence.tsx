@@ -27,6 +27,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEvidenceData, useSources } from "../data/providers";
 import { LoadStateView } from "../components/LoadStateView";
+import { formatCtgovLabel } from "../data/formatCtgovLabel";
 import type { EvidenceEntry } from "../data/types";
 
 /** Shown when no Evidence_Entry matches the requested `measure_id` (Req 8.5). */
@@ -47,12 +48,36 @@ function displayText(value: string | null | undefined): string {
   return value;
 }
 
-/** A list detail (phases / intervention names) joined for display, or "unknown". */
+/**
+ * A single ClinicalTrials.gov code detail (status) mapped to its readable
+ * label via `formatCtgovLabel`, or the "unknown" placeholder when omitted. The
+ * underlying data keeps the raw code; only the display is humanized (Req 18.6).
+ */
+function displayCode(value: string | null | undefined): string {
+  if (value === null || value === undefined || value.trim() === "") {
+    return UNKNOWN_DETAIL;
+  }
+  return formatCtgovLabel(value);
+}
+
+/** A list detail (intervention names) joined for display, or "unknown". */
 function displayList(values: readonly string[] | null | undefined): string {
   if (values === undefined || values === null || values.length === 0) {
     return UNKNOWN_DETAIL;
   }
   return values.join(", ");
+}
+
+/**
+ * A list of ClinicalTrials.gov codes (phases) each mapped to its readable label
+ * via `formatCtgovLabel` and joined for display, or "unknown" when omitted
+ * (Req 18.6).
+ */
+function displayCodeList(values: readonly string[] | null | undefined): string {
+  if (values === undefined || values === null || values.length === 0) {
+    return UNKNOWN_DETAIL;
+  }
+  return values.map(formatCtgovLabel).join(", ");
 }
 
 /**
@@ -129,8 +154,8 @@ function EvidenceDetails({ entry }: { entry: EvidenceEntry }) {
                     </a>
                   </th>
                   <td>{displayText(nct.title)}</td>
-                  <td>{displayText(nct.status)}</td>
-                  <td>{displayList(nct.phases)}</td>
+                  <td>{displayCode(nct.status)}</td>
+                  <td>{displayCodeList(nct.phases)}</td>
                   <td>{displayList(nct.intervention_names)}</td>
                 </tr>
               ))}
