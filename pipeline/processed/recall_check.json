@@ -7,10 +7,10 @@
       "disease_label": "Asthma",
       "recall_query_term": "Asthma",
       "found_count": 35,
-      "included_count": 27,
+      "included_count": 24,
       "ctgov_count": 35,
       "ratio_found": 1.0,
-      "ratio_included": 0.771,
+      "ratio_included": 0.686,
       "flagged": false,
       "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=Asthma&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
     },
@@ -19,24 +19,24 @@
       "disease_label": "Diabetes",
       "recall_query_term": "Diabetes",
       "found_count": 157,
-      "included_count": 117,
+      "included_count": 114,
       "ctgov_count": 155,
       "ratio_found": 1.013,
-      "ratio_included": 0.755,
+      "ratio_included": 0.735,
       "flagged": false,
       "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=Diabetes&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
     },
     {
       "measureid": "HIGHCHOL",
       "disease_label": "High cholesterol",
-      "recall_query_term": "High Cholesterol",
+      "recall_query_term": "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL",
       "found_count": 123,
       "included_count": 11,
-      "ctgov_count": 6,
-      "ratio_found": 20.5,
-      "ratio_included": 1.833,
+      "ctgov_count": 15,
+      "ratio_found": 8.2,
+      "ratio_included": 0.733,
       "flagged": false,
-      "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=High+Cholesterol&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
+      "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=hypercholesterolemia+OR+hyperlipidemia+OR+dyslipidemia+OR+LDL&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
     }
   ]
 }

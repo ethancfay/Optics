@@ -6,7 +6,8 @@ match_status is not `included`. A study whose only include matches are on
 Masked_Values gets `excluded` or `questionable`.
 
 The oracle recomputes include evidence from the raw matches without using the
-Grouping_Engine's own intermediate lists.
+Grouping_Engine's own intermediate lists. A Masked_Value is a (source, value)
+with an Exclude_Term or a Questionable_Term match (Req 4.1, Open Item 15).
 """
 from dataclasses import replace
 
@@ -23,9 +24,15 @@ from tests.mapping.strategies import (
 )
 
 
+def _masked_values(matches):
+    """Masked_Values: (source, value) pairs with an Exclude_Term or Questionable_Term
+    match (Req 4.1, Open Item 15)."""
+    return {(m.source, m.value) for m in matches if m.kind in ("exclude", "questionable")}
+
+
 def _evidence(disease, matches):
     """Include matches that count as include evidence (Req 4.1, 4.4, 7.3, 7.4)."""
-    masked = {(m.source, m.value) for m in matches if m.kind == "exclude"}
+    masked = _masked_values(matches)
     ancestor_ok = disease.ancestor_only_status == "included"
     return [
         m for m in matches
@@ -42,10 +49,9 @@ def _check(study, disease):
         return
     assert row.match_status != "included", (study, disease.measureid, sorted(matches))
     has_include = any(m.kind == "include" for m in matches)
+    masked = _masked_values(matches)
     unmasked_include = any(
-        m.kind == "include"
-        and (m.source, m.value) not in {(e.source, e.value) for e in matches if e.kind == "exclude"}
-        for m in matches
+        m.kind == "include" and (m.source, m.value) not in masked for m in matches
     )
     if has_include and not unmasked_include:
         # Only include matches are on Masked_Values.

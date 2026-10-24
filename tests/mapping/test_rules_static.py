@@ -83,7 +83,8 @@ def test_rules_has_no_import_statement():
 
 @pytest.mark.parametrize("measureid, label, ancestor_status, recall_term", [
     ("CASTHMA", "Asthma", "included", "Asthma"),
-    ("HIGHCHOL", "High cholesterol", "questionable", "High Cholesterol"),
+    ("HIGHCHOL", "High cholesterol", "questionable",
+     "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL"),
     ("DIABETES", "Diabetes", "questionable", "Diabetes"),
 ])
 def test_disease_definition_fields(measureid, label, ancestor_status, recall_term):

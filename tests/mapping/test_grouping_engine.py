@@ -175,6 +175,39 @@ def test_rule6_questionable_term():  # Req 7.1, 8.6 (f)
         "questionable", "complication_only", "condition_text", "Diabetic Retinopathy")
 
 
+QMASK = Disease(
+    "DIABETES",
+    "Diabetes",
+    "questionable",
+    "Diabetes",
+    (
+        _t("diabetes"),
+        _t("gestational diabetes", "exclude", "gestational"),
+        _t("retinopathy", "questionable", "complication_only"),
+        _t("neuropathy", "questionable", "nerve"),
+    ),
+)
+
+
+def test_questionable_masks_include_on_same_value():  # Req 4.1, 4.6, 7.1, Open Item 15
+    s = _study(conditions=["Diabetes Retinopathy"])
+    assert _cells(_decide(s, QMASK)) == (
+        "questionable", "complication_only", "condition_text", "Diabetes Retinopathy")
+
+
+def test_questionable_masked_value_beside_clean_include_is_included():  # Req 4.4, 7.4
+    s = _study(conditions=["Diabetes Retinopathy", "Type 2 Diabetes"])
+    assert _cells(_decide(s, QMASK)) == ("included", "", "condition_text", "Type 2 Diabetes")
+
+
+def test_rule6_ignores_questionable_on_exclude_masked_value():  # Req 7.1, 8.6 (f)
+    # "Gestational Diabetes Neuropathy" is an Exclude_Masked_Value, so its
+    # "neuropathy" match is not a rule 6 candidate even though it sorts first.
+    s = _study(conditions=["Gestational Diabetes Neuropathy", "Retinopathy"])
+    assert _cells(_decide(s, QMASK)) == (
+        "questionable", "complication_only", "condition_text", "Retinopathy")
+
+
 def test_rule6_ancestor_only():  # Req 7.2, 8.6 (g)
     s = _study(ancestor=["Diabetes Mellitus"])
     assert _cells(_decide(s)) == ("questionable", "ancestor_only", "ancestor", "Diabetes Mellitus")

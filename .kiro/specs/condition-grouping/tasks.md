@@ -2,7 +2,7 @@
 
 ## Overview
 
-Python 3.11+, pytest + Hypothesis (already pinned, no new packages). The plan follows the design's six-task mapping. Task 1 builds the Term_Audit and writes `rules.py` from its dispositions. Tasks 2 to 5 build the pipeline modules bottom-up and wire them into `python -m pipeline.mapping`. Task 6 runs the pipeline on real data and commits the outputs.
+Python 3.11+, pytest + Hypothesis (already pinned, no new packages). The plan follows the design's six-task mapping. Task 1 builds the Term_Audit and writes `rules.py` from its dispositions. Tasks 2 to 5 build the pipeline modules bottom-up and wire them into `python -m pipeline.mapping`. Task 6 runs the pipeline on real data and commits the outputs. Task 7 adds questionable masking (Req 4.1, Open Item 15) and the new HIGHCHOL recall term (Req 2.12, Open Item 16), reruns the pipeline and commits the result.
 
 Two shared helpers move earlier than the design's mapping table shows, because the Term_Audit in task 1 already uses them: `csv_reader.read_table` (design: task 2) and `atomic.write_files_atomically` (design: task 5) are built in task 1. Task 5 adds the end-to-end atomic-failure tests through the CLI.
 
@@ -232,7 +232,7 @@ Every top-level task is done only when the whole `pytest` suite (Spec 1 tests in
     - `--offline` with and without an existing `recall_check.json`; filled `correct` cell kept without `--resample`, regenerated with `--resample` (Req 13.8); two runs give identical outputs; running from another working directory uses the same files; unexpected exception prints only the type name; `term_audit` not in `sys.modules` after `run`; `requirements.txt` gains no new package
     - _Requirements: 9.7, 9.10, 9.12, 10.6, 10.7, 10.8, 10.9, 11.6, 11.7, 11.8, 12.2, 12.3, 12.4, 12.5, 12.7, 12.9, 13.6, 13.7, 13.8, 14.10_
 
-- [ ] 6. Full run, verification and commit
+- [x] 6. Full run, verification and commit
   - Done when: the four artifacts are committed, `KIRO_LOG.md` has the entry, the full `pytest` suite passes, and the recall ratios are reported. A flagged `ratio_found` is reported as a warning, not a stop condition.
   - [x] 6.1 Run `python -m pipeline.mapping` with network access
     - Confirm exit code 0; capture the stdout summary and every stderr warning (flagged ratios, fewer than 20 candidates)
@@ -244,10 +244,45 @@ Every top-level task is done only when the whole `pytest` suite (Spec 1 tests in
     - Record the run date, per-disease summary counts, `found_count`, `included_count`, `ctgov_count`, `ratio_found`, `ratio_included`, which diseases are flagged, and the number of Questionable_Terms awaiting bio teammate review
     - _Requirements: 10.6, 12.6_
 
-  - [-] 6.3 Commit outputs and code
+  - [x] 6.3 Commit outputs and code
     - Stage by name: `pipeline/processed/study_diseases.csv`, `pipeline/processed/recall_check.json`, `burden_test/precision_sample.csv`, `.kiro/specs/condition-grouping/term_audit.md`, `KIRO_LOG.md`, plus the new code and tests if not yet committed; commit with a message naming Spec 2
     - Report the recall ratios and any flagged diseases with their counts to the user
     - _Requirements: 9.7, 10.5, 11.3, 14.5_
+
+- [ ] 7. Questionable masking and HIGHCHOL recall term
+  - Done when: the six studies of Req 4.8 have the expected rows, the HIGHCHOL recall term is in `recall_check.json`, `KIRO_LOG.md` has before/after counts, and the full `pytest` suite passes.
+  - [x] 7.1 Mask questionable values for include evidence in `pipeline/mapping/grouping_engine.py`
+    - Add `qmasked` (values with a Questionable_Term match) and build `incNM`, `direct` and `anc` from `masked | qmasked`; keep `masked` exclude-only and keep `qNM` filtered by `masked` alone, so rules 3a/3b keep their exclude precedence and questionable matches stay rule 6 candidates with unchanged reason codes (design § Grouping_Engine)
+    - Update the unit and example tests whose expected rows change in `tests/mapping/test_grouping_engine.py` and `tests/mapping/test_grouping_examples.py`
+    - Update the oracles in `tests/mapping/test_property_02_no_evidence.py` and `tests/mapping/test_property_06_healthy_volunteers.py` to use the widened masking (Properties 2 and 6)
+    - Add example tests in `tests/mapping/test_grouping_examples.py`: "Pediatric Asthma" only → `questionable`/`pediatric_label`; "Pediatric Asthma" + "Asthma" → `included`; `healthyVolunteers` = `true` with only "Pediatric Asthma" → `excluded`/`healthy_volunteers_only`
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.6, 6.1, 6.3, 6.4, 6.7, 7.1, 7.3, 7.4, 7.8, 8.6, 13.4_
+
+  - [x] 7.2 Write property test for questionable masking
+    - **Property 15: Questionable-masked include evidence is never included**
+    - File `tests/mapping/test_property_15_questionable_mask.py`; generators (extend `tests/mapping/strategies.py` if needed) produce condition values that phrase-match both an Include_Term and a Questionable_Term, for example "pediatric asthma" with include "asthma"; check both halves of the property
+    - **Validates: Requirements 4.1, 4.4, 4.6, 7.4, 7.8**
+
+  - [x] 7.3 Set the HIGHCHOL recall query term
+    - In `pipeline/mapping/rules.py` set HIGHCHOL `recall_query_term` to exactly "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL"
+    - Update the Req 2.12 check in `tests/mapping/test_rules_static.py`
+    - _Requirements: 2.12_
+
+  - [x] 7.4 Rerun the pipeline and verify
+    - Record before counts from the committed outputs: per-disease summary counts from `pipeline/processed/study_diseases.csv` and every `recall_check.json` entry (`found_count`, `included_count`, `ctgov_count`, `ratio_found`, `ratio_included`, `flagged`)
+    - Run `python -m pipeline.mapping` with network access; confirm exit code 0 and capture stdout and stderr warnings
+    - Verify the Req 4.8 rows: NCT06538376 CASTHMA `questionable`/`overlap_syndrome`; NCT05723445, NCT06449677, NCT07688070 DIABETES `questionable`/`secondary_cause`; NCT04278404 and NCT06903897 CASTHMA `excluded`/`healthy_volunteers_only`; NCT06903897 DIABETES and HIGHCHOL still `included`
+    - Confirm the HIGHCHOL entry in `recall_check.json` carries the new `recall_query_term` and `request_url`; a HIGHCHOL `ratio_found` above 1.0 is expected (Open Item 16)
+    - Run `pytest` and confirm the committed `pipeline/processed/` and `burden_test/` files are unchanged by it; report before/after counts
+    - _Requirements: 2.12, 4.8, 10.1, 10.5, 12.6, 13.1, 13.8_
+
+  - [x] 7.5 Add a `KIRO_LOG.md` entry
+    - Record the run date, the two changes (questionable masking, HIGHCHOL recall term), before/after per-disease summary counts and before/after recall values, and the Req 4.8 verification result
+    - _Requirements: 4.8, 10.6, 12.6_
+
+  - [-] 7.6 Commit
+    - Stage by name: `pipeline/mapping/grouping_engine.py`, `pipeline/mapping/rules.py`, the changed and new test files under `tests/mapping/`, `.kiro/specs/condition-grouping/requirements.md`, `design.md`, `tasks.md` and `tasks.meta.json`, `pipeline/processed/study_diseases.csv`, `pipeline/processed/recall_check.json`, `burden_test/precision_sample.csv` (only if it changed), and `KIRO_LOG.md`; commit with a message naming Spec 2 questionable masking and the HIGHCHOL recall term
+    - _Requirements: 2.12, 4.1, 9.7, 10.5_
 
 ## Notes
 
@@ -278,7 +313,12 @@ Every top-level task is done only when the whole `pytest` suite (Spec 1 tests in
     { "id": 13, "tasks": ["5.7"] },
     { "id": 14, "tasks": ["6.1"] },
     { "id": 15, "tasks": ["6.2"] },
-    { "id": 16, "tasks": ["6.3"] }
+    { "id": 16, "tasks": ["6.3"] },
+    { "id": 17, "tasks": ["7.1", "7.3"] },
+    { "id": 18, "tasks": ["7.2"] },
+    { "id": 19, "tasks": ["7.4"] },
+    { "id": 20, "tasks": ["7.5"] },
+    { "id": 21, "tasks": ["7.6"] }
   ]
 }
 ```

@@ -35,7 +35,8 @@ SENTINELS = {
 }
 # found_count per Recall_Query_Term for the default studies; a ctgov total equal
 # to it gives ratio_found 1.0 (not flagged).
-FOUND = {"Asthma": 2, "Diabetes": 1, "High Cholesterol": 1}
+HIGHCHOL_TERM = "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL"  # Req 2.12
+FOUND = {"Asthma": 2, "Diabetes": 1, HIGHCHOL_TERM: 1}
 
 
 def _studies():
@@ -215,7 +216,7 @@ def test_unreadable_existing_sample_exits_1_without_resample(tmp_path):
 
 @pytest.mark.parametrize("failing_term, failure", [
     ("Asthma", HttpStatusError(recall_checker.request_url("Asthma"), 503)),
-    ("High Cholesterol", HttpStatusError(recall_checker.request_url("High Cholesterol"), 500)),
+    (HIGHCHOL_TERM, HttpStatusError(recall_checker.request_url(HIGHCHOL_TERM), 500)),
     ("Diabetes", b'{"studies": []}'),
     ("Asthma", b'{"totalCount": "12"}'),
     ("Asthma", b'{"totalCount": true}'),
@@ -224,7 +225,7 @@ def test_unreadable_existing_sample_exits_1_without_resample(tmp_path):
 def test_recall_failure_exits_nonzero_and_leaves_outputs_unchanged(tmp_path, failing_term,
                                                                    failure):
     measureid = {"Asthma": "CASTHMA", "Diabetes": "DIABETES",
-                 "High Cholesterol": "HIGHCHOL"}[failing_term]
+                 HIGHCHOL_TERM: "HIGHCHOL"}[failing_term]
     paths = _make_root(tmp_path)
     _seed_outputs(paths)
     totals = dict(FOUND)
@@ -240,7 +241,7 @@ def test_recall_failure_exits_nonzero_and_leaves_outputs_unchanged(tmp_path, fai
 
 def test_flagged_ratio_warns_and_exits_0(tmp_path):
     paths = _make_root(tmp_path)
-    client = StubClient({"Asthma": 1000, "Diabetes": 1, "High Cholesterol": 0})
+    client = StubClient({"Asthma": 1000, "Diabetes": 1, HIGHCHOL_TERM: 0})
     code, out, err = _run(paths, client=client)
     assert code == 0, err
     assert "warning: recall CASTHMA: found_count=2 included_count=1 ctgov_count=1000 " \
@@ -253,7 +254,7 @@ def test_flagged_ratio_warns_and_exits_0(tmp_path):
     assert [(d["measureid"], d["flagged"]) for d in data["diseases"]] == [
         ("CASTHMA", True), ("DIABETES", False), ("HIGHCHOL", True)]
     assert client.urls == [recall_checker.request_url(t)
-                           for t in ("Asthma", "Diabetes", "High Cholesterol")]
+                           for t in ("Asthma", "Diabetes", HIGHCHOL_TERM)]
     assert out.startswith("CASTHMA: included 1, questionable 0, excluded 1\n")
 
 

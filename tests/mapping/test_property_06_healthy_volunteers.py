@@ -8,8 +8,8 @@ a match, the row with "true" equals the row with "false"; and healthyVolunteers
 
 "Unmasked direct include" is computed here from `find_matches` output, not
 from the Grouping_Engine's internals: an Include_Term match on a `mesh` or
-`condition_text` value that has no Exclude_Term match on the same
-(source, value) (Masked_Value, Req 4.1).
+`condition_text` value that has no Exclude_Term and no Questionable_Term match
+on the same (source, value) (Masked_Value, Req 4.1, Open Item 15).
 """
 from dataclasses import replace
 
@@ -22,7 +22,7 @@ from tests.mapping.strategies import rules_configs, studies
 
 
 def _has_unmasked_direct_include(matches) -> bool:
-    masked = {(m.source, m.value) for m in matches if m.kind == "exclude"}
+    masked = {(m.source, m.value) for m in matches if m.kind in ("exclude", "questionable")}
     return any(
         m.kind == "include"
         and m.source in ("mesh", "condition_text")

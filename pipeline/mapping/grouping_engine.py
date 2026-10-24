@@ -77,12 +77,18 @@ def decide(study: Study, disease: Disease, matches: frozenset[Match]) -> StudyDi
     for m in matches:
         by_kind[m.kind].append(m)
     excl = by_kind["exclude"]
-    masked = {(m.source, m.value) for m in excl}  # Req 4.1
-    inc_nm = [m for m in by_kind["include"] if (m.source, m.value) not in masked]
+    quest = by_kind["questionable"]
+    # Exclude_Masked_Values: decide rules 3a/3b precedence and which
+    # Questionable_Term matches stay rule 6 candidates (Req 4.2, 7.1, 8.6 (f)).
+    masked = {(m.source, m.value) for m in excl}
+    # Masked_Values: an Exclude_Term or Questionable_Term match on the same
+    # value removes its Include_Term matches as evidence (Req 4.1, Open Item 15).
+    qmasked = {(m.source, m.value) for m in quest}
+    inc_mask = masked | qmasked
+    inc_nm = [m for m in by_kind["include"] if (m.source, m.value) not in inc_mask]
     direct = [m for m in inc_nm if m.source in _DIRECT_SOURCES]
     anc = [m for m in inc_nm if m.source == "ancestor"]
     excl_direct = [m for m in excl if m.source in _DIRECT_SOURCES]
-    quest = by_kind["questionable"]
     q_nm = [m for m in quest if (m.source, m.value) not in masked]
     age = parse_max_age(study.maximum_age)
 
@@ -108,9 +114,12 @@ def decide(study: Study, disease: Disease, matches: frozenset[Match]) -> StudyDi
     evidence = direct or (anc if ancestor_included else [])
     if evidence:
         return row("included", "", pick(evidence))
-    # 6. Questionable (Req 7.1, 7.2, 7.5, 8.6 (f), (g)). Req 7.1 counts every
-    # Questionable_Term match; masking (Req 4.1) only removes include evidence.
-    cands = quest + ([] if ancestor_included else anc)
+    # 6. Questionable (Req 7.1, 7.2, 7.5, 8.6 (f), (g)). Candidates are the
+    # Questionable_Term matches on values that are not Exclude_Masked_Values
+    # (questionable-masked values keep theirs) plus, under Ancestor_Only_Status
+    # `questionable`, the unmasked ancestor include matches. Reaching here means
+    # rule 3b did not fire and there is no evidence, so one of them is non-empty.
+    cands = q_nm + ([] if ancestor_included else anc)
     assert cands, "rule 6 reached with no questionable or ancestor candidates"
     dm = pick(cands)
     reason = "ancestor_only" if dm.kind == "include" else _reason(disease, dm)

@@ -229,6 +229,28 @@ def test_healthy_volunteer_asthma_with_condition_is_included():
     assert hv_row == plain_row
 
 
+def test_pediatric_asthma_condition_only_is_questionable():
+    """Req 4.1, 4.6, 7.1: "Pediatric Asthma" matches the Include_Term "asthma" and the
+    Questionable_Term "Pediatric Asthma"; the value is masked for CASTHMA, so the
+    questionable match decides (Open Item 15)."""
+    row = _decide("CASTHMA", _study(conditions=["Pediatric Asthma"]))
+    assert _cells(row) == ("questionable", "pediatric_label", "condition_text", "Pediatric Asthma")
+
+
+def test_pediatric_asthma_plus_asthma_is_included():
+    """Req 4.4, 7.4: a clean "Asthma" value is include evidence next to a masked one."""
+    row = _decide("CASTHMA", _study(conditions=["Pediatric Asthma", "Asthma"]))
+    assert _cells(row) == ("included", "", "condition_text", "Asthma")
+
+
+def test_healthy_volunteer_pediatric_asthma_only_is_excluded():
+    """Req 6.1, 6.3: the only direct include value is questionable-masked, so a
+    healthy-volunteer study gets healthy_volunteers_only."""
+    row = _decide("CASTHMA", _study(conditions=["Pediatric Asthma"], hv="true"))
+    assert _cells(row) == (
+        "excluded", "healthy_volunteers_only", "condition_text", "Pediatric Asthma")
+
+
 def test_group_uses_loaded_rules_per_disease():
     """One study can give rows for several diseases, each decided on its own (Req 8.1)."""
     studies = {

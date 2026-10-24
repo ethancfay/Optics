@@ -146,7 +146,7 @@ DISEASES = [
         "measureid": "HIGHCHOL",
         "disease_label": "High cholesterol",
         "ancestor_only_status": "questionable",
-        "recall_query_term": "High Cholesterol",
+        "recall_query_term": "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL",
         "include": [
             # MeSH descriptors (MeSH_Form = Free_Text_Form listed once)
             "Hypercholesterolemia",

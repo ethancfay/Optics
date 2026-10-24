@@ -19,7 +19,8 @@ Key decisions:
 | HTTP | Reuse `HttpClient.get` and `ctgov_fetcher.build_url` | Allowlist, 60 s timeout, 1/2/4 s retry already implemented (Req 10.2) |
 | Sampling | `random.Random(SAMPLE_SEED).sample(sorted_candidates, k)` with a fresh generator per disease | Per-disease independence (Req 11.5) |
 | Argument parsing | `argparse` with `allow_abbrev=False` | Otherwise `--off` would be accepted, breaking Req 12.3 |
-| Recall query terms | "Asthma", "High Cholesterol", "Diabetes" (same as the dashboard `ctgov_url` condition) | Fixed by Req 2.12; stored in `rules.py` like every other term |
+| Recall query terms | "Asthma", "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL", "Diabetes" | Fixed by Req 2.12; stored in `rules.py` like every other term. "High Cholesterol" returned only 6 studies against `found_count` 123 (Open Item 16) |
+| Include masking | A value matching an Exclude_Term or a Questionable_Term is a Masked_Value and gives no include evidence; exclude-only masking still drives the questionable check of rule 3b | "Pediatric Asthma" phrase-matched "asthma" and was counted `included` (Req 4.1, Open Item 15) |
 
 ## Architecture
 
@@ -60,7 +61,7 @@ pipeline/mapping/
 tests/mapping/         # pytest + Hypothesis, mirrors the modules above
 ```
 
-### Task mapping (≤ 6 tasks)
+### Task mapping
 
 | Task | Components |
 |---|---|
@@ -70,6 +71,7 @@ tests/mapping/         # pytest + Hypothesis, mirrors the modules above
 | 4 | `recall_checker.py` |
 | 5 | `precision_sampler.py`, PII_Guard, `write_files_atomically`, `__main__.py` |
 | 6 | Full network run, commit the three outputs, KIRO_LOG entry; a flagged `ratio_found` is reported, not a stop condition |
+| 7 | Questionable masking in `grouping_engine.py` + Property 15, HIGHCHOL recall term in `rules.py`, rerun, KIRO_LOG entry, commit |
 
 ## Components and Interfaces
 
@@ -140,8 +142,10 @@ DISEASES = [                    # list[dict[str, object]], 1..5 entries
             ("Diabetic Retinopathy", "complication_only"),
         ],
     },
-    # CASTHMA: label "Asthma", ancestor_only_status "included", include ["Asthma", ...]
+    # CASTHMA: label "Asthma", ancestor_only_status "included", recall_query_term "Asthma",
+    #   include ["Asthma", ...], questionable [("Pediatric Asthma", "pediatric_label"), ...]
     # HIGHCHOL: label "High cholesterol", ancestor_only_status "questionable",
+    #   recall_query_term "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL"  (Req 2.12),
     #   include ["Hypercholesterolemia", "Hyperlipidemias", "hyperlipidemia", "Dyslipidemias",
     #            "dyslipidemia", "Hyperlipoproteinemia Type II", "familial hypercholesterolemia",
     #            "Homozygous Familial Hypercholesterolemia", "high cholesterol", "elevated ldl",
@@ -246,12 +250,14 @@ Status decision for one (study, disease), first rule that applies wins (Req 7.6)
 
 ```text
 if matches is empty: return None                                   # Req 3.7
-masked   = {(m.source, m.value) for m in matches if m.kind == exclude}           # Req 4.1
-incNM    = [m for include matches if (m.source, m.value) not in masked]
+masked   = {(m.source, m.value) for m in matches if m.kind == exclude}           # Exclude_Masked_Values
+qmasked  = {(m.source, m.value) for m in matches if m.kind == questionable}
+incMask  = masked | qmasked                                                       # Masked_Values, Req 4.1
+incNM    = [m for include matches if (m.source, m.value) not in incMask]
 direct   = [m in incNM if m.source in {mesh, condition_text}]
 anc      = [m in incNM if m.source == ancestor]
 excl     = exclude matches;  exclDirect = [m in excl if m.source != ancestor]
-qNM      = [m for questionable matches if (m.source, m.value) not in masked]
+qNM      = [m for questionable matches if (m.source, m.value) not in masked]      # exclude masking only
 reason(m) = the Rules_Config reason paired with m.term
 age      = parse_max_age(study.maximum_age)
 
@@ -272,6 +278,8 @@ Notes:
 - Rule 6 always has candidates: reaching it means no evidence and rule 3b did not fire, so either `qNM` is non-empty or `anc` is non-empty with status `questionable`. The engine asserts this.
 - Rule 3a requires a non-empty `anc`. With no unmasked include match at all, rule 3b decides, so Open Item 9 (a questionable match beats a term-based exclude) holds for that case. When `anc` is non-empty, Req 4.3 applies "regardless of any Questionable_Term matches", so rule 3a wins. This keeps Req 4.2 and 4.3 disjoint, as Req 4.3's last sentence states.
 - Excludes only in `ancestorTerms` with ancestor-only include evidence fall through to rules 5/6 (Req 4.5).
+- Questionable masking (Req 4.1, Open Item 15). `incNM`, `direct` and `anc` drop include matches on values that also match an Exclude_Term or a Questionable_Term. `masked` keeps its exclude-only meaning, and `qNM` is still filtered by `masked` alone, so a questionable match on a questionable-masked value stays a rule 6 candidate with its configured reason. Rule 3b is unchanged in effect: an include match dropped only by `qmasked` implies a questionable match on a value outside `masked`, so `qNM` is non-empty and 3b does not fire either way. Rule 3a now also fires when the only direct include values are questionable-masked and an ancestor include exists, which is what Req 4.3 states ("regardless of any Questionable_Term matches"). Rule 2 uses the narrower `direct`, so a healthy-volunteer study whose only direct includes are questionable-masked gets `healthy_volunteers_only` (Req 6.1). Rules 1 and 4 pick the Determining_Match from the narrower `incNM` (Req 8.6b).
+- Exact_Match compares whole Normalized_Text values and Req 2.6 forbids duplicate terms, so a `mesh` or `ancestor` value matches at most one term per disease. Masking therefore only changes outcomes for `condition_text` values (Phrase_Match), for example "Pediatric Asthma" matching both "asthma" and "Pediatric Asthma".
 - `matched_on = DM.source`, `matched_term = DM.value` (Req 8.5).
 
 ### Recall_Checker (`recall_checker.py`, Req 10)
@@ -374,7 +382,7 @@ Only files that should change are passed in. A kept `recall_check.json` (`--offl
 
 *A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-Redundancy review: Req 4.6 is a special case of Req 7.8 (masked-only includes are "no evidence"), so they form one property. Req 8.1 and 8.7 both constrain which rows exist and are combined. Req 7.7, 8.2-8.4 constrain cell values of one row and are combined. Req 6.4, 6.5 and 6.7 together describe the healthy-volunteer rule and form one property. Req 9.7, 9.8 and 8.8 are all determinism and are combined. Req 10.3 and 10.4 are combined so both written ratios and the flag are tested together.
+Redundancy review: Req 4.6 is a special case of Req 7.8 (masked-only includes are "no evidence"), so they form one property. Req 8.1 and 8.7 both constrain which rows exist and are combined. Req 7.7, 8.2-8.4 constrain cell values of one row and are combined. Req 6.4, 6.5 and 6.7 together describe the healthy-volunteer rule and form one property. Req 9.7, 9.8 and 8.8 are all determinism and are combined. Req 10.3 and 10.4 are combined so both written ratios and the flag are tested together. Property 15 overlaps Property 2 on its first half; it is kept separate because its generators force values that phrase-match both an Include_Term and a Questionable_Term (for example "pediatric asthma" with include "asthma"), and its second half checks that a clean direct include value still gives `included`, which Property 2 does not test. Req 4.8 is a check on the committed data, not a property; it is verified in task 7.4.
 
 ### Property 1: Case- and whitespace-insensitive matching
 
@@ -384,7 +392,7 @@ For any study, any disease definition and any perturbation that changes letter c
 
 ### Property 2: No include evidence, never included
 
-For any study and disease whose include matches are all on Masked_Values or in `ancestorTerms` under Ancestor_Only_Status `questionable` (or absent), the row's match_status is not `included`; in particular, a study whose only include matches are on Masked_Values gets `excluded` or `questionable`.
+For any study and disease whose include matches are all on Masked_Values (values that also match an Exclude_Term or a Questionable_Term of that disease) or in `ancestorTerms` under Ancestor_Only_Status `questionable` (or absent), the row's match_status is not `included`; in particular, a study whose only include matches are on Masked_Values gets `excluded` or `questionable`.
 
 **Validates: Requirements 4.6, 7.8, 4.1**
 
@@ -408,7 +416,7 @@ For any non-negative integer n and any of the 12 units in any letter case, `is_c
 
 ### Property 6: Healthy-volunteer rule
 
-For any study and disease with no unmasked Include_Term match in `conditions` or `meshTerms`, setting `healthyVolunteers` to `true` yields no `included` row (and `healthy_volunteers_only` unless child-only); for any study that has such a match, the row with `true` equals the row with `false`; and `healthyVolunteers` of `false` or empty never yields `healthy_volunteers_only`.
+For any study and disease with no Include_Term match in `conditions` or `meshTerms` on a value that matches no Exclude_Term and no Questionable_Term of that disease, setting `healthyVolunteers` to `true` yields no `included` row (and `healthy_volunteers_only` unless child-only); for any study that has such a match, the row with `true` equals the row with `false`; and `healthyVolunteers` of `false` or empty never yields `healthy_volunteers_only`.
 
 **Validates: Requirements 6.7, 6.4, 6.5, 6.1**
 
@@ -460,6 +468,12 @@ For any `studies.csv` content, `render(audit_tables(rows))` is byte-identical ac
 
 **Validates: Requirements 14.6, 14.3**
 
+### Property 15: Questionable-masked include evidence is never included
+
+For any study and disease whose Include_Term matches are all on values that also match an Exclude_Term or a Questionable_Term of that disease (or are ancestor-only under Ancestor_Only_Status `questionable`), the row's match_status is not `included`; and for any study and disease with at least one Include_Term match on a `conditions` or `meshTerms` value that matches no Exclude_Term and no Questionable_Term of that disease, a `maximumAge` that is empty or parses to 18 years or more, and `healthyVolunteers` not `true`, the row's match_status is `included`.
+
+**Validates: Requirements 4.1, 4.4, 4.6, 7.4, 7.8**
+
 ## Error Handling
 
 All defined failures raise `PipelineError` (or its subclass `ConfigError`). Messages carry only file names, line numbers, column names, nctIds, measureids, reason codes, URLs and OS error type names (Req 12.8). No output is replaced until every step has passed (Req 9.10).
@@ -497,6 +511,7 @@ Tests live in `tests/mapping/`, mirror the module names, and use the existing `t
 - Age examples: "17 Years", "215 Months", "939 Weeks", "6574 Days", "157787 Hours", "0 Years" are child-only; "18 Years", "216 Months", "940 Weeks", "6575 Days", "157788 Hours" are not.
 - One representative study per reason code (`child_only`, `unparseable_age`, `healthy_volunteers_only`, `ancestor_only`, and every Exclude/Questionable reason in `rules.py`, including `gestational`, `prediabetes`, `not_mellitus`, `ascvd_only`) and one `included` study per disease, each asserting `match_status`, `exclusion_reason`, `matched_on` and `matched_term`. Reason codes are enumerated from the loaded `rules.py`, so a new reason without an example fails the test.
 - Phrase-match examples from Req 3.2, the Req 4.3/4.4 gestational examples, and the HIGHCHOL "Myocardial Infarction" → `ascvd_only` example.
+- Questionable masking (Req 4.1): "Pediatric Asthma" only → `questionable`/`pediatric_label`; "Pediatric Asthma" + "Asthma" → `included`; a healthy-volunteer study with only "Pediatric Asthma" → `excluded`/`healthy_volunteers_only` (Req 6.1).
 - Recall with a stub client: URL parameters, `found_count` (counts included, questionable and excluded rows) and `included_count` (included only), both ratios rounded half up, both null on `ctgov_count` 0, flagged for `ratio_found` 0.799 and null, not flagged for 0.8 and 0.7995, and not flagged for `ratio_found` 0.9 with `ratio_included` 0.1 (Req 13.5). Failure stubs (raised `PipelineError`, non-JSON body, missing or `bool` `totalCount`) assert exit ≠ 0, measureid and URL on stderr, and byte-identical outputs.
 - Precision sample: a filled `correct` cell keeps the file without `--resample` and replaces it with `--resample`.
 - CLI and I/O: usage errors exit 2, config errors, input errors, PII hit, simulated replace failure with rollback, `--offline` with and without an existing `recall_check.json`, run from another working directory, summary format.
@@ -504,3 +519,5 @@ Tests live in `tests/mapping/`, mirror the module names, and use the existing `t
 - Term_Audit examples: `LDL` lists "LDL Cholesterol" and "VLDL", duplicates within one study count once, case variants count separately, `no values` table, filled-file refusal.
 
 **Final run (task 6).** `python -m pipeline.mapping` on the real data with network, then `pytest`. The three outputs are committed. A flagged `ratio_found` (below 0.8 or null) is a warning: the run exits 0, the task reports the flagged diseases with their counts, and it does not stop.
+
+**Questionable-masking rerun (task 7).** Before counts (stdout summary and `recall_check.json`) are taken from the committed outputs, the pipeline is rerun with network, and the six studies of Req 4.8 are checked in the new `study_diseases.csv`. The HIGHCHOL `ratio_found` may stay above 1.0 because `found_count` counts `excluded` rows (Open Item 16).

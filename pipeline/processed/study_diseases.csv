@@ -268,7 +268,7 @@ NCT04255433,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT04265261,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
 NCT04270682,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
 NCT04270942,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
-NCT04278404,CASTHMA,Asthma,included,,condition_text,Asthma in Children
+NCT04278404,CASTHMA,Asthma,excluded,healthy_volunteers_only,condition_text,Asthma in Children
 NCT04279613,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
 NCT04280029,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Coronary Disease
 NCT04282148,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
@@ -554,7 +554,7 @@ NCT05712720,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT05713266,CASTHMA,Asthma,included,,mesh,Asthma
 NCT05713266,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT05714059,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
-NCT05723445,DIABETES,Diabetes,included,,condition_text,Cystic Fibrosis-related Diabetes
+NCT05723445,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis-related Diabetes
 NCT05727891,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
 NCT05729516,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
 NCT05734313,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
@@ -714,7 +714,7 @@ NCT06432790,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
 NCT06438315,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
 NCT06445608,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
 NCT06445946,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
-NCT06449677,DIABETES,Diabetes,included,,condition_text,Cystic Fibrosis-related Diabetes
+NCT06449677,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis-related Diabetes
 NCT06451757,DIABETES,Diabetes,included,,condition_text,Maternally Inherited Diabetes and Deafness (MIDD)
 NCT06457139,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT06457685,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
@@ -731,7 +731,7 @@ NCT06525259,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 
 NCT06529419,CASTHMA,Asthma,included,,mesh,Asthma
 NCT06534411,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
 NCT06535854,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
-NCT06538376,CASTHMA,Asthma,included,,condition_text,Asthma COPD
+NCT06538376,CASTHMA,Asthma,questionable,overlap_syndrome,condition_text,Asthma COPD
 NCT06542874,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
 NCT06557005,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT06565156,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
@@ -806,7 +806,7 @@ NCT06885177,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery D
 NCT06890975,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT06892002,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
 NCT06899503,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
-NCT06903897,CASTHMA,Asthma,included,,condition_text,Pediatric Asthma
+NCT06903897,CASTHMA,Asthma,excluded,healthy_volunteers_only,condition_text,Pediatric Asthma
 NCT06903897,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT06903897,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
 NCT06907147,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
@@ -964,7 +964,7 @@ NCT07668336,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 
 NCT07676565,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
 NCT07683026,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
 NCT07684144,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
-NCT07688070,DIABETES,Diabetes,included,,condition_text,Cystic Fibrosis Related Diabetes
+NCT07688070,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis Related Diabetes
 NCT07689877,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
 NCT07705555,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
 NCT07705607,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
