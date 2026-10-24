@@ -331,12 +331,13 @@ function TextAlternative({ entries, tableId, onSelect }: TextAlternativeProps) {
             <th scope="col">high</th>
             <th scope="col">t</th>
             <th scope="col">affected_adults</th>
+            <th scope="col">prevalence_year</th>
           </tr>
         </thead>
         <tbody>
           {entries.length === 0 ? (
             <tr>
-              <td colSpan={6}>No diseases are available</td>
+              <td colSpan={7}>No diseases are available</td>
             </tr>
           ) : (
             entries.map((entry, index) => {
@@ -364,6 +365,7 @@ function TextAlternative({ entries, tableId, onSelect }: TextAlternativeProps) {
                   <td>{displayNumber(entry.high)}</td>
                   <td>{displayNumber(entry.t)}</td>
                   <td>{displayNumber(entry.affected_adults)}</td>
+                  <td>{displayText(entry.prevalence_year)}</td>
                 </tr>
               );
             })
