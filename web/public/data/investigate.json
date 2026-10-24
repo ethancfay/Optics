@@ -1,182 +1,317 @@
 [
   {
-    "measure_id": "CASTHMA",
+    "by_intervention_type": [
+      {
+        "count": 1,
+        "label": "Behavioral"
+      },
+      {
+        "count": 4,
+        "label": "Biological"
+      },
+      {
+        "count": 1,
+        "label": "Combination Product"
+      },
+      {
+        "count": 4,
+        "label": "Device"
+      },
+      {
+        "count": 2,
+        "label": "Dietary Supplement"
+      },
+      {
+        "count": 41,
+        "label": "Drug"
+      },
+      {
+        "count": 10,
+        "label": "Other"
+      },
+      {
+        "count": 3,
+        "label": "Procedure"
+      }
+    ],
+    "by_overall_status": [
+      {
+        "count": 12,
+        "label": "Active Not Recruiting"
+      },
+      {
+        "count": 37,
+        "label": "Completed"
+      },
+      {
+        "count": 1,
+        "label": "Not Yet Recruiting"
+      },
+      {
+        "count": 11,
+        "label": "Recruiting"
+      }
+    ],
+    "by_phase": [
+      {
+        "count": 8,
+        "label": "Not applicable"
+      },
+      {
+        "count": 10,
+        "label": "Not reported"
+      },
+      {
+        "count": 5,
+        "label": "Phase 1"
+      },
+      {
+        "count": 15,
+        "label": "Phase 2"
+      },
+      {
+        "count": 17,
+        "label": "Phase 3"
+      },
+      {
+        "count": 6,
+        "label": "Phase 4"
+      }
+    ],
+    "by_study_type": [
+      {
+        "count": 51,
+        "label": "Interventional"
+      },
+      {
+        "count": 10,
+        "label": "Observational"
+      }
+    ],
     "condition": "Asthma",
-    "ma_studies": 107,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 37 },
-      { "label": "Active, not recruiting", "count": 12 },
-      { "label": "Completed", "count": 58 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 44 },
-      { "label": "Observational", "count": 11 }
-    ],
-    "by_intervention_type": [
-      { "label": "Drug", "count": 29 },
-      { "label": "Device", "count": 6 },
-      { "label": "Behavioral", "count": 9 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 15 },
-      { "label": "Phase 3", "count": 10 },
-      { "label": "Not applicable", "count": 12 }
-    ],
-    "phase_overlap_studies": 4,
     "findings": [
       {
-        "text": "Most recruiting studies are interventional drug trials, which may reflect where current activity is concentrated.",
-        "label": "possible explanation from available records"
+        "label": "possible explanation from available records",
+        "text": "Some studies list a drug-type intervention, which may be an existing drug, a comparator, or a placebo."
       },
       {
-        "text": "Whether this level of activity matches patient demand across the state cannot be established from the public records.",
-        "label": "cannot determine from public data"
+        "label": "cannot determine from public data",
+        "text": "Whether this reflects funding levels or sponsor decisions cannot be determined from ClinicalTrials.gov or CDC PLACES records."
       }
-    ]
+    ],
+    "ma_studies": 61,
+    "measure_id": "CASTHMA",
+    "phase_overlap_studies": 0,
+    "us_studies": null
   },
   {
-    "measure_id": "DEPRESSION",
-    "condition": "Depression",
-    "ma_studies": 174,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 58 },
-      { "label": "Active, not recruiting", "count": 20 },
-      { "label": "Completed", "count": 96 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 63 },
-      { "label": "Observational", "count": 15 }
-    ],
     "by_intervention_type": [
-      { "label": "Drug", "count": 34 },
-      { "label": "Behavioral", "count": 22 },
-      { "label": "Device", "count": 7 }
+      {
+        "count": 31,
+        "label": "Behavioral"
+      },
+      {
+        "count": 8,
+        "label": "Biological"
+      },
+      {
+        "count": 1,
+        "label": "Combination Product"
+      },
+      {
+        "count": 43,
+        "label": "Device"
+      },
+      {
+        "count": 6,
+        "label": "Diagnostic Test"
+      },
+      {
+        "count": 3,
+        "label": "Dietary Supplement"
+      },
+      {
+        "count": 124,
+        "label": "Drug"
+      },
+      {
+        "count": 58,
+        "label": "Other"
+      },
+      {
+        "count": 6,
+        "label": "Procedure"
+      }
+    ],
+    "by_overall_status": [
+      {
+        "count": 39,
+        "label": "Active Not Recruiting"
+      },
+      {
+        "count": 142,
+        "label": "Completed"
+      },
+      {
+        "count": 5,
+        "label": "Not Yet Recruiting"
+      },
+      {
+        "count": 70,
+        "label": "Recruiting"
+      }
     ],
     "by_phase": [
-      { "label": "Phase 2", "count": 21 },
-      { "label": "Phase 3", "count": 14 },
-      { "label": "Not applicable", "count": 23 }
-    ],
-    "phase_overlap_studies": 6,
-    "findings": [
       {
-        "text": "A large share of studies are behavioral rather than drug trials, which may explain the mix observed here.",
-        "label": "possible explanation from available records"
+        "count": 1,
+        "label": "Early Phase1"
       },
       {
-        "text": "The reasons behind the balance of behavioral and drug studies cannot be determined from public data.",
-        "label": "cannot determine from public data"
+        "count": 92,
+        "label": "Not applicable"
+      },
+      {
+        "count": 56,
+        "label": "Not reported"
+      },
+      {
+        "count": 6,
+        "label": "Phase 1"
+      },
+      {
+        "count": 41,
+        "label": "Phase 2"
+      },
+      {
+        "count": 57,
+        "label": "Phase 3"
+      },
+      {
+        "count": 11,
+        "label": "Phase 4"
       }
-    ]
-  },
-  {
-    "measure_id": "BPHIGH",
-    "condition": "High Blood Pressure",
-    "ma_studies": 390,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 142 },
-      { "label": "Active, not recruiting", "count": 38 },
-      { "label": "Completed", "count": 210 }
     ],
     "by_study_type": [
-      { "label": "Interventional", "count": 158 },
-      { "label": "Observational", "count": 22 }
-    ],
-    "by_intervention_type": [
-      { "label": "Drug", "count": 101 },
-      { "label": "Device", "count": 24 },
-      { "label": "Behavioral", "count": 33 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 48 },
-      { "label": "Phase 3", "count": 36 },
-      { "label": "Not applicable", "count": 58 }
-    ],
-    "phase_overlap_studies": 11,
-    "findings": [
       {
-        "text": "The high count of recruiting studies may be explained by the large affected population recorded for this condition.",
-        "label": "possible explanation from available records"
+        "count": 200,
+        "label": "Interventional"
       },
       {
-        "text": "Whether activity is evenly distributed across the state cannot be determined from public data.",
-        "label": "cannot determine from public data"
+        "count": 56,
+        "label": "Observational"
       }
-    ]
-  },
-  {
-    "measure_id": "DIABETES",
+    ],
     "condition": "Diabetes",
-    "ma_studies": 272,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 96 },
-      { "label": "Active, not recruiting", "count": 27 },
-      { "label": "Completed", "count": 149 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 108 },
-      { "label": "Observational", "count": 15 }
-    ],
-    "by_intervention_type": [
-      { "label": "Drug", "count": 72 },
-      { "label": "Device", "count": 18 },
-      { "label": "Behavioral", "count": 15 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 33 },
-      { "label": "Phase 3", "count": 29 },
-      { "label": "Not applicable", "count": 34 }
-    ],
-    "phase_overlap_studies": 8,
     "findings": [
       {
-        "text": "A relatively high ratio of studies to affected adults may be explained by concentrated drug development in this area.",
-        "label": "possible explanation from available records"
+        "label": "possible explanation from available records",
+        "text": "Some studies list a drug-type intervention, which may be an existing drug, a comparator, or a placebo."
       },
       {
-        "text": "The drivers of the observed study mix cannot be determined from public data.",
-        "label": "cannot determine from public data"
+        "label": "possible explanation from available records",
+        "text": "Some studies list more than one phase, so counts by phase overlap."
+      },
+      {
+        "label": "cannot determine from public data",
+        "text": "Whether this reflects funding levels or sponsor decisions cannot be determined from ClinicalTrials.gov or CDC PLACES records."
       }
-    ]
+    ],
+    "ma_studies": 256,
+    "measure_id": "DIABETES",
+    "phase_overlap_studies": 8,
+    "us_studies": null
   },
   {
-    "measure_id": "HIGHCHOL",
-    "condition": "High Cholesterol",
-    "ma_studies": 132,
-    "us_studies": null,
-    "by_overall_status": [
-      { "label": "Recruiting", "count": 41 },
-      { "label": "Active, not recruiting", "count": 14 },
-      { "label": "Completed", "count": 77 }
-    ],
-    "by_study_type": [
-      { "label": "Interventional", "count": 47 },
-      { "label": "Observational", "count": 8 }
-    ],
     "by_intervention_type": [
-      { "label": "Drug", "count": 38 },
-      { "label": "Behavioral", "count": 10 },
-      { "label": "Device", "count": 3 }
-    ],
-    "by_phase": [
-      { "label": "Phase 2", "count": 16 },
-      { "label": "Phase 3", "count": 13 },
-      { "label": "Not applicable", "count": 12 }
-    ],
-    "phase_overlap_studies": 5,
-    "findings": [
       {
-        "text": "The low ratio relative to affected adults may reflect that activity is recorded under related conditions elsewhere.",
-        "label": "possible explanation from available records"
+        "count": 6,
+        "label": "Behavioral"
       },
       {
-        "text": "Whether studies are recorded under other related labels cannot be determined from public data.",
-        "label": "cannot determine from public data"
+        "count": 1,
+        "label": "Biological"
+      },
+      {
+        "count": 2,
+        "label": "Device"
+      },
+      {
+        "count": 1,
+        "label": "Diagnostic Test"
+      },
+      {
+        "count": 13,
+        "label": "Drug"
+      },
+      {
+        "count": 3,
+        "label": "Other"
+      },
+      {
+        "count": 1,
+        "label": "Procedure"
       }
-    ]
+    ],
+    "by_overall_status": [
+      {
+        "count": 6,
+        "label": "Active Not Recruiting"
+      },
+      {
+        "count": 13,
+        "label": "Completed"
+      },
+      {
+        "count": 5,
+        "label": "Recruiting"
+      }
+    ],
+    "by_phase": [
+      {
+        "count": 10,
+        "label": "Not applicable"
+      },
+      {
+        "count": 1,
+        "label": "Not reported"
+      },
+      {
+        "count": 2,
+        "label": "Phase 2"
+      },
+      {
+        "count": 10,
+        "label": "Phase 3"
+      },
+      {
+        "count": 1,
+        "label": "Phase 4"
+      }
+    ],
+    "by_study_type": [
+      {
+        "count": 23,
+        "label": "Interventional"
+      },
+      {
+        "count": 1,
+        "label": "Observational"
+      }
+    ],
+    "condition": "High Cholesterol",
+    "findings": [
+      {
+        "label": "possible explanation from available records",
+        "text": "Some studies list a drug-type intervention, which may be an existing drug, a comparator, or a placebo."
+      },
+      {
+        "label": "cannot determine from public data",
+        "text": "Whether this reflects funding levels or sponsor decisions cannot be determined from ClinicalTrials.gov or CDC PLACES records."
+      }
+    ],
+    "ma_studies": 24,
+    "measure_id": "HIGHCHOL",
+    "phase_overlap_studies": 0,
+    "us_studies": null
   }
 ]
