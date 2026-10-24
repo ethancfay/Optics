@@ -130,10 +130,15 @@ function whatEntryArb(measure_id: string): fc.Arbitrary<WhatEntry> {
     });
 }
 
-/** A valid non-empty LabelCount breakdown array with safe labels. */
-const breakdownArb: fc.Arbitrary<LabelCount[]> = fc.array(
+/**
+ * A valid non-empty LabelCount breakdown array with safe, UNIQUE labels. The
+ * Investigate page keys breakdown rows by label, so duplicate labels would
+ * trigger React's duplicate-key warning (design "Generator hygiene", like the
+ * Property 8 fix). Real breakdowns never repeat a label.
+ */
+const breakdownArb: fc.Arbitrary<LabelCount[]> = fc.uniqueArray(
   fc.record({ label: safePhraseArb, count: fc.nat({ max: 1000 }) }),
-  { minLength: 1, maxLength: 4 }
+  { minLength: 1, maxLength: 4, selector: (item) => item.label }
 );
 
 /** A valid Finding: safe text plus exactly one permitted Evidence_Label. */

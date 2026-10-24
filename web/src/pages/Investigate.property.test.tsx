@@ -45,10 +45,15 @@ const labelCountArb: fc.Arbitrary<LabelCount> = fc.record({
   count: fc.nat({ max: 1000 }),
 });
 
-/** A minimal valid non-empty breakdown array. */
-const breakdownArb: fc.Arbitrary<LabelCount[]> = fc.array(labelCountArb, {
+/**
+ * A minimal valid non-empty breakdown array. Labels are unique (as in the real
+ * data) because the page keys breakdown rows by label; duplicates would trigger
+ * React's duplicate-key warning (design "Generator hygiene", like Property 8).
+ */
+const breakdownArb: fc.Arbitrary<LabelCount[]> = fc.uniqueArray(labelCountArb, {
   minLength: 1,
   maxLength: 4,
+  selector: (item) => item.label,
 });
 
 /** A Finding: non-empty text plus a label drawn from the two EVIDENCE_LABELS. */

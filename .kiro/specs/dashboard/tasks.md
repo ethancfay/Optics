@@ -277,7 +277,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Commit as two commits: (1) the spec change (requirements.md, design.md, tasks.md); (2) the `evidence.json` data change and any updated tests.
     - _Requirements: 18.1, 18.2, 18.4_
 
-- [ ] 18. Consistent counts, visible prevalence year, cleanup
+- [x] 18. Consistent counts, visible prevalence year, cleanup
   - _Requirements: 2.1, 2.5, 7.2, 11.7, 19.1-19.9_
 
   - [x] 18.1 Confirm the spec reflects the plan (requirements.md + design.md)
@@ -306,11 +306,11 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Add the `NATIONAL_COMPARISON_PLANNED` sentence to the Method page and a test for it.
     - _Requirements: 11.7_
 
-  - [ ] 18.6 Test hygiene: unique generated labels
+  - [x] 18.6 Test hygiene: unique generated labels
     - Build keyed generated arrays (breakdown labels, What `measure_id`s) with `fc.uniqueArray` + `selector` in the Investigate and Forbidden_Terms property tests (and any other generator that feeds a keyed list), like the Property 8 fix. The full run must print no duplicate-key warning.
     - _Requirements: testing strategy (design "Generator hygiene")_
 
-  - [ ] 18.7 Verify and commit (don't push)
+  - [x] 18.7 Verify and commit (don't push)
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data (`what.json`, `sources.json` + fixture test); (c) Investigate + Method changes with tests; (d) test hygiene.
 
