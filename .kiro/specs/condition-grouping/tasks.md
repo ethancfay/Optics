@@ -249,7 +249,7 @@ Every top-level task is done only when the whole `pytest` suite (Spec 1 tests in
     - Report the recall ratios and any flagged diseases with their counts to the user
     - _Requirements: 9.7, 10.5, 11.3, 14.5_
 
-- [ ] 7. Questionable masking and HIGHCHOL recall term
+- [x] 7. Questionable masking and HIGHCHOL recall term
   - Done when: the six studies of Req 4.8 have the expected rows, the HIGHCHOL recall term is in `recall_check.json`, `KIRO_LOG.md` has before/after counts, and the full `pytest` suite passes.
   - [x] 7.1 Mask questionable values for include evidence in `pipeline/mapping/grouping_engine.py`
     - Add `qmasked` (values with a Questionable_Term match) and build `incNM`, `direct` and `anc` from `masked | qmasked`; keep `masked` exclude-only and keep `qNM` filtered by `masked` alone, so rules 3a/3b keep their exclude precedence and questionable matches stay rule 6 candidates with unchanged reason codes (design § Grouping_Engine)
@@ -280,7 +280,7 @@ Every top-level task is done only when the whole `pytest` suite (Spec 1 tests in
     - Record the run date, the two changes (questionable masking, HIGHCHOL recall term), before/after per-disease summary counts and before/after recall values, and the Req 4.8 verification result
     - _Requirements: 4.8, 10.6, 12.6_
 
-  - [-] 7.6 Commit
+  - [x] 7.6 Commit
     - Stage by name: `pipeline/mapping/grouping_engine.py`, `pipeline/mapping/rules.py`, the changed and new test files under `tests/mapping/`, `.kiro/specs/condition-grouping/requirements.md`, `design.md`, `tasks.md` and `tasks.meta.json`, `pipeline/processed/study_diseases.csv`, `pipeline/processed/recall_check.json`, `burden_test/precision_sample.csv` (only if it changed), and `KIRO_LOG.md`; commit with a message naming Spec 2 questionable masking and the HIGHCHOL recall term
     - _Requirements: 2.12, 4.1, 9.7, 10.5_
 
