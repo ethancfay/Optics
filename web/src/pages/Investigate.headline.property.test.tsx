@@ -22,6 +22,9 @@ const useWhatDataMock = vi.fn<() => LoadState<WhatEntry[]>>();
 vi.mock("../data/providers", () => ({
   useInvestigateData: () => useInvestigateDataMock(),
   useWhatData: () => useWhatDataMock(),
+  // Evidence_Data only drives No_Intervention_Count (shown as "unknown" for an
+  // empty state); it does not affect the headline.
+  useEvidenceData: (): LoadState<unknown[]> => ({ status: "empty" }),
   // The providers module is mocked, so the sample flag is mocked too (the
   // intro sentence does not affect the headline).
   useIsSample: () => true,

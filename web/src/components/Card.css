@@ -1,0 +1,175 @@
+/*
+ * Styles for the reusable Card container (Req 2.2, 6.5).
+ *
+ * A navy card (`--card`) with light text, a large rounded corner
+ * (`--radius-card`, >= 12px per Req 2.2) and the shared card shadow. Inner
+ * panels use the light-blue inner-panel token so content sits on light plates
+ * inside the navy card, keeping WCAG AA contrast (Req 2.5). All colours
+ * reference the palette custom properties in `src/styles/palette.css` (single
+ * source of truth); this file introduces no raw colour values.
+ *
+ * Presentational only: no data logic lives here.
+ */
+
+.card {
+  background-color: var(--card);
+  color: var(--card-ink, var(--ink));
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+.card + .card {
+  margin-top: 24px;
+}
+
+.card-title {
+  margin: 0 0 16px;
+  color: var(--card-ink, var(--ink));
+}
+
+.card-body {
+  /* Container for the page content; layout is owned by the composing page. */
+  color: inherit;
+}
+
+/*
+ * Light inner panel used to place readable content on a light plate inside the
+ * navy card. Pages opt in by adding `card-panel` to a child element.
+ */
+.card-panel {
+  background-color: var(--panel, var(--accent-soft));
+  color: var(--ink);
+  border-radius: var(--radius-control);
+  padding: 16px;
+}
+
+.card-panel + .card-panel {
+  margin-top: 16px;
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Navy-card contrast — variable-driven model (final)
+ * ---------------------------------------------------------------------------
+ * The whole card is navy (--card). Rather than re-colour each element, we
+ * REDEFINE the text variables ON the card scope so every descendant that reads
+ * var(--ink) / var(--muted) / var(--card-ink) automatically resolves to a light
+ * value on the navy surface — this catches body text, headings, list items,
+ * small helper text, and anything added later, with no per-element rule.
+ *
+ * Then, on the LIGHT plates that sit inside the card (tables and their cells,
+ * captions, definition/note boxes, the caveat box, code/formula boxes, and
+ * select/input controls), we reset the same variables back to dark values and
+ * set color locally, so their dark-on-light contrast is restored.
+ *
+ * Values (all >= 4.5:1 AA):
+ *   on navy #263342:  text #F4F7FB (~13:1), muted #C9D3E0 (~8.6:1)
+ *   on light plate:   text #1A1A1A (~16:1 on cream), muted #4A5562 (~7:1)
+ *   links keep the palette --accent (#2F5C9A, AA on both cream and light-blue).
+ */
+
+/* Navy card scope: light text variables cascade to every descendant. */
+.card {
+  --ink: #F4F7FB;
+  --muted: #C9D3E0;
+  --card-ink: #F4F7FB;
+  color: #F4F7FB;
+}
+
+/*
+ * Light plates inside the card reset the variables back to dark and set color
+ * locally. Listing the table parts (table/thead/tbody/tr/th/td/caption) ensures
+ * the reset reaches cells whose colour was set directly. The box classes cover
+ * the definition/note text, the caveat box, the formula/code box, and the
+ * select/input control.
+ */
+.card .inv-table,
+.card .inv-table thead,
+.card .inv-table tbody,
+.card .inv-table tr,
+.card .inv-table th,
+.card .inv-table td,
+.card .inv-table caption,
+.card .dw-table,
+.card .dw-table thead,
+.card .dw-table tbody,
+.card .dw-table tr,
+.card .dw-table th,
+.card .dw-table td,
+.card .dw-table caption,
+.card .evidence-table,
+.card .evidence-table thead,
+.card .evidence-table tbody,
+.card .evidence-table tr,
+.card .evidence-table th,
+.card .evidence-table td,
+.card .evidence-table caption,
+.card .inv-definition,
+.card .inv-definition-inline,
+.card .inv-f2-note,
+.card .inv-caption,
+.card .inv-prevalence-year,
+.card .inv-finding,
+.card .inv-finding p,
+.card .inv-badge,
+.card .method-page__equation,
+.card .what-caveats,
+.card .what-caveat,
+.card .what-picker-select,
+.card .card-panel,
+.card .card-panel p,
+.card .card-panel li,
+.card .card-panel h1,
+.card .card-panel h2,
+.card .card-panel h3,
+.card .card-panel h4,
+.card .card-panel strong,
+.card .card-panel b,
+.card .card-panel label,
+.card pre,
+.card code,
+.card select,
+.card input,
+.card textarea {
+  --ink: #1A1A1A;
+  --muted: #4A5562;
+  color: #1A1A1A;
+}
+
+/* Tables get an explicit cream plate so cells never show the navy behind them. */
+.card .inv-table,
+.card .inv-table thead,
+.card .inv-table tbody,
+.card .inv-table tr,
+.card .inv-table th,
+.card .inv-table td,
+.card .inv-table caption,
+.card .dw-table,
+.card .dw-table thead,
+.card .dw-table tbody,
+.card .dw-table tr,
+.card .dw-table th,
+.card .dw-table td,
+.card .dw-table caption,
+.card .evidence-table,
+.card .evidence-table thead,
+.card .evidence-table tbody,
+.card .evidence-table tr,
+.card .evidence-table th,
+.card .evidence-table td,
+.card .evidence-table caption {
+  background-color: #FBF8F3;
+}
+
+/* Links on light plates keep the accent blue (AA on cream / light-blue). */
+.card .inv-table a,
+.card .dw-table a,
+.card .dw-row-button,
+.card .evidence-table a,
+.card .inv-definition a,
+.card .inv-finding a,
+.card .what-caveats a,
+.card .card-panel a {
+  color: var(--accent);
+}

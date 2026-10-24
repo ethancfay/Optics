@@ -50,7 +50,9 @@ const UNAVAILABLE = "unavailable";
 // band — name right-aligned into the gutter, whisker vertically centred beside
 // it — is what lets a reader trace a value without a legend.
 const PLOT_WIDTH = 640;
-const PLOT_RIGHT = 16;
+// Room at the right of the plot for the direct low-high value label that sits
+// just past each whisker's high end cap (Req 9.2), so the text is never clipped.
+const PLOT_RIGHT = 92;
 const ROW_HEIGHT = 32;
 const TOP_PAD = 16;
 const BOTTOM_PAD = 52; // tick labels + the axis unit label
@@ -61,6 +63,8 @@ const NAME_COLUMN_MIN = 96;
 const NAME_COLUMN_MAX = 188;
 /** Clearance between a name's right edge and the plot's left edge. */
 const NAME_GAP = 14;
+/** Clearance between a whisker's high end cap and its direct value label. */
+const VALUE_LABEL_GAP = 10;
 /** Conservative advance width of one character at the 12px row-label size. */
 const NAME_CHAR_WIDTH = 6.8;
 
@@ -85,6 +89,20 @@ function displayText(value: string | null | undefined): string {
     return UNAVAILABLE;
   }
   return value;
+}
+
+/**
+ * The direct low-high value label drawn next to a disease's whisker (Req 9.2):
+ * the same low and high numbers the whisker spans, so a reader can read the
+ * range off the mark itself rather than estimating it against the axis. Uses an
+ * en dash between the two values, and falls back to the "unavailable"
+ * placeholder for either bound that is missing or non-finite (Req 6.5).
+ */
+function rangeLabel(
+  low: number | null | undefined,
+  high: number | null | undefined,
+): string {
+  return `${displayNumber(low)}\u2013${displayNumber(high)}`;
 }
 
 export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
@@ -261,6 +279,20 @@ export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
                     strokeWidth={1}
                   />
                 )}
+                {/* Direct low-high value label, printed just past the high end
+                    cap on the same row as the whisker (Req 9.2), so each
+                    disease's range is readable off the chart without tracing
+                    back to the axis. When the high bound is unavailable the
+                    label hangs off the plot's right edge instead. */}
+                <text
+                  className="dw-value-label"
+                  x={(xHigh ?? nameColumnWidth + PLOT_WIDTH) + VALUE_LABEL_GAP}
+                  y={centerY}
+                  textAnchor="start"
+                  dominantBaseline="central"
+                >
+                  {rangeLabel(entry.low, entry.high)}
+                </text>
                 {/* Non-colour text label so meaning never relies on colour alone
                     (Req 5.8, 15.2): the condition name sits in the left column,
                     vertically centred on the very row as its whisker. */}

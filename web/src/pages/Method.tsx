@@ -1,5 +1,11 @@
 // Method_Page — route component for `/method` (Req 11).
 //
+// Restyle (Req 11.1): the whole page is wrapped in a single reusable Card titled
+// exactly "Method and Sources". The source links and fetched dates stay wired
+// from Sources_Data (Req 11.2), and the existing LoadStateView still renders the
+// data-unavailable component naming `sources.json` when Sources_Data fails
+// (Req 11.3). Data wiring and copy semantics are unchanged.
+//
 // The Method page lets a researcher trust and cite the numbers. It explains, in
 // grade-8 plain language and with no Forbidden_Terms (Req 11.6, 17):
 //
@@ -30,6 +36,7 @@
 
 import { useSources } from "../data/providers";
 import { LoadStateView } from "../components/LoadStateView";
+import Card from "../components/Card";
 import type { SourcesData } from "../data/types";
 
 /**
@@ -119,7 +126,7 @@ export default function Method() {
 
   return (
     <div className="method-page">
-      <h1>Method and sources</h1>
+      <Card title="Method and Sources" className="method-page__card">
       <p className="method-page__intro">
         This page explains how we build the index and where the data comes from,
         so you can check and cite the numbers.
@@ -202,6 +209,7 @@ export default function Method() {
           <li>{NATIONAL_COMPARISON_PLANNED}</li>
         </ul>
       </section>
+      </Card>
     </div>
   );
 }

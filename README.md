@@ -1,4 +1,4 @@
-# Research Gap Index
+# Optics
 
 Compares how common selected diseases are among Massachusetts adults (18+) with observed MA-associated clinical study activity. It measures study activity against adult prevalence, not disease severity.
 

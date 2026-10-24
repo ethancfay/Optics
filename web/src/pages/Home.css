@@ -1,0 +1,92 @@
+/*
+ * Home page layout (frontend-redesign, Req 6.5, 7).
+ *
+ * Home is the two mockup cards: a left "What is Research Gap Index?" card and a
+ * right "Top Finding" card, side by side on wide viewports and stacked on
+ * narrow ones. The cards themselves are the reusable Card component, so this
+ * file owns only the page layout, not the card chrome.
+ *
+ * The shared base stylesheet auto-cards the top-level `.home-page` block. Here
+ * that block is just a layout container holding two Cards, so we reset the
+ * auto-card chrome to avoid a navy-card-inside-navy-card look; the Cards supply
+ * their own surface. All colours reference palette custom properties.
+ */
+
+.layout__main > .home-page {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.home-page > h1 {
+  margin: 0 0 24px;
+}
+
+/*
+ * Two-column card grid. Equal columns on wide viewports; a single stacked
+ * column at phone widths so content never scrolls horizontally (Req 22.4).
+ */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .home-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cancel Card's default top margin when cards sit in the grid (gap handles it). */
+.home-cards .card + .card {
+  margin-top: 0;
+}
+
+.home-what-is {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.home-top-finding p {
+  margin: 0 0 12px;
+}
+
+.home-top-finding__disease {
+  color: inherit;
+}
+
+/* The low-high range is the focal number; large tabular figures. */
+.home-top-finding__range {
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.home-no-data {
+  margin: 0;
+}
+
+/* "See every disease" primary action link. */
+.home-what-link {
+  margin: 16px 0 0;
+}
+
+.home-what-link a {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: var(--radius-control);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.home-what-link a:hover {
+  text-decoration: none;
+  filter: brightness(0.94);
+}

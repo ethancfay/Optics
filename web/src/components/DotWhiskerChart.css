@@ -71,6 +71,17 @@
   font-size: 12px;
 }
 
+/*
+ * The direct low-high value printed just past each whisker's high end cap
+ * (Req 9.2). Tabular figures so the two numbers and the en dash line up row to
+ * row; --ink for AA contrast on --surface, matching the row name labels.
+ */
+.dw-value-label {
+  fill: var(--ink);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- Text-alternative table ----------------------------------------------- */
 
 /*

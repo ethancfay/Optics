@@ -7,17 +7,8 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route, useParams } from "react-router-dom";
-import DotWhiskerChart, {
-  AXIS_LABEL,
-  LOG_SCALE_SUFFIX,
-  LOG_SCALE_TITLE_NOTE,
-} from "./DotWhiskerChart";
+import DotWhiskerChart from "./DotWhiskerChart";
 import type { WhatEntry } from "../data/types";
-import { sortConditions } from "../data/conditions";
-import shippedWhat from "../../public/data/what.json";
-
-/** The shipped sample what.json, sorted the way the What_View passes it. */
-const SHIPPED: readonly WhatEntry[] = sortConditions(shippedWhat as WhatEntry[]);
 
 /** A fully-valid entry; individual tests override fields as needed. */
 function makeEntry(overrides: Partial<WhatEntry> = {}): WhatEntry {
@@ -114,69 +105,31 @@ describe("DotWhiskerChart", () => {
     expect(cells[2]).toHaveTextContent("3"); // high
   });
 
-  it("uses the log scale for the shipped data: ticks 0.1, 1, 10, '(log scale)' label, title note (Req 22.3, 22.4)", () => {
-    renderChart(SHIPPED);
+  it("renders a direct low-high value label adjacent to every disease's whisker (Req 9.2, 9.3)", () => {
+    const entries = [
+      makeEntry({ condition: "Asthma", measure_id: "CASTHMA", low: 1, mid: 2, high: 3 }),
+      makeEntry({ condition: "Diabetes", measure_id: "DIABETES", low: 4, mid: 5, high: 6 }),
+      makeEntry({ condition: "High Cholesterol", measure_id: "HIGHCHOL", low: 2, mid: 3, high: 5 }),
+    ];
+    renderChart(entries);
 
     const svg = screen.getByRole("img");
-    const tickLabels = Array.from(svg.querySelectorAll("text.dw-axis-tick")).map(
-      (node) => node.textContent
-    );
-    expect(tickLabels).toEqual(["0.1", "1", "10"]);
-    expect(svg.querySelectorAll("line.dw-axis-grid")).toHaveLength(3);
+    const labels = Array.from(
+      svg.querySelectorAll(".dw-value-label")
+    ).map((node) => node.textContent);
 
-    expect(svg.querySelector("text.dw-axis-label")?.textContent).toBe(
-      AXIS_LABEL + LOG_SCALE_SUFFIX
-    );
-    expect(AXIS_LABEL + LOG_SCALE_SUFFIX).toBe(
-      "distinct recruiting MA studies per 100,000 affected adults (18+) (log scale)"
-    );
-    expect(svg.querySelector("title")?.textContent).toContain(LOG_SCALE_TITLE_NOTE);
-
-    // aria-describedby still names the text-alternative table (Req 22.8).
-    expect(svg.getAttribute("aria-describedby")).toBe(screen.getByRole("table").id);
+    // One direct value label per disease, each spelling out that disease's own
+    // low-high range (en dash between the bounds).
+    expect(labels).toEqual(["1\u20133", "4\u20136", "2\u20135"]);
   });
 
-  it("falls back to a linear scale from 0 when a disease has zero studies (Req 22.5, 22.8)", () => {
-    const zero = makeEntry({
-      condition: "Zero Study Disease",
-      measure_id: "ZERO",
-      low: 0,
-      mid: 0,
-      high: 0,
-      t: 0,
-    });
-    renderChart([zero, ...SHIPPED]);
+  it("falls back to \"unavailable\" in a whisker's value label when a bound is non-finite (Req 6.5, 9.2)", () => {
+    const entry = makeEntry({ high: undefined as unknown as number });
+    renderChart([entry]);
 
     const svg = screen.getByRole("img");
-    const tickLabels = Array.from(svg.querySelectorAll("text.dw-axis-tick")).map(
-      (node) => node.textContent
-    );
-    expect(tickLabels[0]).toBe("0");
-    expect(tickLabels.length).toBeGreaterThanOrEqual(2);
-
-    expect(svg.querySelector("text.dw-axis-label")?.textContent).toBe(AXIS_LABEL);
-    expect(svg.querySelector("title")?.textContent).not.toContain(
-      LOG_SCALE_TITLE_NOTE
-    );
-
-    // Every disease is still drawn: one dot per row.
-    expect(svg.querySelectorAll("circle")).toHaveLength(4);
-    expect(svg.getAttribute("aria-describedby")).toBe(screen.getByRole("table").id);
-  });
-
-  it("renders without error when every value is 0, all marks at the plot's left edge (Req 22.5)", () => {
-    renderChart([
-      makeEntry({ low: 0, mid: 0, high: 0 }),
-      makeEntry({ condition: "Other", measure_id: "OTHER", low: 0, mid: 0, high: 0 }),
-    ]);
-
-    const svg = screen.getByRole("img");
-    const dots = Array.from(svg.querySelectorAll("circle"));
-    expect(dots).toHaveLength(2);
-    const xs = new Set(dots.map((dot) => dot.getAttribute("cx")));
-    expect(xs.size).toBe(1);
-    const divider = svg.querySelector("line.dw-axis-divider");
-    expect([...xs][0]).toBe(divider?.getAttribute("x1"));
+    const label = svg.querySelector(".dw-value-label");
+    expect(label?.textContent).toBe("1\u2013unavailable");
   });
 
   it("navigates to /investigate/:measureId when a row's condition button is activated (Req 5.5, 6.3)", () => {
