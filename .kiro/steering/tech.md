@@ -16,8 +16,7 @@
 
 ## External APIs
 
-- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies` with `filter.geo=distance(42.3,-71.8,150mi)`, `filter.overallStatus=RECRUITING`, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination. Hard limit of 100 pages; a repeated token is an error. The number of studies fetched must equal `totalCount`.
-- CDC PLACES (Socrata): dataset `swc5-untb`, filtered to `stateabbr=MA` and `datavaluetypeid=CrdPrv`, page size 1000 with offset paging, sorted by `locationname` then `measureid`. Hard limit of 100 pages. Keep `locationid` (county FIPS) and `measure` (label).
+- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies` with `filter.geo=distance(42.3,-71.8,150mi)`, `filter.overallStatus` = RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED (COMPLETED kept only if `lastUpdatePostDate` is within 3 years), all study types, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination. Hard limit of 100 pages; a repeated token is an error. The number of studies fetched must equal `totalCount`. Study-type and status filtering for metrics happens in scoring, not fetching.
 
 ## Conventions
 
