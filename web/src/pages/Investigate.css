@@ -5,55 +5,37 @@
  * carries its text label (Req 7.3, 15.2).
  */
 
+/*
+ * The four breakdown tables sit in a responsive grid. Table cell/row styling
+ * (full width, --surface header row, --border rules, right-aligned numbers)
+ * lives in the shared base.css so every table matches; this file only owns the
+ * Investigate-specific pieces (layout grid, finding cards, badge, definitions).
+ */
 .inv-breakdowns {
   display: grid;
-  gap: 1.5rem;
-}
-
-.inv-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.inv-table caption {
-  text-align: left;
-  color: var(--ink);
-  font-weight: 600;
-  padding: 0.5rem 0;
-}
-
-.inv-table th,
-.inv-table td {
-  border: 1px solid var(--seq-2);
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  color: var(--ink);
-}
-
-.inv-counts {
-  display: flex;
-  gap: 1.5rem;
-  list-style: none;
-  padding: 0;
-}
-
-.inv-count-value {
-  font-weight: 600;
-  color: var(--ink);
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 16px;
 }
 
 .inv-findings {
   list-style: none;
   padding: 0;
+  margin: 0 0 12px;
   display: grid;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .inv-finding {
-  border: 1px solid var(--seq-2);
-  border-radius: 4px;
-  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 16px;
   color: var(--ink);
+}
+
+.inv-finding p {
+  margin: 0;
 }
 
 /*
@@ -63,17 +45,23 @@
 .inv-badge {
   display: inline-block;
   margin-top: 0.5rem;
-  padding: 0.125rem 0.5rem;
+  padding: 2px 10px;
+  background: var(--accent-soft);
   border: 1px solid var(--accent);
   border-radius: 999px;
   color: var(--accent);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
+/* First-use definition, rendered as a soft helper note. */
 .inv-definition {
-  color: var(--ink);
+  color: var(--muted);
   font-size: 0.9375rem;
+  background: var(--surface);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  padding: 8px 12px;
 }
 
 .inv-evidence-link,

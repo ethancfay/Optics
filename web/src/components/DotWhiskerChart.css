@@ -5,24 +5,11 @@
  * page carry a visible keyboard focus ring (Req 15.3, 15.4, 15.5).
  */
 
-.dw-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.dw-table caption {
-  text-align: left;
-  color: var(--ink);
-  padding: 0.5rem 0;
-}
-
-.dw-table th,
-.dw-table td {
-  border: 1px solid var(--seq-2);
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  color: var(--ink);
-}
+/*
+ * Table cell/row styling (full width, --surface header row, --border rules)
+ * lives in the shared base.css so this table matches the Investigate tables.
+ * This file only owns the keyboard-focusable row control below.
+ */
 
 /*
  * Each row's condition is a keyboard-focusable button that navigates to the

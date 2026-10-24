@@ -31,16 +31,56 @@
 
 /* --- Primary navigation (Req 14.4, 15.4) ---------------------------------- */
 
+/*
+ * Header bar (visual-design steering). A white strip with a bottom border; the
+ * product name sits on the left, the primary nav on the right. It collapses to
+ * a wrapped row on phones. The inner row is width-matched to the content column.
+ */
+.site-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.75rem 24px;
+}
+
+.site-header__brand {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.site-header__brand:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .site-header__inner {
+    padding: 0.75rem 16px;
+  }
+}
+
 .nav {
-  border-bottom: 1px solid var(--seq-2);
+  /* The header owns the bottom border now; the nav sits inside it. */
+  margin: 0;
 }
 
 .nav__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0.5rem;
+  gap: 0.25rem 0.25rem;
   margin: 0;
-  padding: 0.5rem 0.75rem;
+  padding: 0;
   list-style: none;
 }
 
@@ -64,49 +104,52 @@
 }
 
 /*
- * Visible active style (Req 14.4). Pairs an underline and weight change with
- * the colour change so the active state is not conveyed by colour alone
- * (Req 15.2). NavLink also sets aria-current="page" on this link.
+ * Visible active style (Req 14.4). The active link gets the accent colour plus
+ * a 2px underline offset from the text, so the active state is carried by both
+ * colour AND the underline rule (never colour alone, Req 15.2).
  */
 .nav__link.is-active {
+  color: var(--accent);
   font-weight: 700;
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 6px;
   text-decoration-thickness: 2px;
 }
 
 /* --- Shared visible focus ring (Req 15.4) --------------------------------- */
 
+/*
+ * Real keyboard-operable controls keep a visible --focus ring. `#main` is
+ * deliberately omitted: it is focused programmatically on each route change
+ * (tabIndex={-1}) and must NOT paint an outline just for being the landing
+ * target (`main:focus { outline: none }` lives in base.css, per the design).
+ */
 .skip-link:focus-visible,
-.nav__link:focus-visible,
-.layout__main:focus-visible {
+.nav__link:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
-/*
- * #main is programmatically focused on route change (tabIndex={-1}); suppress
- * the default outline only when it did not receive focus from the keyboard, so
- * keyboard focus still shows a visible ring (Req 15.7, 15.4).
- */
-.layout__main:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* --- Sample-data label (Req 2.7) ------------------------------------------ */
+/* --- Sample-data banner pill (Req 2.7) ------------------------------------ */
 
 /*
- * Rendered in the header region, above the nav, so it is visible within the
- * first screen at 375 px without scrolling. Uses the accent colour on a light
- * sequential background and a left border so the banner reads as a distinct
- * status strip, not body copy. Colour is paired with the explicit label text so
- * meaning is not conveyed by colour alone (Req 15.2).
+ * A slim pill-style strip ABOVE the header, so it is visible within the first
+ * screen at 375 px without scrolling. Soft accent tint with small text; the
+ * colour is paired with the explicit label text, so meaning is never conveyed
+ * by colour alone (Req 15.2).
  */
 .sample-banner {
   margin: 0;
-  padding: 0.5rem 0.75rem;
-  background: var(--seq-1);
+  padding: 6px 24px;
+  background: var(--accent-soft);
   color: var(--ink);
-  border-bottom: 2px solid var(--accent);
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .sample-banner {
+    padding: 6px 16px;
+  }
 }

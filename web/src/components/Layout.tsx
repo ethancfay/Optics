@@ -20,7 +20,7 @@
 
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Footer } from "./Footer";
 import { useIsSample } from "../data/providers";
 import "./Layout.css";
@@ -121,10 +121,20 @@ export default function Layout({ children }: { children?: ReactNode }) {
   return (
     <div className="layout">
       <SkipLink />
-      {/* Header region: the sample-data label sits above the nav so it is above
-          the fold at 375 px (Req 2.7). */}
+      {/* Slim sample-data pill strip, above the header so it is above the fold
+          at 375 px (Req 2.7). */}
       <SampleDataBanner />
-      <Nav />
+      {/* Header bar: product name on the left, primary nav on the right. The
+          brand is a Link (not a heading) so it never collides with a page's
+          own <h1>. */}
+      <header className="site-header">
+        <div className="site-header__inner">
+          <Link to="/" className="site-header__brand">
+            Research Gap Index
+          </Link>
+          <Nav />
+        </div>
+      </header>
       <main id="main" tabIndex={-1} ref={mainRef} className="layout__main">
         {children ?? <Outlet />}
       </main>
