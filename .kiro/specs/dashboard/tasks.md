@@ -352,22 +352,22 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data; (c) copy + tests.
 
-- [ ] 20. Method page matching section reflects Spec 2's real rules
+- [x] 20. Method page matching section reflects Spec 2's real rules
   - Sources: `.kiro/specs/condition-grouping/requirements.md` (Req 2-5, 7), `pipeline/mapping/rules.py`, `.kiro/specs/scoring-export/requirements.md` (Glossary "Eligible_Study", Req 4.1, 5.1), `.kiro/steering/data-contract.md` ("Eligible for a disease"), `pipeline/scoring/index.py` (skips `match_status != "included"`).
   - _Requirements: 11.2, 20.6, 21.1-21.6_
 
   - [x] 20.1 Spec: Requirement 21 (new); amend Req 11.2 and Req 20.6; design Method_Page note
     - _Requirements: 21.1-21.6_
 
-  - [ ] 20.2 Method page copy
+  - [x] 20.2 Method page copy
     - Replace the generic crosswalk paragraph in `Method.tsx` with exported constants `MATCHING_TERMS_NOTE`, `CHILD_ONLY_NOTE`, `QUESTIONABLE_NOT_COUNTED` (plus the existing `HIGHCHOL_HEART_DISEASE_NOTE`), per design. Change the last filter bullet to refer to the word lists, not the crosswalk. Remove the `TODO(scoring-export)` comment and every "crosswalk" mention in the file.
     - _Requirements: 11.2, 21.1-21.5_
 
-  - [ ] 20.3 Tests
+  - [x] 20.3 Tests
     - `Method.test.tsx`: each Req 21 sentence renders once; the questionable sentence says these studies are not counted; no rendered "crosswalk" or "to do"/"todo" text; the source file has no `TODO(scoring-export)`; the matching-section copy stays at grade 8 or lower (Flesch-Kincaid) and has no Forbidden_Terms.
     - _Requirements: 21.4-21.6_
 
-  - [ ] 20.4 Verify and commit (don't push)
+  - [x] 20.4 Verify and commit (don't push)
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) Method copy + tests.
 
