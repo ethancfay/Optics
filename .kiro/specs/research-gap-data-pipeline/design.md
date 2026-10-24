@@ -401,7 +401,10 @@ Study_Row columns, in this order (Req 4.2, 7.2). "list" marks multi-valued field
 
 `minimumAge` and `maximumAge` are written as the source text verbatim (for example `18 Years`, `6 Months`), with no parsing or unit conversion, and empty when missing or empty; interpretation (for example maximumAge less than 18 years) happens in scoring, not in this pipeline, in the same spirit as the studyType note in criterion 1.
 
-Paired lists (intervention type and name, MeSH term and id) are built in a single pass over the source list. A missing element value becomes `""`, so the paired lists always have equal length (Req 4.7). Req 4.7 states this rule for interventions; I apply the same rule to the MeSH pairs. Non-string list elements are converted with `str()`, so every element is a string (Req 7.7).
+Paired lists (intervention type and name, MeSH term and id) are built in a single pass over the source list. A missing element value becomes `""`, so the paired lists always have equal length (Req 4.7). Req 4.7 states this rule for interventions; I apply the same rule to the MeSH pairs. Non-string list elements are converted with `str()`, so every element is a string (Req 7.7). A `null` list element becomes `""` rather than the text `None`, following the same missing-value rule (Req 4.4, 4.7).
+
+- `pages` is the Q1 pages followed by the Q2 pages, each in page order (Req 4.5). `__main__` builds it from `CtgovFetchResult.queries` or from `RawCache.ctgov_q1_pages + ctgov_q2_pages`.
+- `MissingGeo` is a frozen dataclass with `nctId`, `facility`, and `location_quality` (Req 5.11, 12.3).
 
 Site_Row columns, in this order: `nctId, facility, city, state, zip, latitude, longitude, siteStatus, location_quality`. Coordinates are written with `repr(float(x))`, the shortest round-trip form. Raw pages are stored with the same `json` float handling, so network and offline runs produce the same strings.
 
