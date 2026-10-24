@@ -25,3 +25,5 @@ Tightened sites.zip validation to accept only `^\d{5}(-?\d{4})?$` (5 digits or 5
 - Updated __main__.py to wire the invalid_zip_count through
 - Added tests for zip validation, deduplication interaction, and phone pattern non-matching for valid zips
 - All 238 tests pass
+| 20:17 | Ethan | Custom agent (health-reviewer) | Ran health-reviewer as a read-only sub-agent on product.md, README.md, pipeline/transform/. NEEDS CHANGES: README listed IHME and U.S. Census (not allowed sources), used "looks thin" framing, and omitted the adult-18+/not-severity limit. product.md and transform/ passed. | |
+| 20:19 | Ethan | Custom agent (health-reviewer) | Applied the 3 README fixes (neutral wording, adult 18+ / not-severity limit, only ClinicalTrials.gov + CDC PLACES). Re-ran health-reviewer: PASS, 0 findings. | |

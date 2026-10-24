@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run pytest on Python save",
+      "trigger": "PostFileSave",
+      "description": "When a .py file under pipeline/ or tests/ is saved, run the pytest suite and report failures.",
+      "matcher": "(pipeline|tests)/.*\\.py$",
+      "action": {
+        "type": "command",
+        "command": ".venv/bin/python -m pytest -q tests",
+        "timeout": 600
+      }
+    }
+  ]
+}

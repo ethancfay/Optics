@@ -1,14 +1,12 @@
 # Research Gap Index
 
-Shows where Massachusetts research looks thin: disease burden vs. recruiting clinical trials.
+Compares how common selected diseases are among Massachusetts adults (18+) with observed MA-associated clinical study activity. It measures study activity against adult prevalence, not disease severity.
 
 Not medical advice. Index, not prediction.
 
 ## Data sources
-- ClinicalTrials.gov (NIH)
-- IHME Global Burden of Disease
-- CDC PLACES
-- U.S. Census
+- [ClinicalTrials.gov (NIH)](https://clinicaltrials.gov/)
+- [CDC PLACES](https://www.cdc.gov/places/)
 
 ## How we used Kiro
 See `.kiro/` and `KIRO_LOG.md`.
