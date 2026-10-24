@@ -30,8 +30,8 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Create `src/data/contentSafety.ts` with `containsContactData(value)` scanning for email and North-American phone patterns, so validators and tests can enforce that no name/email/phone is ever exposed in data or UI.
     - _Requirements: 2.13, 7.3, 17.1, 17.2, 17.3, 17.4_
 
-- [ ] 3. Schema validators (pure)
-  - [ ] 3.1 Implement entry validators for all five entry types
+- [x] 3. Schema validators (pure)
+  - [x] 3.1 Implement entry validators for all five entry types
     - Create `src/data/validators.ts` with hand-written type guards `validateWhatEntry`, `validateInvestigateEntry`, `validateEvidenceEntry`, `validateWhereEntry`, and `validateSourceEntry` (plus `validateSourcesData`), enforcing presence/type, non-empty strings, `https://` URL prefixes (and `https://clinicaltrials.gov/` for NCT urls), `>= 0` numbers, non-negative integers for count fields (`t`, `affected_adults`, `ma_studies`, `us_studies`, `count`), `0 < p <= 1` for `p_low`/`p_high`, `YYYY-MM-DD` dates, `^NCT\d{8}$` for `nct_id`, finding `label` ∈ `EVIDENCE_LABELS`, `low <= mid <= high` and `p_low <= p_high` for What entries, nullable `miles_to_nearest` for Where entries, and rejection of any string field containing contact data.
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.13, 3.4, 5.9, 7.3_
 
