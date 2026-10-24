@@ -2,13 +2,15 @@
 
 ## Overview
 
-The Dashboard is a static Vite + React single-page application (SPA) living in `web/`, deployed on Vercel with the project root directory set to `web`. It reads only six precomputed, same-origin files from `web/public/data/` — `what.json`, `investigate.json`, `evidence.json`, `where.json`, `sources.json`, and `ma_counties.geojson` — and makes no other runtime network requests. There is no backend, database, server-side function, API key, or AI-generated text at runtime (Req 1).
+The Dashboard is a static Vite + React single-page application (SPA) living in `web/`, deployed on Vercel with the project root directory set to `web`. It reads only four precomputed, same-origin files from `web/public/data/` — `what.json`, `investigate.json`, `evidence.json`, and `sources.json` — and makes no other runtime network requests. There is no backend, database, server-side function, API key, or AI-generated text at runtime (Req 1).
+
+> **Version note — hidden WHERE view.** The WHERE view (a per-county map of distance to the nearest verified recruiting site) is hidden in this version: county shapes would require a data source outside clinicaltrials.gov / data.cdc.gov, so `where.json` and `ma_counties.geojson` are neither shipped nor fetched, `/where` is not routed, and the nav carries no WHERE link. The national (US) comparison is deferred: `us_studies` in `investigate.json` is always `null`, and the Investigate page shows "National comparison not included in this version" in its place. The `Where` page, `CountyMap`, the Where/County-boundaries providers, and the `where.json`/`ma_counties.geojson` schema and validators are retained (unused) so the view can be reinstated without a rebuild. Sections below that describe the WHERE map, its text alternative, the county-state resolver, and the where/geojson sample files apply only when the view is reinstated.
 
 The audience is pharmaceutical and biotech R&D strategy and clinical-development professionals doing early opportunity screening. They use the Dashboard to decide what to investigate next, not to make investment or drug-development decisions. The success criterion is that a researcher picks a disease, sees burden versus observed research activity, and reaches at least one record-supported explanation plus what remains unknown, in under one minute on a phone. The design therefore optimizes for a mobile-first, keyboard- and screen-reader-accessible experience that surfaces the diseases with the lowest observed research activity relative to measured burden (lowest `mid`) first (Req 16).
 
 The product is a *burden-vs-activity index*, never a prediction or recommendation. It describes a descriptive discrepancy between measured burden (how common a disease is among Massachusetts adults 18+) and observed research activity (distinct recruiting Massachusetts studies). It never claims a disease is neglected, underfunded, or needs more trials, never implies an optimal burden-to-trial ratio, never claims unmet therapeutic need, and never infers pharmaceutical-company motives (Forbidden_Terms, Req 17). Every page carries the same footer disclaimer and source links, every number shown comes straight from the JSON files (nothing is recomputed into new disease or trial counts), and every chart and map has a text-alternative table (health-safety steering; Req 3.6, 6, 10, 13, 15).
 
-The core metric is **distinct recruiting Massachusetts studies (distinct ClinicalTrials.gov NCT IDs) per 100,000 affected adults (18+)**, shown as a low-high range. The range is computed upstream from CDC PLACES prevalence confidence limits as `[T / (N * p_high), T / (N * p_low)] * 100,000`; the Dashboard reads the precomputed `low`, `mid`, and `high` fields and **does not recompute the formula at runtime** (Req 5.1, Req 11.1, assumption 8). Trial sites are no longer the primary metric; county-level distance to the nearest verified recruiting site appears only in the secondary WHERE view.
+The core metric is **distinct recruiting Massachusetts studies (distinct ClinicalTrials.gov NCT IDs) per 100,000 affected adults (18+)**, shown as a low-high range. The range is computed upstream from CDC PLACES prevalence confidence limits as `[T / (N * p_high), T / (N * p_low)] * 100,000`; the Dashboard reads the precomputed `low`, `mid`, and `high` fields and **does not recompute the formula at runtime** (Req 5.1, Req 11.1, assumption 8). `T` counts recruiting Massachusetts studies only; the Investigate and Evidence views cover all four fetched statuses (recruiting, not yet recruiting, active not recruiting, and recently updated completed). The WHERE county-distance view is hidden in this version (see the version note above).
 
 This document also defines the JSON data contract and concrete sample placeholder files so the Dashboard can be built and tested before the `research-gap-data-pipeline` and `scoring-export` specs produce real data (Req 2).
 
@@ -107,7 +109,7 @@ graph TD
 
 ### Runtime request policy
 
-All `fetch` calls target relative, same-origin paths under `/data/` (e.g. `fetch("/data/what.json")`). The design forbids absolute URLs to other origins in runtime code. Fonts are bundled (self-hosted via Vite), the map geometry is a bundled/same-origin GeoJSON file, and all chart code is our own SVG — so there is exactly one set of origins touched at runtime: the Dashboard's own (Req 1.2). The six data paths are `/data/what.json`, `/data/investigate.json`, `/data/evidence.json`, `/data/where.json`, `/data/sources.json`, and `/data/ma_counties.geojson`. Outbound links the user clicks (ClinicalTrials.gov, CDC PLACES, GitHub blob URLs) are navigation and are rendered with `rel="noopener noreferrer"` and, where they open a new context, `target="_blank"` (Req 8.1).
+All `fetch` calls target relative, same-origin paths under `/data/` (e.g. `fetch("/data/what.json")`). The design forbids absolute URLs to other origins in runtime code. Fonts are bundled (self-hosted via Vite) and all chart code is our own SVG — so there is exactly one set of origins touched at runtime: the Dashboard's own (Req 1.2). In this version the four active data paths are `/data/what.json`, `/data/investigate.json`, `/data/evidence.json`, and `/data/sources.json`; `/data/where.json` and `/data/ma_counties.geojson` are not fetched because the WHERE view is hidden. Outbound links the user clicks (ClinicalTrials.gov, CDC PLACES, GitHub blob URLs) are navigation and are rendered with `rel="noopener noreferrer"` and, where they open a new context, `target="_blank"` (Req 8.1).
 
 ### Vercel configuration
 
@@ -125,12 +127,13 @@ Routes use `measure_id` to identify a disease so display labels can change witho
 | `/what` | `What_View` | What_Data | 5, 6, 16 |
 | `/investigate/:measureId` | `Investigate_Page` | Investigate_Data | 7 |
 | `/evidence/:measureId` | `Evidence_Page` | Evidence_Data, Sources_Data | 8 |
-| `/where` | `Where_View` | Where_Data, County_Boundaries | 9, 10 |
 | `/method` | `Method_Page` | Sources_Data | 11 |
 | `/build` | `Build_Page` | none | 12 |
 | `*` (unknown) | `NotFoundPage` | none | 14.3 (graceful) |
 
-Navigation (Req 14) is a persistent `<nav>` in `Layout` linking to Home, WHAT, WHERE, Method, and Build. The active route is marked with `aria-current="page"` and a visible style (Req 14.4). All navigation uses react-router `<Link>`/`<NavLink>`, so no full-document reload occurs (Req 4.5, 14.2). The Investigate and Evidence pages are reached by selecting a disease in the WHAT view (then following the Investigate→Evidence link), not from the top nav.
+The `/where` route (`Where_View`, needing Where_Data + County_Boundaries, Req 9/10) is **not registered in this version** — the WHERE view is hidden (see the version note in the Overview). A direct request to `/where` matches the `*` route and renders `NotFoundPage`.
+
+Navigation (Req 14) is a persistent `<nav>` in `Layout` linking to Home, WHAT, Method, and Build (no WHERE link in this version). The active route is marked with `aria-current="page"` and a visible style (Req 14.4). All navigation uses react-router `<Link>`/`<NavLink>`, so no full-document reload occurs (Req 4.5, 14.2). The Investigate and Evidence pages are reached by selecting a disease in the WHAT view (then following the Investigate→Evidence link), not from the top nav.
 
 ### Layout, Navigation, and Footer
 
@@ -192,9 +195,9 @@ Accessibility mirrors the chart: `role="img"` + `aria-describedby` → a data ta
 
 - **Home_Page**: one-sentence problem statement (1-200 chars) framing the burden-vs-activity question (Req 4.1); top finding = disease with the lowest `mid` (ties broken by case-insensitive ascending `condition`), naming it and its low-high range (Req 4.2, 4.3); a visible-text link to the WHAT view navigating without a full reload (Req 4.4, 4.5); "no disease data available" message when there are zero valid entries (Req 4.6). The top finding is described as a discrepancy between measured burden and observed research activity and uses no Forbidden_Terms (Req 4.7, 17).
 
-- **Investigate_Page**: for the `:measureId`, finds the Investigate_Entry with that `measure_id` and renders four breakdowns — by overall status, by study type, by intervention type, and by phase — from each array's `label`/`count` pairs (Req 7.1); shows `ma_studies` labeled as a Massachusetts count and `us_studies` labeled as a United States count (Req 7.2); renders each `findings[]` entry together with its `Evidence_Label` badge and **never renders a causal or uncertain explanatory statement that is not accompanied by one of the two Evidence_Label values** ("possible explanation from available records" / "cannot determine from public data") (Req 7.3); shows a link to the Evidence page for the same `measure_id` (Req 7.4); grade-8 plain language with ≤20-word definitions for "interventional" and "prevalence" at first use (Req 7.5); shows a "disease not found" message with a link back to WHAT when no entry matches (Req 7.6); displays no diagnosis/treatment/eligibility/enrollment text and no Forbidden_Terms (Req 7.7, 17). When WHAT navigates here for a `measure_id` with no Investigate_Entry, this not-found message is what renders (Req 5.10).
+- **Investigate_Page**: for the `:measureId`, finds the Investigate_Entry with that `measure_id` and renders four breakdowns — by overall status, by study type, by intervention type, and by phase — from each array's `label`/`count` pairs (Req 7.1); shows a fixed caption next to the intervention-type (Drug) breakdown: "Drug means the study lists a drug intervention; it may be an existing drug, comparator or placebo." (Req 7.8); shows `ma_studies` labeled as a Massachusetts count across all four fetched statuses, and for `us_studies` shows the United States count when it is a number or the text "National comparison not included in this version" when it is `null` (deferred national comparison) (Req 7.2); renders each `findings[]` entry together with its `Evidence_Label` badge and **never renders a causal or uncertain explanatory statement that is not accompanied by one of the two Evidence_Label values** ("possible explanation from available records" / "cannot determine from public data") (Req 7.3); shows a link to the Evidence page for the same `measure_id` (Req 7.4); grade-8 plain language with ≤20-word definitions for "interventional" and "prevalence" at first use (Req 7.5); shows a "disease not found" message with a link back to WHAT when no entry matches (Req 7.6); displays no diagnosis/treatment/eligibility/enrollment text and no Forbidden_Terms (Req 7.7, 17). When WHAT navigates here for a `measure_id` with no Investigate_Entry, this not-found message is what renders (Req 5.10).
 
-- **Evidence_Page**: for the `:measureId`, finds the Evidence_Entry with that `measure_id` and renders each `ncts[]` entry as a link whose destination is that entry's `url`, opening in a separate browser context (`target="_blank"`, `rel="noopener noreferrer"`) so the Evidence page stays open (Req 8.1); shows the applied `filters`, the `mapping_choices`, and the `missing_data_notes` (Req 8.2); shows the `data_as_of` value from Sources_Data labeled "Data as of" (Req 8.3); shows "no contributing studies are available" with no broken link when `ncts` is empty (Req 8.4); shows a "disease not found" message with a link back to WHAT when no entry matches (Req 8.5); displays no diagnosis/eligibility text and no Forbidden_Terms (Req 8.6, 17).
+- **Evidence_Page**: for the `:measureId`, finds the Evidence_Entry with that `measure_id` and renders each `ncts[]` entry as a table row with columns for the `nct_id` (a link whose destination is that entry's `url`, opening in a separate browser context via `target="_blank"`, `rel="noopener noreferrer"`, so the Evidence page stays open), `title`, `status`, `phases`, and `intervention_names`, showing "unknown" for any optional detail a study omits (Req 8.1); shows the applied `filters`, the `mapping_choices`, and the `missing_data_notes` (Req 8.2); shows the `data_as_of` value from Sources_Data labeled "Data as of" (Req 8.3); shows "no contributing studies are available" with no broken link when `ncts` is empty (Req 8.4); shows a "disease not found" message with a link back to WHAT when no entry matches (Req 8.5); displays no diagnosis/eligibility text and no Forbidden_Terms (Req 8.6, 17).
 
 - **Method_Page**: displays the Index_Value formula `[T / (N * p_high), T / (N * p_low)] * 100,000` with `T` the distinct recruiting MA study count, `N` the adult (18+) denominator, and `p_low`/`p_high` the CDC PLACES crude-prevalence confidence limits (Req 11.1); the crosswalk and filters used to attribute studies to each disease (Req 11.2); each Source_Entry as a named link with its `fetched` date (Req 11.3); the limit that burden is CDC PLACES crude prevalence for adults 18+ with no DALYs or severity (Req 11.4); the limit that MA trial activity does not represent all research relevant to MA patients (Req 11.5); grade-8 language and no Forbidden_Terms (Req 11.6, 17).
 
@@ -221,6 +224,7 @@ interface WhatEntry {
   affected_adults: number;  // non-negative integer (adults 18+)
   p_low: number;            // > 0 and <= 1; invariant: p_low <= p_high
   p_high: number;           // > 0 and <= 1
+  prevalence_year?: string; // CDC PLACES data year, e.g. "2023" (optional extra key)
   ctgov_url: string;        // begins with "https://"
 }
 
@@ -236,12 +240,13 @@ interface Finding {
 interface InvestigateEntry {
   measure_id: string;       // non-empty
   condition: string;        // non-empty
-  ma_studies: number;       // non-negative integer
-  us_studies: number;       // non-negative integer
+  ma_studies: number;       // non-negative integer (all four fetched statuses)
+  us_studies: number | null;// null in this version (national comparison deferred)
   by_overall_status: LabelCount[];
   by_study_type: LabelCount[];
   by_intervention_type: LabelCount[];
   by_phase: LabelCount[];
+  phase_overlap_studies?: number; // non-negative integer (optional extra key)
   findings: Finding[];
 }
 
@@ -249,6 +254,12 @@ interface InvestigateEntry {
 interface NctRef {
   nct_id: string;           // matches ^NCT\d{8}$
   url: string;              // begins with "https://clinicaltrials.gov/"
+  title?: string;           // optional extra key (rendered in the evidence table)
+  status?: string;          // optional extra key
+  study_type?: string;      // optional extra key
+  phases?: string[];        // optional extra key
+  intervention_types?: string[];  // optional extra key
+  intervention_names?: string[];  // optional extra key
 }
 interface EvidenceEntry {
   measure_id: string;       // non-empty
@@ -274,6 +285,7 @@ interface SourcesData {
   data_as_of: string;       // ISO 8601 YYYY-MM-DD
   is_sample?: boolean;      // true in sample fixtures (drives sample-data label, Req 2.7)
   sources: SourceEntry[];
+  prevalence_years?: Record<string, string>; // measure_id -> PLACES year (optional extra key)
 }
 interface SourceEntry {
   name: string;             // non-empty
@@ -290,9 +302,9 @@ interface CountyFeature {
 ```
 
 Validation rules (used by `loadJson`):
-- `validateWhatEntry`: valid iff every field is present and typed, strings `condition`/`measure_id` non-empty, `ctgov_url` starts with `https://`, `low`/`mid`/`high`/`affected_adults`/`t` are `>= 0`, `t`/`affected_adults` are integers, `p_low`/`p_high` are `> 0` and `<= 1`, `low <= mid <= high`, and `p_low <= p_high` (Req 2.1, 3.4, 5.9).
-- `validateInvestigateEntry`: valid iff `measure_id`/`condition` non-empty strings, `ma_studies`/`us_studies` non-negative integers, each of `by_overall_status`/`by_study_type`/`by_intervention_type`/`by_phase` is an array of `{ label: non-empty string, count: non-negative integer }`, and every `findings[]` entry has a non-empty `text` and a `label` that is exactly one of the two `EvidenceLabel` strings (Req 2.2, 3.4, 7.3).
-- `validateEvidenceEntry`: valid iff `measure_id`/`condition` non-empty strings, each `ncts[]` entry has `nct_id` matching `^NCT\d{8}$` and `url` starting `https://clinicaltrials.gov/`, `filters` and `mapping_choices` are arrays of non-empty strings, and `missing_data_notes` is an array of strings (Req 2.3, 3.4).
+- `validateWhatEntry`: valid iff every required field is present and typed, strings `condition`/`measure_id` non-empty, `ctgov_url` starts with `https://`, `low`/`mid`/`high`/`affected_adults`/`t` are `>= 0`, `t`/`affected_adults` are integers, `p_low`/`p_high` are `> 0` and `<= 1`, `low <= mid <= high`, and `p_low <= p_high`; the optional `prevalence_year`, when present, is a non-empty contact-free string (Req 2.1, 3.4, 5.9).
+- `validateInvestigateEntry`: valid iff `measure_id`/`condition` non-empty strings, `ma_studies` a non-negative integer, `us_studies` either `null` or a non-negative integer, each of `by_overall_status`/`by_study_type`/`by_intervention_type`/`by_phase` is an array of `{ label: non-empty string, count: non-negative integer }`, and every `findings[]` entry has a non-empty `text` and a `label` that is exactly one of the two `EvidenceLabel` strings; the optional `phase_overlap_studies`, when present, is ignored by rendering (Req 2.2, 3.4, 7.3).
+- `validateEvidenceEntry`: valid iff `measure_id`/`condition` non-empty strings, each `ncts[]` entry has `nct_id` matching `^NCT\d{8}$` and `url` starting `https://clinicaltrials.gov/`, `filters` and `mapping_choices` are arrays of non-empty strings, and `missing_data_notes` is an array of strings; the optional per-study detail keys (`title`, `status`, `study_type`, `phases`, `intervention_types`, `intervention_names`), when present, are contact-free strings or arrays of contact-free strings (Req 2.3, 3.4).
 - `validateWhereEntry`: valid iff `county_fips`/`county`/`condition`/`measure_id` are non-empty strings, `has_verified_site` is a boolean, and `miles_to_nearest` is either a number `>= 0` or `null` (Req 2.4, 3.4).
 - `validateSourceEntry`: valid iff `name` non-empty, `url` starts with `https://`, `fetched` matches `YYYY-MM-DD`; `data_as_of` must match `YYYY-MM-DD` (Req 2.5, 3.4).
 
@@ -361,14 +373,13 @@ The choropleth uses a single-hue sequential ramp (no red↔green pairing) so it 
 
 ### Sample data file plan
 
-Sample files live in `web/public/data/` and satisfy Req 2.6-2.12. `sources.json` sets `is_sample: true` to trigger the sample-data label (Req 2.7).
+Sample files live in `web/public/data/` and satisfy Req 2.6-2.10. `sources.json` sets `is_sample: true` to trigger the sample-data label (Req 2.7). In this version only four sample files are shipped — `what.json`, `investigate.json`, `evidence.json`, and `sources.json`; `where.json` and `ma_counties.geojson` are omitted because the WHERE view is hidden.
 
-- **`what.json`** — 3 to 5 entries with distinct `measure_id` drawn from the diseases in scope (Req 2.8): asthma (`CASTHMA`), high cholesterol (`HIGHCHOL`), high blood pressure (`BPHIGH`), diabetes (`DIABETES`), depression (`DEPRESSION`). Each has all ten fields in bounds with `low <= mid <= high`, `0 < p_low <= p_high <= 1`, and an `https://clinicaltrials.gov/...` `ctgov_url`. Values use a realistic studies-per-100k spread so the single chart shows a clear ascending-`mid` order.
-- **`investigate.json`** — one Investigate_Entry per `measure_id` present in `what.json` (Req 2.9); each has at least one entry in every breakdown array (`by_overall_status`, `by_study_type`, `by_intervention_type`, `by_phase`) and at least one finding carrying each of the two Evidence_Label values; `ma_studies`/`us_studies` are non-negative integers.
-- **`evidence.json`** — one Evidence_Entry per `measure_id` present in `what.json` (Req 2.10); each has at least one NCT in its `ncts` array (`nct_id` matching `^NCT\d{8}$`, `url` under `https://clinicaltrials.gov/`), plus non-empty `filters`/`mapping_choices` and some `missing_data_notes`.
-- **`where.json`** — for exactly one disease, exactly one Where_Entry per each of the 14 MA `county_fips` values (so the full map renders), including at least one entry in the Unknown_Distance state (`miles_to_nearest: null`, `has_verified_site: false`) so both a numeric county and an unknown county can be exercised (Req 2.11). May include a few extra entries for other diseases to exercise the selector.
-- **`sources.json`** — `data_as_of` set, `is_sample: true`, and two Source_Entry items: ClinicalTrials.gov and CDC PLACES, each with `https://` `url` and a `YYYY-MM-DD` `fetched` date (Req 2.5).
-- **`ma_counties.geojson`** — FeatureCollection of exactly 14 Features, each `properties.county_fips` a 5-char string matching `where.json`, simplified to ≤ 300 KB (Req 2.12).
+- **`what.json`** — 3 to 5 entries with distinct `measure_id` drawn from the diseases in scope (Req 2.8): asthma (`CASTHMA`), high cholesterol (`HIGHCHOL`), high blood pressure (`BPHIGH`), diabetes (`DIABETES`), depression (`DEPRESSION`). Each has all required fields in bounds with `low <= mid <= high`, `0 < p_low <= p_high <= 1`, an `https://clinicaltrials.gov/...` `ctgov_url`, and a `prevalence_year` (the CDC PLACES data year shown next to the prevalence-derived affected-adults count). Values use a realistic studies-per-100k spread so the single chart shows a clear ascending-`mid` order.
+- **`investigate.json`** — one Investigate_Entry per `measure_id` present in `what.json` (Req 2.9); each has at least one entry in every breakdown array (`by_overall_status`, `by_study_type`, `by_intervention_type`, `by_phase`) and at least one finding carrying each of the two Evidence_Label values; `ma_studies` is a non-negative integer (all four fetched statuses), `us_studies` is `null` (national comparison deferred), and `phase_overlap_studies` is supplied as an extra key.
+- **`evidence.json`** — one Evidence_Entry per `measure_id` present in `what.json` (Req 2.10); each has at least one NCT in its `ncts` array (`nct_id` matching `^NCT\d{8}$`, `url` under `https://clinicaltrials.gov/`), with the per-study detail keys (`title`, `status`, `study_type`, `phases`, `intervention_types`, `intervention_names`) populated for the evidence table, plus non-empty `filters`/`mapping_choices` and some `missing_data_notes`.
+- **`sources.json`** — `data_as_of` set, `is_sample: true`, two Source_Entry items (ClinicalTrials.gov and the CDC PLACES county release) each with `https://` `url` and a `YYYY-MM-DD` `fetched` date, and a `prevalence_years` map from each `measure_id` to its PLACES year (Req 2.5).
+- **`where.json`** and **`ma_counties.geojson`** — not shipped in this version (the WHERE view is hidden). When the view is reinstated, `where.json` provides one Where_Entry per each of the 14 MA `county_fips` for one disease including at least one Unknown_Distance entry (Req 2.11), and `ma_counties.geojson` is a FeatureCollection of exactly 14 Features with matching 5-char `county_fips`, ≤ 300 KB (Req 2.12).
 
 No sample file contains any investigator/contact/official name, email, or phone number (Req 2.13).
 
@@ -418,7 +429,7 @@ The following prework analysis was performed to classify every acceptance criter
 
 **Validates: Requirements 5.1, 5.6**
 
-### Property 7: Every county resolves to its own distance bucket or an explicit unknown marker
+### Property 7: Every county resolves to its own distance bucket or an explicit unknown marker (WHERE view — reinstated only)
 
 *For any* Where_Data and selected disease, each of the 14 counties resolves to a colour bucket derived from the `miles_to_nearest` of the Where_Entry matching that disease and the county's `county_fips` when such an entry exists and is not in the Unknown_Distance state, and resolves to the explicit unknown marker (never the zero-distance bucket, never blank) when no such entry exists or the entry is in the Unknown_Distance state; and the WHERE text-alternative table lists, for each county, the same numeric distance, or "unknown", matching that resolution.
 
@@ -475,13 +486,13 @@ The data layer is the single place that turns failures into the discriminated `L
 | Unknown `measure_id` on `/evidence/:measureId` | — | "Disease not found" + link back to WHAT | 8.5 |
 | Evidence_Entry with empty `ncts` | — | "No contributing studies are available"; no broken link | 8.4 |
 | Sources_Data fails to load | `error` | Footer still shows disclaimer; "Source information is unavailable" replaces links and date | 13.5 |
-| Where_Data has zero entries | `empty` | "No distance data is available"; no empty map | 9.6 |
-| County has no Where_Entry, or entry is Unknown_Distance, for selection | — | County marked "unknown" (hatched), not shaded zero, not blank | 9.3, 9.4 |
+| Where_Data has zero entries (WHERE view, reinstated only) | `empty` | "No distance data is available"; no empty map | 9.6 |
+| County has no Where_Entry, or entry is Unknown_Distance, for selection (WHERE view, reinstated only) | — | County marked "unknown" (hatched), not shaded zero, not blank | 9.3, 9.4 |
 
 Principles:
 - The Dashboard never renders a partial, stale, or placeholder number for a failed file (Req 1.7, 3.3, 3.6).
 - Each failure names the specific file that could not be loaded (Req 1.7).
-- Errors degrade gracefully per-file: a failure loading `where.json` does not blank the Footer, which depends on `sources.json` (Req 13.5); a failure loading `evidence.json` does not blank the Investigate page.
+- Errors degrade gracefully per-file: a failure loading `evidence.json` does not blank the Footer, which depends only on `sources.json` (Req 13.5); a failed `sources.json` does not blank the Evidence page's study list.
 - No error surfaces raw response bodies or stack traces to the user; messages are plain-language and grade-8 (steering health-safety; Req 11.6).
 
 ## Testing Strategy

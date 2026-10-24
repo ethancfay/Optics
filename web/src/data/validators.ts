@@ -140,13 +140,26 @@ export function validateFinding(value: unknown): value is Finding {
   return isSafeNonEmptyString(value.text) && isEvidenceLabel(value.label);
 }
 
-/** An NCT reference: nct_id matches ^NCT\d{8}$, url under clinicaltrials.gov. */
+/**
+ * An NCT reference: `nct_id` matches ^NCT\d{8}$ and `url` is under
+ * clinicaltrials.gov. The Spec-3 detail keys (`title`, `status`, `study_type`,
+ * `phases`, `intervention_types`, `intervention_names`) are OPTIONAL extra keys;
+ * when present they must be contact-safe strings (or arrays of contact-safe
+ * strings) so a name/email/phone can never slip through the evidence table
+ * (Req 2.13). A study that omits a detail key stays valid; the table renders
+ * "unknown" for it.
+ */
 export function validateNctRef(value: unknown): value is NctRef {
   if (!isRecord(value)) return false;
-  return (
-    isNctId(value.nct_id) &&
-    isHttpsUrl(value.url, "https://clinicaltrials.gov/")
-  );
+  if (!isNctId(value.nct_id)) return false;
+  if (!isHttpsUrl(value.url, "https://clinicaltrials.gov/")) return false;
+  for (const key of ["title", "status", "study_type"] as const) {
+    if (value[key] !== undefined && !isSafeString(value[key])) return false;
+  }
+  for (const key of ["phases", "intervention_types", "intervention_names"] as const) {
+    if (value[key] !== undefined && !isArrayOf(value[key], isSafeString)) return false;
+  }
+  return true;
 }
 
 // --- entry validators ------------------------------------------------------
@@ -169,13 +182,18 @@ export function validateWhatEntry(value: unknown): value is WhatEntry {
   if (!isProbability(value.p_low)) return false;
   if (!isProbability(value.p_high)) return false;
   if (!(value.p_low <= value.p_high)) return false;
+  // prevalence_year is an optional extra key: when present it must be a
+  // non-empty, contact-free string (e.g. "2023").
+  if (value.prevalence_year !== undefined && !isSafeNonEmptyString(value.prevalence_year))
+    return false;
   if (!isHttpsUrl(value.ctgov_url, "https://")) return false;
   return true;
 }
 
 /**
  * InvestigateEntry (investigate.json): ids/condition present, non-negative-integer
- * ma_studies/us_studies, four LabelCount breakdown arrays, and findings each
+ * ma_studies, us_studies either null (deferred national comparison) or a
+ * non-negative integer, four LabelCount breakdown arrays, and findings each
  * carrying exactly one Evidence_Label.
  */
 export function validateInvestigateEntry(
@@ -185,7 +203,12 @@ export function validateInvestigateEntry(
   if (!isSafeNonEmptyString(value.measure_id)) return false;
   if (!isSafeNonEmptyString(value.condition)) return false;
   if (!isNonNegativeInteger(value.ma_studies)) return false;
-  if (!isNonNegativeInteger(value.us_studies)) return false;
+  // us_studies is the deferred national comparison: the contract fixes it at
+  // null in this version, but accept a non-negative integer too so real Spec-3
+  // output that later supplies a number still validates (null or int, not any
+  // other type).
+  if (!(value.us_studies === null || isNonNegativeInteger(value.us_studies)))
+    return false;
   if (!isArrayOf(value.by_overall_status, validateLabelCount)) return false;
   if (!isArrayOf(value.by_study_type, validateLabelCount)) return false;
   if (!isArrayOf(value.by_intervention_type, validateLabelCount)) return false;

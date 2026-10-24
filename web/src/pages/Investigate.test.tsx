@@ -8,7 +8,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import Investigate from "./Investigate";
+import Investigate, { DRUG_COUNT_CAPTION } from "./Investigate";
 import { InvestigateDataProvider } from "../data/providers";
 import { EVIDENCE_LABELS } from "../data/evidenceLabels";
 import type { InvestigateEntry } from "../data/types";
@@ -239,5 +239,59 @@ describe("Investigate page — content safety (Req 7.7)", () => {
     for (const forbidden of ["diagnos", "treatment", "eligib", "enroll"]) {
       expect(text).not.toContain(forbidden);
     }
+  });
+});
+
+describe("Investigate page — us_studies is null (national comparison deferred)", () => {
+  /** CASTHMA with the national comparison deferred (us_studies: null). */
+  const NO_US: InvestigateEntry = { ...CASTHMA, us_studies: null };
+
+  beforeEach(() => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
+      jsonResponse([NO_US])
+    );
+  });
+
+  it("shows the deferred-comparison message instead of a US number", async () => {
+    renderInvestigate("CASTHMA");
+    await screen.findByRole("heading", { level: 1, name: "Asthma" });
+
+    const us = screen.getByText(/United States:/).closest("li");
+    expect(us).not.toBeNull();
+    // The placeholder copy is shown, and no US study count number appears.
+    expect(
+      within(us as HTMLElement).getByText(
+        "National comparison not included in this version"
+      )
+    ).toBeInTheDocument();
+    expect(
+      within(us as HTMLElement).queryByText(String(CASTHMA.us_studies))
+    ).toBeNull();
+  });
+});
+
+describe("Investigate page — Drug intervention caption (Req 7.1)", () => {
+  beforeEach(() => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
+      jsonResponse(PAYLOAD)
+    );
+  });
+
+  it("renders the Drug caption alongside the intervention-type breakdown", async () => {
+    renderInvestigate("CASTHMA");
+    await screen.findByRole("heading", { level: 1, name: "Asthma" });
+
+    // The caption text is shown.
+    const caption = screen.getByText(DRUG_COUNT_CAPTION);
+    expect(caption).toBeInTheDocument();
+
+    // It sits in the same breakdown block as the "By intervention type" table,
+    // i.e. next to the Drug count — not next to another breakdown.
+    const interventionTable = breakdownTable("By intervention type");
+    const block = interventionTable.closest(".inv-breakdown");
+    expect(block).not.toBeNull();
+    expect(within(block as HTMLElement).getByText(DRUG_COUNT_CAPTION)).toBeInTheDocument();
+    // Confirm the Drug row is in that same block.
+    expect(within(block as HTMLElement).getByText("Drug")).toBeInTheDocument();
   });
 });

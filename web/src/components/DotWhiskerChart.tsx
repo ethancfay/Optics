@@ -223,10 +223,13 @@ interface TextAlternativeProps {
 /**
  * The visually-complete data table that conveys the same information as the
  * chart (Req 6.1, 6.2, 6.3). Columns are, in order: condition, low, mid, high,
- * t, affected_adults. Rows render in the same order as `entries` (the caller's
- * sort order). Each row's condition cell is a keyboard-focusable control that
- * navigates to the Investigate page for that disease's `measure_id`
- * (Req 5.5, 15.3). Missing cells show "unavailable" (Req 6.5).
+ * t, affected_adults, prevalence_year. The prevalence_year column shows the CDC
+ * PLACES data year the prevalence (and therefore affected_adults) comes from, so
+ * the year sits next to the prevalence-derived count (Req 6.1). Rows render in
+ * the same order as `entries` (the caller's sort order). Each row's condition
+ * cell is a keyboard-focusable control that navigates to the Investigate page
+ * for that disease's `measure_id` (Req 5.5, 15.3). Missing cells show
+ * "unavailable" (Req 6.5).
  */
 function TextAlternative({ entries, tableId, onSelect }: TextAlternativeProps) {
   return (
@@ -242,12 +245,13 @@ function TextAlternative({ entries, tableId, onSelect }: TextAlternativeProps) {
           <th scope="col">high</th>
           <th scope="col">t</th>
           <th scope="col">affected_adults</th>
+          <th scope="col">prevalence_year</th>
         </tr>
       </thead>
       <tbody>
         {entries.length === 0 ? (
           <tr>
-            <td colSpan={6}>No diseases are available</td>
+            <td colSpan={7}>No diseases are available</td>
           </tr>
         ) : (
           entries.map((entry, index) => {
@@ -275,6 +279,7 @@ function TextAlternative({ entries, tableId, onSelect }: TextAlternativeProps) {
                 <td>{displayNumber(entry.high)}</td>
                 <td>{displayNumber(entry.t)}</td>
                 <td>{displayNumber(entry.affected_adults)}</td>
+                <td>{displayText(entry.prevalence_year)}</td>
               </tr>
             );
           })

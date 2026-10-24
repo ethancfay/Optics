@@ -8,9 +8,16 @@
       "fetched": "2024-05-28"
     },
     {
-      "name": "CDC PLACES",
-      "url": "https://www.cdc.gov/places/",
+      "name": "CDC PLACES 2025 county release",
+      "url": "https://data.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-County-Data-20/swc5-untb",
       "fetched": "2024-05-20"
     }
-  ]
+  ],
+  "prevalence_years": {
+    "CASTHMA": "2022",
+    "DEPRESSION": "2023",
+    "BPHIGH": "2023",
+    "DIABETES": "2022",
+    "HIGHCHOL": "2022"
+  }
 }

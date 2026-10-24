@@ -28,11 +28,16 @@ import "./Layout.css";
 /** The visible text of the sample-data label (Req 2.7). */
 export const SAMPLE_DATA_LABEL = "Sample data — not real figures";
 
-/** The five top-level destinations in the persistent nav (Req 14.1). */
+/**
+ * The top-level destinations in the persistent nav (Req 14.1). The WHERE view
+ * is hidden in this version: county shapes would need a data source outside
+ * clinicaltrials.gov / data.cdc.gov, so it is not routed or linked (data
+ * contract: where.json / ma_counties.geojson deferred). The Where component
+ * code is kept but unused.
+ */
 const NAV_LINKS: ReadonlyArray<{ to: string; label: string }> = [
   { to: "/", label: "Home" },
   { to: "/what", label: "WHAT" },
-  { to: "/where", label: "WHERE" },
   { to: "/method", label: "Method" },
   { to: "/build", label: "Build" },
 ];

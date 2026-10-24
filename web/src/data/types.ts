@@ -22,10 +22,11 @@ export interface WhatEntry {
   low: number; // >= 0
   mid: number; // >= 0; invariant: low <= mid <= high
   high: number; // >= 0
-  t: number; // non-negative integer distinct study count
+  t: number; // non-negative integer distinct study count (recruiting MA studies)
   affected_adults: number; // non-negative integer (adults 18+)
   p_low: number; // > 0 and <= 1; invariant: p_low <= p_high
   p_high: number; // > 0 and <= 1
+  prevalence_year?: string; // PLACES data year for this measure (e.g. "2023"); optional (extra key)
   ctgov_url: string; // begins with "https://"
 }
 
@@ -43,8 +44,8 @@ export interface Finding {
 export interface InvestigateEntry {
   measure_id: string; // non-empty
   condition: string; // non-empty
-  ma_studies: number; // non-negative integer
-  us_studies: number; // non-negative integer
+  ma_studies: number; // non-negative integer (eligible MA studies, all fetched statuses)
+  us_studies: number | null; // national comparison deferred: always null in this version
   by_overall_status: LabelCount[];
   by_study_type: LabelCount[];
   by_intervention_type: LabelCount[];
@@ -53,9 +54,21 @@ export interface InvestigateEntry {
 }
 
 // evidence.json — JSON array of EvidenceEntry (Req 2.3)
+//
+// The contract requires `nct_id` and `url`. Spec 3 adds the per-study detail
+// columns (`title`, `status`, `study_type`, `phases`, `intervention_types`,
+// `intervention_names`) as extra keys the evidence table renders. They are
+// optional here so a minimal (contract-only) NctRef still type-checks and
+// validates, and so the table can show "unknown" for any detail a study omits.
 export interface NctRef {
   nct_id: string; // matches ^NCT\d{8}$
   url: string; // begins with "https://clinicaltrials.gov/"
+  title?: string; // study title (extra key)
+  status?: string; // overall status label (extra key)
+  study_type?: string; // e.g. "Interventional" (extra key)
+  phases?: string[]; // reported phase labels (extra key)
+  intervention_types?: string[]; // e.g. ["Drug"] (extra key)
+  intervention_names?: string[]; // reported intervention names (extra key)
 }
 
 export interface EvidenceEntry {

@@ -56,7 +56,7 @@ describe("DotWhiskerChart", () => {
       "No diseases are available"
     );
 
-    // The table still renders all six column headers (Req 6.4).
+    // The table still renders all seven column headers (Req 6.4).
     const table = screen.getByRole("table");
     const headers = within(table).getAllByRole("columnheader");
     expect(headers.map((h) => h.textContent)).toEqual([
@@ -66,6 +66,7 @@ describe("DotWhiskerChart", () => {
       "high",
       "t",
       "affected_adults",
+      "prevalence_year",
     ]);
 
     // No data rows: no condition buttons exist in the empty state.

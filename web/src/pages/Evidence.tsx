@@ -36,6 +36,25 @@ const DISEASE_NOT_FOUND_MESSAGE = "Disease not found.";
 const NO_CONTRIBUTING_STUDIES_MESSAGE =
   "No contributing studies are available.";
 
+/** Placeholder shown for any study detail the public record does not report. */
+const UNKNOWN_DETAIL = "unknown";
+
+/** A single string detail (title/status) or the "unknown" placeholder. */
+function displayText(value: string | null | undefined): string {
+  if (value === null || value === undefined || value.trim() === "") {
+    return UNKNOWN_DETAIL;
+  }
+  return value;
+}
+
+/** A list detail (phases / intervention names) joined for display, or "unknown". */
+function displayList(values: readonly string[] | null | undefined): string {
+  if (values === undefined || values === null || values.length === 0) {
+    return UNKNOWN_DETAIL;
+  }
+  return values.join(", ");
+}
+
 /**
  * The Evidence page. Reads the `:measureId` route param, resolves it against
  * the loaded Evidence_Data, and renders the matching entry's provenance. The
@@ -83,15 +102,40 @@ function EvidenceDetails({ entry }: { entry: EvidenceEntry }) {
           // No studies: a message and NO link element, so nothing is broken (Req 8.4).
           <p role="status">{NO_CONTRIBUTING_STUDIES_MESSAGE}</p>
         ) : (
-          <ul>
-            {entry.ncts.map((nct) => (
-              <li key={nct.nct_id}>
-                <a href={nct.url} target="_blank" rel="noopener noreferrer">
-                  {nct.nct_id}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <table className="evidence-table">
+            <caption>
+              Each study links to its ClinicalTrials.gov record. "Unknown" marks
+              a detail the public record does not report.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">NCT ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Status</th>
+                <th scope="col">Phases</th>
+                <th scope="col">Intervention names</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entry.ncts.map((nct) => (
+                <tr key={nct.nct_id}>
+                  <th scope="row">
+                    <a
+                      href={nct.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {nct.nct_id}
+                    </a>
+                  </th>
+                  <td>{displayText(nct.title)}</td>
+                  <td>{displayText(nct.status)}</td>
+                  <td>{displayList(nct.phases)}</td>
+                  <td>{displayList(nct.intervention_names)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </section>
 

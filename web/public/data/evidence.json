@@ -3,8 +3,26 @@
     "measure_id": "CASTHMA",
     "condition": "Asthma",
     "ncts": [
-      { "nct_id": "NCT04123456", "url": "https://clinicaltrials.gov/study/NCT04123456" },
-      { "nct_id": "NCT05234567", "url": "https://clinicaltrials.gov/study/NCT05234567" }
+      {
+        "nct_id": "NCT04123456",
+        "url": "https://clinicaltrials.gov/study/NCT04123456",
+        "title": "Inhaled Corticosteroid Step-Down in Adults With Mild Asthma",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["PHASE3"],
+        "intervention_types": ["Drug"],
+        "intervention_names": ["Budesonide", "Placebo"]
+      },
+      {
+        "nct_id": "NCT05234567",
+        "url": "https://clinicaltrials.gov/study/NCT05234567",
+        "title": "Digital Coaching for Asthma Self-Management",
+        "status": "Active, not recruiting",
+        "study_type": "Interventional",
+        "phases": ["NA"],
+        "intervention_types": ["Behavioral"],
+        "intervention_names": ["Self-management coaching app"]
+      }
     ],
     "filters": [
       "Recruiting status only",
@@ -24,9 +42,36 @@
     "measure_id": "DEPRESSION",
     "condition": "Depression",
     "ncts": [
-      { "nct_id": "NCT04987654", "url": "https://clinicaltrials.gov/study/NCT04987654" },
-      { "nct_id": "NCT05112233", "url": "https://clinicaltrials.gov/study/NCT05112233" },
-      { "nct_id": "NCT06009988", "url": "https://clinicaltrials.gov/study/NCT06009988" }
+      {
+        "nct_id": "NCT04987654",
+        "url": "https://clinicaltrials.gov/study/NCT04987654",
+        "title": "Adjunctive Therapy for Treatment-Resistant Depression",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["PHASE2", "PHASE3"],
+        "intervention_types": ["Drug"],
+        "intervention_names": ["Investigational agent", "Placebo"]
+      },
+      {
+        "nct_id": "NCT05112233",
+        "url": "https://clinicaltrials.gov/study/NCT05112233",
+        "title": "Group Cognitive Behavioral Therapy for Adults With Depression",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["NA"],
+        "intervention_types": ["Behavioral"],
+        "intervention_names": ["Group CBT"]
+      },
+      {
+        "nct_id": "NCT06009988",
+        "url": "https://clinicaltrials.gov/study/NCT06009988",
+        "title": "Observational Cohort of Depression Care Pathways",
+        "status": "Completed",
+        "study_type": "Observational",
+        "phases": [],
+        "intervention_types": [],
+        "intervention_names": []
+      }
     ],
     "filters": [
       "Recruiting status only",
@@ -45,8 +90,26 @@
     "measure_id": "BPHIGH",
     "condition": "High Blood Pressure",
     "ncts": [
-      { "nct_id": "NCT04776655", "url": "https://clinicaltrials.gov/study/NCT04776655" },
-      { "nct_id": "NCT05443322", "url": "https://clinicaltrials.gov/study/NCT05443322" }
+      {
+        "nct_id": "NCT04776655",
+        "url": "https://clinicaltrials.gov/study/NCT04776655",
+        "title": "Fixed-Dose Combination Therapy for Hypertension Control",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["PHASE3"],
+        "intervention_types": ["Drug"],
+        "intervention_names": ["Combination antihypertensive", "Active comparator"]
+      },
+      {
+        "nct_id": "NCT05443322",
+        "url": "https://clinicaltrials.gov/study/NCT05443322",
+        "title": "Renal Denervation Device for Resistant Hypertension",
+        "status": "Active, not recruiting",
+        "study_type": "Interventional",
+        "phases": ["NA"],
+        "intervention_types": ["Device"],
+        "intervention_names": ["Renal denervation system"]
+      }
     ],
     "filters": [
       "Recruiting status only",
@@ -65,8 +128,26 @@
     "measure_id": "DIABETES",
     "condition": "Diabetes",
     "ncts": [
-      { "nct_id": "NCT04332211", "url": "https://clinicaltrials.gov/study/NCT04332211" },
-      { "nct_id": "NCT05667788", "url": "https://clinicaltrials.gov/study/NCT05667788" }
+      {
+        "nct_id": "NCT04332211",
+        "url": "https://clinicaltrials.gov/study/NCT04332211",
+        "title": "GLP-1 Receptor Agonist in Adults With Type 2 Diabetes",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["PHASE3"],
+        "intervention_types": ["Drug"],
+        "intervention_names": ["GLP-1 receptor agonist", "Placebo"]
+      },
+      {
+        "nct_id": "NCT05667788",
+        "url": "https://clinicaltrials.gov/study/NCT05667788",
+        "title": "Continuous Glucose Monitoring and Lifestyle Support",
+        "status": "Completed",
+        "study_type": "Interventional",
+        "phases": ["NA"],
+        "intervention_types": ["Device", "Behavioral"],
+        "intervention_names": ["Continuous glucose monitor", "Lifestyle program"]
+      }
     ],
     "filters": [
       "Recruiting status only",
@@ -85,7 +166,16 @@
     "measure_id": "HIGHCHOL",
     "condition": "High Cholesterol",
     "ncts": [
-      { "nct_id": "NCT04221100", "url": "https://clinicaltrials.gov/study/NCT04221100" }
+      {
+        "nct_id": "NCT04221100",
+        "url": "https://clinicaltrials.gov/study/NCT04221100",
+        "title": "PCSK9 Inhibitor for Adults With High Cholesterol",
+        "status": "Recruiting",
+        "study_type": "Interventional",
+        "phases": ["PHASE2"],
+        "intervention_types": ["Drug"],
+        "intervention_names": ["PCSK9 inhibitor", "Placebo"]
+      }
     ],
     "filters": [
       "Recruiting status only",

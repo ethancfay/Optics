@@ -33,7 +33,6 @@ import {
   validateWhatEntry,
   validateInvestigateEntry,
   validateEvidenceEntry,
-  validateWhereEntry,
   validateSourcesData,
 } from "./data/validators";
 import { loadJson, loadSources } from "./data/loadJson";
@@ -44,7 +43,6 @@ import type {
   WhatEntry,
   InvestigateEntry,
   EvidenceEntry,
-  WhereEntry,
   SourcesData,
 } from "./data/types";
 
@@ -61,19 +59,12 @@ function readData<T>(file: string): T {
 const whatRaw = readData<unknown[]>("what.json");
 const investigateRaw = readData<unknown[]>("investigate.json");
 const evidenceRaw = readData<unknown[]>("evidence.json");
-const whereRaw = readData<unknown[]>("where.json");
 const sourcesRaw = readData<unknown>("sources.json");
-const geojsonText = readFileSync(resolve(DATA_DIR, "ma_counties.geojson"), "utf8");
-const geojsonRaw = JSON.parse(geojsonText) as {
-  type: string;
-  features: Array<{
-    type: string;
-    properties: { county_fips: string };
-    geometry: { type: string; coordinates: unknown };
-  }>;
-};
 
-/** The disease the where.json fixture provides all 14 counties for (Req 2.10). */
+// The WHERE view is hidden in this version: where.json and ma_counties.geojson
+// are no longer shipped or fetched, so this file no longer reads or serves them.
+
+/** The disease whose Investigate/Evidence entries the :measureId routes use. */
 const DESIGNATED_MEASURE_ID = "CASTHMA";
 
 // --- fetch mock that serves the REAL files, routed by path -------------------
@@ -95,9 +86,7 @@ function stubFetchWithRealFiles() {
     "/data/what.json": whatRaw,
     "/data/investigate.json": investigateRaw,
     "/data/evidence.json": evidenceRaw,
-    "/data/where.json": whereRaw,
     "/data/sources.json": sourcesRaw,
-    "/data/ma_counties.geojson": geojsonRaw,
   };
   const fetchMock = vi.fn((input: string) => {
     calls.set(input, (calls.get(input) ?? 0) + 1);
@@ -152,12 +141,8 @@ describe("Routing (Req 14, 15.7)", () => {
       })
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("link", { name: "WHERE" }));
-    expect(
-      await screen.findByRole("heading", {
-        name: "Distance to the nearest verified recruiting site",
-      })
-    ).toBeInTheDocument();
+    // The WHERE view is hidden in this version: there is no WHERE nav link.
+    expect(screen.queryByRole("link", { name: "WHERE" })).toBeNull();
 
     fireEvent.click(screen.getByRole("link", { name: "Method" }));
     expect(
@@ -179,10 +164,11 @@ describe("Routing (Req 14, 15.7)", () => {
     const cases: Array<{ path: string; heading: string }> = [
       { path: "/", heading: "Research Gap Index" },
       { path: "/what", heading: "Burden versus research activity by disease" },
-      { path: "/where", heading: "Distance to the nearest verified recruiting site" },
       { path: "/method", heading: "Method and sources" },
       { path: "/build", heading: "How we built it with Kiro" },
       { path: "/does-not-exist", heading: "Page not found" },
+      // The hidden WHERE view has no route: a direct hit falls through to NotFound.
+      { path: "/where", heading: "Page not found" },
     ];
     for (const { path, heading } of cases) {
       const { unmount } = renderApp(path);
@@ -321,54 +307,27 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     }
   });
 
-  it("where.json: exactly 14 distinct county_fips for the designated disease with >=1 Unknown_Distance (Req 2.10)", async () => {
-    const state = await loadJson<WhereEntry>("where.json", validateWhereEntry);
-    expect(state.status).toBe("ready");
-    if (state.status !== "ready") return;
-    expect(state.omittedCount).toBe(0);
-
-    const forDisease = state.data.filter(
-      (e) => e.measure_id === DESIGNATED_MEASURE_ID
+  it("evidence.json: at least one study carries the Spec-3 detail keys (title/status/phases/interventions)", async () => {
+    const ev = await loadJson<EvidenceEntry>(
+      "evidence.json",
+      validateEvidenceEntry
     );
-    const fips = forDisease.map((e) => e.county_fips);
-    expect(new Set(fips).size).toBe(14);
-    expect(fips.length).toBe(14);
+    expect(ev.status).toBe("ready");
+    if (ev.status !== "ready") return;
 
-    const unknownCount = forDisease.filter(
-      (e) => e.miles_to_nearest === null && e.has_verified_site === false
-    ).length;
-    expect(unknownCount).toBeGreaterThanOrEqual(1);
-  });
-
-  it("ma_counties.geojson: 14 valid features, <= 300 KB, FIPS match where.json (Req 2.11, 2.12)", async () => {
-    // Size budget (Req 2.11).
-    const bytes = Buffer.byteLength(geojsonText, "utf8");
-    expect(bytes).toBeLessThanOrEqual(300 * 1024);
-
-    // Top-level shape.
-    expect(geojsonRaw.type).toBe("FeatureCollection");
-    expect(geojsonRaw.features.length).toBe(14);
-
-    // Each feature passes the providers.tsx CountyFeature guard shape:
-    // type:"Feature", non-empty county_fips, Polygon/MultiPolygon + coordinates array.
-    for (const f of geojsonRaw.features) {
-      expect(f.type).toBe("Feature");
-      expect(typeof f.properties.county_fips).toBe("string");
-      expect(f.properties.county_fips.trim().length).toBeGreaterThan(0);
-      expect(["Polygon", "MultiPolygon"]).toContain(f.geometry.type);
-      expect(Array.isArray(f.geometry.coordinates)).toBe(true);
+    // The evidence table reads title, status, phases, and intervention_names.
+    // The sample fixture supplies them for at least one study, and when present
+    // every value is of the expected type (so the table never renders [object]).
+    const allNcts = ev.data.flatMap((e) => e.ncts);
+    expect(allNcts.some((n) => typeof n.title === "string" && n.title.length > 0)).toBe(true);
+    expect(allNcts.some((n) => typeof n.status === "string" && n.status.length > 0)).toBe(true);
+    expect(allNcts.some((n) => Array.isArray(n.phases))).toBe(true);
+    expect(allNcts.some((n) => Array.isArray(n.intervention_names))).toBe(true);
+    for (const n of allNcts) {
+      if (n.phases !== undefined) expect(Array.isArray(n.phases)).toBe(true);
+      if (n.intervention_names !== undefined)
+        expect(Array.isArray(n.intervention_names)).toBe(true);
     }
-
-    // FIPS match between GeoJSON and where.json for the designated disease.
-    const geoFips = new Set(
-      geojsonRaw.features.map((f) => f.properties.county_fips)
-    );
-    const whereFips = new Set(
-      (whereRaw as WhereEntry[])
-        .filter((e) => e.measure_id === DESIGNATED_MEASURE_ID)
-        .map((e) => e.county_fips)
-    );
-    expect(geoFips).toEqual(whereFips);
   });
 
   it("sources.json loads and is flagged is_sample (Req 2.7)", async () => {
@@ -441,9 +400,7 @@ describe("Content safety — no contact data (Req 2.13)", () => {
       whatRaw,
       investigateRaw,
       evidenceRaw,
-      whereRaw,
       sourcesRaw,
-      geojsonRaw,
     ]) {
       collectStrings(raw, strings);
     }
@@ -479,7 +436,6 @@ describe("Content safety — no contact data (Req 2.13)", () => {
       "/what",
       `/investigate/${DESIGNATED_MEASURE_ID}`,
       `/evidence/${DESIGNATED_MEASURE_ID}`,
-      "/where",
       "/method",
       "/build",
     ];
@@ -522,20 +478,6 @@ describe("Accessibility and layout (Req 15, 16)", () => {
     expect(table?.tagName.toLowerCase()).toBe("table");
   });
 
-  it("WHERE map SVG is associated with its text-alternative table via aria-describedby (Req 15.5, 15.8)", async () => {
-    const { container } = renderApp("/where");
-    const svg = await waitFor(() => {
-      const el = container.querySelector('svg[role="img"]');
-      expect(el).not.toBeNull();
-      return el as SVGElement;
-    });
-    const tableId = svg.getAttribute("aria-describedby");
-    expect(tableId).toBeTruthy();
-    const table = document.getElementById(tableId as string);
-    expect(table).not.toBeNull();
-    expect(table?.tagName.toLowerCase()).toBe("table");
-  });
-
   it("WHAT table rows are keyboard-operable buttons with accessible names (Req 15.3, 15.5)", async () => {
     renderApp("/what");
     await screen.findByRole("heading", {
@@ -549,12 +491,6 @@ describe("Accessibility and layout (Req 15, 16)", () => {
       });
       expect(button.tagName.toLowerCase()).toBe("button");
     }
-  });
-
-  it("WHERE disease <select> has a programmatic accessible name (Req 15.5)", async () => {
-    renderApp("/where");
-    const select = await screen.findByRole("combobox", { name: "Disease" });
-    expect(select.tagName.toLowerCase()).toBe("select");
   });
 
   it("the three lowest-mid diseases appear first, in order, in the WHAT chart/table (Req 16.1)", async () => {
@@ -604,22 +540,23 @@ describe("Accessibility and layout (Req 15, 16)", () => {
   });
 
   it("fetches each data file exactly once per page view (Req 16.3)", async () => {
-    // WHERE reads exactly two files: where.json and ma_counties.geojson. Sources
-    // is loaded once app-wide by the top-level SourcesProvider.
+    // WHAT reads exactly one file: what.json. Sources is loaded once app-wide by
+    // the top-level SourcesProvider. (The WHERE view, which used to read
+    // where.json + ma_counties.geojson, is hidden in this version.)
     const { calls } = stubFetchWithRealFiles();
-    const { unmount } = renderApp("/where");
+    const { unmount } = renderApp("/what");
     await screen.findByRole("heading", {
-      name: "Distance to the nearest verified recruiting site",
+      name: "Burden versus research activity by disease",
     });
     await waitFor(() => {
-      expect(calls.get("/data/where.json")).toBe(1);
-      expect(calls.get("/data/ma_counties.geojson")).toBe(1);
+      expect(calls.get("/data/what.json")).toBe(1);
       expect(calls.get("/data/sources.json")).toBe(1);
     });
-    // No page other than WHERE's own files was requested.
-    expect(calls.get("/data/what.json")).toBeUndefined();
+    // No page other than WHAT's own file (plus app-wide sources) was requested.
     expect(calls.get("/data/investigate.json")).toBeUndefined();
     expect(calls.get("/data/evidence.json")).toBeUndefined();
+    expect(calls.get("/data/where.json")).toBeUndefined();
+    expect(calls.get("/data/ma_counties.geojson")).toBeUndefined();
     unmount();
   });
 });

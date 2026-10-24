@@ -68,3 +68,20 @@
 .inv-back-link {
   color: var(--accent);
 }
+
+/*
+ * Note shown beneath a breakdown table (e.g. the Drug-count explanation next to
+ * the intervention-type breakdown). Muted helper text, never colour-only.
+ */
+.inv-caption {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+/* The deferred national-comparison placeholder, shown in place of a US count. */
+.inv-count-unavailable {
+  color: var(--muted);
+  font-style: italic;
+}

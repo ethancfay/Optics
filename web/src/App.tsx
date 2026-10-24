@@ -27,8 +27,6 @@ import {
   WhatDataProvider,
   InvestigateDataProvider,
   EvidenceDataProvider,
-  WhereDataProvider,
-  CountyBoundariesProvider,
 } from "./data/providers";
 import type { ReactNode } from "react";
 
@@ -36,7 +34,9 @@ import Home from "./pages/Home";
 import What from "./pages/What";
 import Investigate from "./pages/Investigate";
 import Evidence from "./pages/Evidence";
-import Where from "./pages/Where";
+// The WHERE view is hidden in this version (no county-shape data source inside
+// clinicaltrials.gov / data.cdc.gov). `pages/Where`, `components/CountyMap`,
+// and the Where/CountyBoundaries providers are intentionally kept but unrouted.
 import Method from "./pages/Method";
 import Build from "./pages/Build";
 import NotFound from "./pages/NotFound";
@@ -72,17 +72,9 @@ export function AppRoutes() {
           element={withProvider(EvidenceDataProvider, <Evidence />)}
         />
 
-        {/* WHERE reads Where_Data (distances) and County_Boundaries (geometry). */}
-        <Route
-          path="/where"
-          element={
-            <WhereDataProvider>
-              <CountyBoundariesProvider>
-                <Where />
-              </CountyBoundariesProvider>
-            </WhereDataProvider>
-          }
-        />
+        {/* The WHERE view is hidden in this version: no route and no nav link
+            (county shapes need a data source outside clinicaltrials.gov /
+            data.cdc.gov). A direct hit on /where falls through to NotFound. */}
 
         {/* Method reads Sources_Data, already in scope app-wide. */}
         <Route path="/method" element={<Method />} />

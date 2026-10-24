@@ -226,6 +226,17 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
 - [x] 15. Final checkpoint - Ensure the build and full test run pass
   - Run `npm run build` in `web/` and the full `vitest --run` suite; fix any failures; ensure all tests pass, ask the user if questions arise.
 
+- [x] 16. Revise the Dashboard to match the updated product and data contract
+  - Hide the WHERE view: remove the `/where` route from `src/App.tsx` and the WHERE link from `Layout` nav; delete `web/public/data/where.json` and `web/public/data/ma_counties.geojson` (county shapes need a source outside clinicaltrials.gov/data.cdc.gov). Keep `pages/Where.tsx`, `components/CountyMap.tsx`, and the Where/County-boundaries providers unused.
+  - National comparison deferred: `us_studies` is always `null`. Change `InvestigateEntry.us_studies` to `number | null`, accept `null` in `validateInvestigateEntry`, and render "National comparison not included in this version" on the Investigate page when it is `null`.
+  - Index definition text: clarify that `T` counts recruiting MA studies and that Investigate/Evidence cover all four fetched statuses; add optional `prevalence_year` to `WhatEntry` and show it next to the prevalence-derived column in the WHAT text-alternative table.
+  - Evidence table: add `title`, `status`, `phases`, and `intervention_names` columns (from new optional `NctRef` keys), keeping the NCT link; show "unknown" for any omitted detail.
+  - Add the Drug-count caption next to the intervention-type breakdown: "Drug means the study lists a drug intervention; it may be an existing drug, comparator or placebo." (Req 7.8).
+  - Keep the visible "Sample data" banner shown when `sources.json` `is_sample` is true (Req 2.7).
+  - Update the sample JSON files (`what.json`, `investigate.json`, `evidence.json`, `sources.json`) with the new/extra keys.
+  - Keep all existing tests passing; add tests for the `null` us_studies message, the Drug caption, and the sample-data banner; update the WHERE/geojson-dependent tests for the hidden view.
+  - _Requirements: 1.2, 2.1, 2.2, 2.3, 2.5, 2.6, 2.7, 6.1, 7.2, 7.8, 8.1, 9 (hidden), 13.1, 14.1_
+
 ## Notes
 
 - Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 13 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.

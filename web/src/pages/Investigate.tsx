@@ -24,40 +24,57 @@ import { useInvestigateData } from "../data/providers";
 import type { InvestigateEntry, LabelCount } from "../data/types";
 import "./Investigate.css";
 
-/** One breakdown table built from an array of {label, count} pairs (Req 7.1). */
+/**
+ * One breakdown table built from an array of {label, count} pairs (Req 7.1).
+ * An optional `caption` renders as a note beneath the table — used to carry the
+ * Drug-count explanation next to the intervention-type breakdown (Req 7.1).
+ */
 function Breakdown({
   title,
   items,
+  caption,
 }: {
   title: string;
   items: readonly LabelCount[];
+  caption?: string;
 }) {
   return (
-    <table className="inv-table">
-      <caption>{title}</caption>
-      <thead>
-        <tr>
-          <th scope="col">Category</th>
-          <th scope="col">Studies</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.length === 0 ? (
+    <div className="inv-breakdown">
+      <table className="inv-table">
+        <caption>{title}</caption>
+        <thead>
           <tr>
-            <td colSpan={2}>No categories are available.</td>
+            <th scope="col">Category</th>
+            <th scope="col">Studies</th>
           </tr>
-        ) : (
-          items.map((item) => (
-            <tr key={item.label}>
-              <td>{item.label}</td>
-              <td>{item.count}</td>
+        </thead>
+        <tbody>
+          {items.length === 0 ? (
+            <tr>
+              <td colSpan={2}>No categories are available.</td>
             </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+          ) : (
+            items.map((item) => (
+              <tr key={item.label}>
+                <td>{item.label}</td>
+                <td>{item.count}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+      {caption !== undefined && <p className="inv-caption">{caption}</p>}
+    </div>
   );
 }
+
+/**
+ * Caption shown next to any Drug intervention count. "Drug" is a study that
+ * lists a drug-type intervention; it may be an existing drug, a comparator, or
+ * a placebo, not necessarily a new treatment (Req 7.1, data contract).
+ */
+export const DRUG_COUNT_CAPTION =
+  "Drug means the study lists a drug intervention; it may be an existing drug, comparator or placebo.";
 
 /** The resolved Investigate_Entry view (Req 7.1-7.5). */
 function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
@@ -65,8 +82,8 @@ function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
     <article>
       <h1>{entry.condition}</h1>
       <p>
-        This page describes the recruiting studies counted for this disease and
-        how they break down. The numbers come straight from public study
+        This page describes the Massachusetts studies counted for this disease
+        and how they break down. The numbers come straight from public study
         records.
       </p>
 
@@ -77,11 +94,19 @@ function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
       <ul className="inv-counts">
         <li>
           Massachusetts:{" "}
-          <span className="inv-count-value">{entry.ma_studies}</span>
+          <span className="inv-count-value">{entry.ma_studies}</span>{" "}
+          studies across all four fetched statuses (recruiting, not yet
+          recruiting, active not recruiting, and recently updated completed).
         </li>
         <li>
           United States:{" "}
-          <span className="inv-count-value">{entry.us_studies}</span>
+          {entry.us_studies === null ? (
+            <span className="inv-count-unavailable">
+              National comparison not included in this version
+            </span>
+          ) : (
+            <span className="inv-count-value">{entry.us_studies}</span>
+          )}
         </li>
       </ul>
 
@@ -96,6 +121,7 @@ function InvestigateDetail({ entry }: { entry: InvestigateEntry }) {
         <Breakdown
           title="By intervention type"
           items={entry.by_intervention_type}
+          caption={DRUG_COUNT_CAPTION}
         />
         <Breakdown title="By phase" items={entry.by_phase} />
       </div>

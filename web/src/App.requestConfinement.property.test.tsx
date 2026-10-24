@@ -3,16 +3,19 @@
 // Validates: Requirements 1.2
 //
 // For any order of page views across the app's routes (`/`, `/what`,
-// `/investigate/:measureId`, `/evidence/:measureId`, `/where`, `/method`,
-// `/build`), every file the app fetches at runtime is requested as a relative,
-// same-origin path under the Data_Directory `/data/`. We mount the app's REAL
-// routing table and providers under a MemoryRouter with `fetch` MOCKED to
-// record every requested path, exercise a generated sequence of page views that
-// collectively touches all six data files (what.json, investigate.json,
-// evidence.json, where.json, sources.json, ma_counties.geojson), then assert
-// that EVERY recorded path begins with `/data/` and that NONE targets another
-// origin (no `http://`, no `https://`, no `//host`, no other scheme). No real
-// network request is ever made.
+// `/investigate/:measureId`, `/evidence/:measureId`, `/method`, `/build`),
+// every file the app fetches at runtime is requested as a relative, same-origin
+// path under the Data_Directory `/data/`. We mount the app's REAL routing table
+// and providers under a MemoryRouter with `fetch` MOCKED to record every
+// requested path, exercise a generated sequence of page views that collectively
+// touches the active data files (what.json, investigate.json, evidence.json,
+// sources.json), then assert that EVERY recorded path begins with `/data/` and
+// that NONE targets another origin (no `http://`, no `https://`, no `//host`,
+// no other scheme). No real network request is ever made.
+//
+// The WHERE view is hidden in this version, so where.json and ma_counties.geojson
+// are no longer fetched at runtime; they are intentionally absent from the route
+// set and the "touched" assertions below.
 
 import { afterEach, describe, expect, test, vi } from "vitest";
 import fc from "fast-check";
@@ -123,7 +126,6 @@ const ROUTES = [
   "/what",
   "/investigate/CASTHMA",
   "/evidence/CASTHMA",
-  "/where",
   "/method",
   "/build",
 ] as const;
@@ -211,17 +213,20 @@ describe("Property 10: runtime data requests are same-origin and under /data/", 
             unmount();
           }
 
-          // The sequence must have produced at least the six data-file fetches
+          // The sequence must have produced the active data-file fetches
           // (sources is fetched on every mount; the file routes add the rest).
+          // where.json and ma_counties.geojson are NOT fetched: the WHERE view
+          // is hidden in this version.
           const touched = new Set(
             recorded.map((p) => p.replace(/^.*\/data\//, ""))
           );
           expect(touched.has("what.json")).toBe(true);
           expect(touched.has("investigate.json")).toBe(true);
           expect(touched.has("evidence.json")).toBe(true);
-          expect(touched.has("where.json")).toBe(true);
           expect(touched.has("sources.json")).toBe(true);
-          expect(touched.has("ma_counties.geojson")).toBe(true);
+          // Hidden WHERE view: these files are never requested at runtime.
+          expect(touched.has("where.json")).toBe(false);
+          expect(touched.has("ma_counties.geojson")).toBe(false);
 
           // The core property: every recorded path is same-origin under /data/,
           // and none targets another origin.
