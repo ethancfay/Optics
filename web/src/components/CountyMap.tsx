@@ -37,6 +37,7 @@ import {
   type CountyState,
   type DistanceBucket,
 } from "../data/where";
+import "./CountyMap.css";
 
 /** Message shown when there is no Where_Data to drive the map (Req 9.6). */
 export const NO_DISTANCE_DATA_MESSAGE = "No distance data is available";
@@ -186,24 +187,29 @@ export function CountyMap({
   }, [features]);
 
   // Resolve each county's state once for the active disease; shared by the map
-  // paths and the text-alternative rows so they can never disagree.
+  // paths and the text-alternative rows so they can never disagree. Sorted A–Z
+  // by county name so the table reads as an alphabetical list rather than
+  // following the GeoJSON's feature order (the map is unaffected: every county
+  // is filled independently).
   const rows = useMemo(
     () =>
-      features.map((feature) => {
-        const fips = feature.properties.county_fips;
-        const state = resolveCountyState(whereData, activeMeasureId, fips);
-        const whereEntry = whereData.find(
-          (e) => e.measure_id === activeMeasureId && e.county_fips === fips
-        );
-        return {
-          fips,
-          // County label comes from Where_Data (the GeoJSON carries only FIPS);
-          // fall back to the FIPS code if no entry names the county.
-          county: whereEntry?.county ?? fips,
-          state,
-          feature,
-        };
-      }),
+      features
+        .map((feature) => {
+          const fips = feature.properties.county_fips;
+          const state = resolveCountyState(whereData, activeMeasureId, fips);
+          const whereEntry = whereData.find(
+            (e) => e.measure_id === activeMeasureId && e.county_fips === fips
+          );
+          return {
+            fips,
+            // County label comes from Where_Data (the GeoJSON carries only FIPS);
+            // fall back to the FIPS code if no entry names the county.
+            county: whereEntry?.county ?? fips,
+            state,
+            feature,
+          };
+        })
+        .sort((a, b) => a.county.localeCompare(b.county)),
     [features, whereData, activeMeasureId]
   );
 
