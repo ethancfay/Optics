@@ -106,7 +106,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 2.1–2.9, 10.1_
 
-- [-] 7. Study_Transformer
+- [x] 7. Study_Transformer
   - Implement `pipeline/transform/study_transformer.py` following design § Study_Transformer steps 1–7:
     - Q1-then-Q2 order.
     - `nctId` deduplication before the status filter.
@@ -131,7 +131,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 4.1–4.9, 5.1–5.11, 13.2, 13.3, 13.12_
 
-- [ ] 8. PLACES_Transformer
+- [-] 8. PLACES_Transformer
   - Implement `pipeline/transform/places_transformer.py` as specified in design § PLACES_Transformer:
     - The MA + `CrdPrv` filter.
     - Identifier validation, and `locationid` converted to a 5-character FIPS string.

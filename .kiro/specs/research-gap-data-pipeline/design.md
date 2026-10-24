@@ -424,6 +424,19 @@ PLACES_Row columns, in this order: `locationname, locationid, measureid, measure
 
 Socrata leaves null fields out of the JSON entirely. The transformer treats an absent key the same as an empty value.
 
+Implementation details fixed in task 8:
+
+- `PlacesDuplicate` is a frozen dataclass with `locationid` (the County_FIPS), `measureid`, `kept_year`, and `discarded`. Duplicates are returned in order of first appearance; the Fetch_Log_Writer sorts them (Req 6.3, 12.12).
+- The filter in step 1 compares `stateabbr` and `datavaluetypeid` exactly. A record that is not a JSON object is dropped by the filter (Req 6.2).
+- Step 2 runs on every retained record, before duplicates are resolved, so a bad identifier stops the run even when a valid duplicate exists (Req 6.6).
+- A whitespace-only `locationname` or `measureid` counts as empty. A non-string `locationname` or `measureid` also stops the run, with a message saying the field is not a string (Req 6.6).
+- `locationid` must fully match ASCII `[0-9]{1,5}`. Trailing newlines, spaces, signs, and non-ASCII digits are rejected (Req 6.6, 6.8).
+- A numeric string counts as numeric only if it is plain decimal text: an optional sign, digits with an optional point, and an optional exponent. Whitespace, underscores, `NaN`, and `Infinity` are rejected, so the kept source text is always a plain number (Req 6.1, 6.4).
+- A JSON number keeps its text as `str(int)` or `repr(float)`. A `bool` is never numeric (Req 6.1).
+- The same numeric rule applies to `year` in duplicate resolution. The `year` cell is the source text, or empty when it is not a string or number (Req 6.1, 6.3).
+- PLACES coordinates keep the source text of the WKT tokens, or `repr(float)` for GeoJSON floats. If either coordinate is missing, non-numeric, or out of range, both are empty. A GeoJSON value must have `type` `Point` and exactly 2 coordinates (Req 6.5).
+- Error messages name the field and give `locationname` and `measureid` only when they are non-empty strings. The bad value itself is never included (Req 3.3, 6.6).
+
 **PLACES measures do not all share one data year.** Probe V5 found 490 MA crude prevalence rows from 2023 and 70 from 2022, all in the same 2025 release. These are different measures, not duplicates: no (`locationname`, `measureid`) pair repeats. Each PLACES_Row therefore keeps its own `year` column, and code must never assume one year for the whole release. Downstream outputs (Spec 2 grouping, Spec 3 scoring and `web/public/data/*.json`, Spec 4 display) must carry the data year for each measure alongside the prevalence values. They must not show one release-wide year in its place.
 
 ### CSV_Writer (`pipeline/io/csv_writer.py`), Req 7
