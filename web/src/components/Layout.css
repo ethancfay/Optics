@@ -1,0 +1,155 @@
+/*
+ * Styles for the shared Layout shell: SkipLink, Nav, and the focus ring used
+ * across the shell. All colours reference the palette custom properties from
+ * `src/styles/palette.css` so there is a single source of truth and WCAG AA
+ * contrast is preserved (Req 15.1, 15.2, 15.4).
+ */
+
+/* --- Skip link (Req 15.3, 15.4) ------------------------------------------- */
+
+/*
+ * Visually hidden until focused. It stays in the DOM and in the tab order (it
+ * is the first focusable element), so keyboard and screen-reader users can jump
+ * past the nav to #main. On focus it becomes visible at the top-left.
+ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 0 0 4px 0;
+  text-decoration: underline;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* --- Primary navigation (Req 14.4, 15.4) ---------------------------------- */
+
+/*
+ * Header bar (visual-design steering). A white strip with a bottom border; the
+ * product name sits on the left, the primary nav on the right. It collapses to
+ * a wrapped row on phones. The inner row is width-matched to the content column.
+ */
+.site-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.75rem 24px;
+}
+
+.site-header__brand {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.site-header__brand:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .site-header__inner {
+    padding: 0.75rem 16px;
+  }
+}
+
+.nav {
+  /* The header owns the bottom border now; the nav sits inside it. */
+  margin: 0;
+}
+
+.nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__item {
+  margin: 0;
+}
+
+.nav__link {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: 4px;
+  /* Single-tap friendly touch target on mobile (Req 16.2). */
+  min-height: 44px;
+  line-height: 1.6;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+}
+
+/*
+ * Visible active style (Req 14.4). The active link gets the accent colour plus
+ * a 2px underline offset from the text, so the active state is carried by both
+ * colour AND the underline rule (never colour alone, Req 15.2).
+ */
+.nav__link.is-active {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+}
+
+/* --- Shared visible focus ring (Req 15.4) --------------------------------- */
+
+/*
+ * Real keyboard-operable controls keep a visible --focus ring. `#main` is
+ * deliberately omitted: it is focused programmatically on each route change
+ * (tabIndex={-1}) and must NOT paint an outline just for being the landing
+ * target (`main:focus { outline: none }` lives in base.css, per the design).
+ */
+.skip-link:focus-visible,
+.nav__link:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* --- Sample-data banner pill (Req 2.7) ------------------------------------ */
+
+/*
+ * A slim pill-style strip ABOVE the header, so it is visible within the first
+ * screen at 375 px without scrolling. Soft accent tint with small text; the
+ * colour is paired with the explicit label text, so meaning is never conveyed
+ * by colour alone (Req 15.2).
+ */
+.sample-banner {
+  margin: 0;
+  padding: 6px 24px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .sample-banner {
+    padding: 6px 16px;
+  }
+}

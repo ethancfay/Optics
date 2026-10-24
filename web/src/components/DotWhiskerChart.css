@@ -1,0 +1,123 @@
+/*
+ * Styles for the DotWhiskerChart: the chart panel, its value axis, its row
+ * labels, and the keyboard-focusable controls in its text-alternative table.
+ * Colours reference the palette custom properties from `src/styles/palette.css`
+ * (single source of truth, WCAG AA contrast). The row controls that navigate to
+ * the Investigate page carry a visible keyboard focus ring (Req 15.3, 15.4).
+ */
+
+/* --- Chart panel ---------------------------------------------------------- */
+
+/*
+ * Same plate treatment as the WHERE choropleth (`--surface`, hairline
+ * `--border`, 12px radius, 12px inset), so the two data pages read as one
+ * system. Capped and centred rather than allowed to stretch: the cap is wider
+ * than the map's because this chart carries a name column beside its plot.
+ */
+/* Owns the spacing and the phone-viewport scrolling for the plot. */
+.dw-chart-scroll {
+  margin: 0 0 24px;
+  overflow-x: auto;
+}
+
+.dw-chart {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  max-width: 900px;
+  height: auto;
+  margin: 0 auto;
+  padding: 12px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+/* --- Value axis (tick labels + gridlines) --------------------------------- */
+
+/*
+ * Gridlines, the baseline and the name/plot divider are decoration only — every
+ * value they encode is spelled out by the tick labels beside them and by the
+ * text-alternative table, and the group is hidden from assistive tech.
+ */
+.dw-axis-grid,
+.dw-axis-baseline,
+.dw-axis-divider {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+/* Numeric tick labels under the baseline, readable against --surface. */
+.dw-axis-tick {
+  fill: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The unit label for the whole axis, centred under the plot (Req 5.4). */
+.dw-axis-label {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+/* --- Row labels ----------------------------------------------------------- */
+
+/*
+ * The disease name in the left column, right-aligned toward the plot and
+ * vertically centred on its whisker's row. --ink keeps AA contrast on --surface.
+ */
+.dw-row-label {
+  fill: var(--ink);
+  font-size: 12px;
+}
+
+/* --- Text-alternative table ----------------------------------------------- */
+
+/*
+ * Table cell/row styling (full width, --surface header row, --border rules)
+ * lives in the shared base.css so this table matches the Investigate tables.
+ * This file owns the scroll container and the keyboard-focusable row control.
+ */
+
+/*
+ * Six columns have a min-content width wider than a phone, so the table scrolls
+ * inside this container rather than pushing the whole page into horizontal
+ * overflow (the 375px requirement). The container owns the block spacing.
+ */
+.dw-table-scroll {
+  margin: 0 0 12px;
+  overflow-x: auto;
+}
+
+.dw-table-scroll .dw-table {
+  margin-bottom: 0;
+}
+
+/*
+ * Each row's condition is a keyboard-focusable button that navigates to the
+ * Investigate page. Styled as an underlined link so it reads as an action
+ * without relying on colour alone (Req 15.2).
+ */
+.dw-row-button {
+  display: inline-block;
+  padding: 0.25rem 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+  /* Single-tap friendly touch target on mobile (Req 16.2). */
+  min-height: 44px;
+}
+
+.dw-row-button:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Visible focus ring for keyboard users (Req 15.4). */
+.dw-row-button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}

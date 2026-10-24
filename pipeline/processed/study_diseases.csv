@@ -1,0 +1,985 @@
+nctId,measureid,disease_label,match_status,exclusion_reason,matched_on,matched_term
+NCT00072683,DIABETES,Diabetes,excluded,not_mellitus,mesh,Diabetes Insipidus
+NCT00091637,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Acute Myocardial Infarction
+NCT00097292,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT00114881,CASTHMA,Asthma,included,,mesh,Asthma
+NCT00168857,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT00179400,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT00196742,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT00279786,CASTHMA,Asthma,included,,mesh,Status Asthmaticus
+NCT00325884,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT00357955,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT00357955,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT00358943,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT00385697,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT00418522,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT00432965,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT00540761,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT00595491,CASTHMA,Asthma,included,,mesh,Asthma
+NCT00673842,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT00707876,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT00762333,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Myocardial Infarction
+NCT00811889,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT00826280,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT00847730,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT00853632,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT00877903,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT00920621,CASTHMA,Asthma,included,,mesh,Asthma
+NCT00960401,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Atherosclerosis
+NCT01053936,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01064440,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT01106534,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01110538,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01113515,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT01114269,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01154374,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT01180361,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Atherosclerosis
+NCT01238432,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01258231,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT01283113,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01288560,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01326182,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01331005,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT01334918,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01419080,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT01467466,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01475786,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT01524276,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01524705,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01561690,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01565317,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT01606826,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01633177,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01633489,HIGHCHOL,High cholesterol,questionable,monogenic_or_rare,mesh,Cholesterol Ester Storage Disease
+NCT01694940,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT01694940,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,ancestor,Lipid Metabolism Disorders
+NCT01711593,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01728571,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01734785,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01762046,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01764633,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT01773707,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT01794143,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT01821924,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT01823016,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01843374,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT01867125,CASTHMA,Asthma,included,,mesh,Asthma
+NCT01868230,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT01904851,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT01937845,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT01967849,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02004561,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02004691,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,ancestor,Lipid Metabolism Disorders
+NCT02061436,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT02068885,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02081326,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02087826,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02089217,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT02100722,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT02104674,CASTHMA,Asthma,included,,mesh,Asthma
+NCT02148796,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT02173379,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT02285582,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT02291302,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT02302079,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02328599,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02344290,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT02427464,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT02464878,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT02520050,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02549495,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02551679,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT02555683,CASTHMA,Asthma,included,,mesh,Asthma
+NCT02561000,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT02570984,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT02587936,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02624869,HIGHCHOL,High cholesterol,excluded,child_only,mesh,Homozygous Familial Hypercholesterolemia
+NCT02638220,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT02734277,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT02760329,CASTHMA,Asthma,included,,mesh,Asthma
+NCT02787785,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02787785,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT02791204,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02791204,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,ancestor,Atherosclerosis
+NCT02795052,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT02805023,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT02836574,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02843035,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT02846545,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT02851862,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT02887859,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT02895867,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02896140,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT02905357,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT02914483,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT02915198,DIABETES,Diabetes,excluded,prediabetes,mesh,Prediabetic State
+NCT02915198,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT02923193,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT02925299,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02956590,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT02973633,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Myocardial Infarction
+NCT02981407,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT02986984,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02991534,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT02991534,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT02996877,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03006770,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03012529,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03028350,CASTHMA,Asthma,included,,mesh,"Asthma, Aspirin-Induced"
+NCT03046927,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03047369,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT03048825,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT03058289,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT03063749,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03064126,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT03066050,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03066596,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma Childhood
+NCT03078491,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03084523,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Intracranial Atherosclerosis
+NCT03085524,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03085524,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03089398,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03097419,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT03108456,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03119233,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03133156,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03146156,DIABETES,Diabetes,excluded,healthy_volunteers_only,ancestor,Diabetes Complications
+NCT03168776,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03170518,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT03171259,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03175536,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03193619,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03195140,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03199053,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03209609,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03217006,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03225196,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Subclinical Atherosclerotic Cardiovascular Disease
+NCT03226392,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03241459,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03242343,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03248128,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT03262415,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03263494,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03291223,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT03321513,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT03363464,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03366337,DIABETES,Diabetes,included,,condition_text,CKD Associated With Type 1 Diabetes
+NCT03371082,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03373045,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03409744,HIGHCHOL,High cholesterol,included,,mesh,Homozygous Familial Hypercholesterolemia
+NCT03417388,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03421561,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03422471,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes
+NCT03425539,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT03429543,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT03437798,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03446365,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT03455959,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03470441,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT03473223,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT03477604,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03507777,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT03524222,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03529019,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03530397,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT03540758,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03542682,DIABETES,Diabetes,included,,condition_text,Type1diabetes
+NCT03549559,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03551496,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03560466,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT03583814,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT03584464,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT03588286,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT03596450,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03604198,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03622580,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT03622593,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT03648450,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03653091,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03669042,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT03677180,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT03680859,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Gastroparesis
+NCT03694158,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03697109,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03705234,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT03710928,DIABETES,Diabetes,included,,condition_text,Type1diabetes
+NCT03717896,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Ketoacidosis
+NCT03737214,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT03738852,DIABETES,Diabetes,included,,condition_text,Type1 Diabetes Mellitus
+NCT03777722,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03809299,DIABETES,Diabetes,excluded,healthy_volunteers_only,mesh,Prediabetic State
+NCT03811561,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03814187,HIGHCHOL,High cholesterol,included,,mesh,Homozygous Familial Hypercholesterolemia
+NCT03818581,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03819153,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03860558,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03872401,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT03874715,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03875651,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT03875729,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT03890666,CASTHMA,Asthma,included,,mesh,Asthma
+NCT03895996,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03908125,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03914326,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03927690,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT03929601,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03936660,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT03937453,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT03947619,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT03959423,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT03982420,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Carotid Atherosclerosis
+NCT04023552,HIGHCHOL,High cholesterol,questionable,lab_value_only,condition_text,Cardiovascular Disease and Lipoprotein(a)
+NCT04028492,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Gastroparesis
+NCT04029480,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT04055090,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT04076813,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04082884,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04083339,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04093219,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04096248,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04101669,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04104243,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04108156,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT04124120,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04126148,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,ancestor,Coronary Disease
+NCT04129931,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04130737,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04148482,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04170543,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT04175626,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04184622,DIABETES,Diabetes,excluded,prediabetes,mesh,Prediabetic State
+NCT04185558,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT04187521,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT04195477,DIABETES,Diabetes,included,,condition_text,Diabetes Prevention
+NCT04196140,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04200313,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04200391,DIABETES,Diabetes,included,,condition_text,Type1diabetes
+NCT04203797,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04207099,DIABETES,Diabetes,questionable,complication_only,condition_text,Non Healing Diabetic Foot Ulcer
+NCT04219085,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT04219709,DIABETES,Diabetes,included,,condition_text,Type1diabetes
+NCT04221815,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT04224181,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Myocardial Infarction
+NCT04227379,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04227899,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04233034,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT04233918,HIGHCHOL,High cholesterol,excluded,child_only,mesh,Homozygous Familial Hypercholesterolemia
+NCT04255433,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04265261,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT04270682,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT04270942,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04278404,CASTHMA,Asthma,excluded,healthy_volunteers_only,condition_text,Asthma in Children
+NCT04279613,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04280029,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Coronary Disease
+NCT04282148,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04287621,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04303195,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Gastroparesis
+NCT04304105,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04305054,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT04308590,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04317274,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT04321512,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Myocardial Infarction
+NCT04325035,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT04331535,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04331535,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04334707,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04344301,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04356027,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04394715,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT04401332,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04409795,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04419467,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT04424290,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT04429503,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04432831,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT04450693,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Foot Infection
+NCT04455633,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04458766,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipoproteinemia Type II
+NCT04460326,DIABETES,Diabetes,included,,condition_text,Type 2 Diabetes Treated With Insulin
+NCT04460885,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04476108,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT04476472,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT04476862,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT04481737,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04481737,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT04496544,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04496687,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04496947,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,mesh,Atherosclerosis
+NCT04503551,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT04505865,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT04509674,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04523194,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT04527107,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04533503,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04535128,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04537923,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04541186,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT04560998,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04560998,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04562532,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04567550,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT04573920,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT04576442,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT04595370,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04595474,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04595968,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04596631,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04597918,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT04598893,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04599075,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04599192,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT04608474,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT04609878,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04609904,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04625660,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04628364,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT04629586,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04634240,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04646473,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04657003,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04660643,DIABETES,Diabetes,excluded,prediabetes,mesh,Prediabetic State
+NCT04661215,DIABETES,Diabetes,excluded,healthy_volunteers_only,condition_text,Diabetic Gastroparesis
+NCT04661358,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT04663867,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04678895,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT04682483,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT04688671,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT04692688,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04707469,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04710563,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04710940,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04717050,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes
+NCT04717050,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04718103,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04718389,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04719832,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04720534,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT04735835,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04742023,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04750577,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT04760626,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04763200,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04770532,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04773678,CASTHMA,Asthma,included,,condition_text,Moderate to Severe Persistent Asthma
+NCT04774159,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT04786262,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04789148,DIABETES,Diabetes,excluded,not_mellitus,mesh,"Diabetes Insipidus, Neurogenic"
+NCT04791358,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT04795531,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04800692,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT04802746,CASTHMA,Asthma,included,,condition_text,Participants With Mild Asthma
+NCT04809285,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04836546,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04837001,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT04848480,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04849312,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04857996,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04860336,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT04862689,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Coronary Disease
+NCT04864119,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Type 2 Myocardial Infarction
+NCT04865588,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT04873934,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT04880850,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT04891978,CASTHMA,Asthma,included,,mesh,Asthma
+NCT04916470,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04929249,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT04929379,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT04942379,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT04955691,DIABETES,Diabetes,included,,condition_text,"Type1diabetes, Low Carbohydrate Diet"
+NCT04959552,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04964557,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT04965597,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT04974528,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT04977583,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04977583,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT04982640,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT04983680,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT04985773,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Coronary Disease
+NCT04992065,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT04998201,HIGHCHOL,High cholesterol,included,,condition_text,Mixed Dyslipidemia
+NCT04998604,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05000021,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05007925,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05013229,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05030428,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05045742,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05046158,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT05055297,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05066997,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05067621,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05077657,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05079919,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT05088759,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT05097287,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05099770,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05100836,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT05114590,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05124808,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT05132361,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05137223,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05142722,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05144984,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05145478,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05151731,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05152888,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Stable Coronary Disease
+NCT05163912,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05168657,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05177094,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT05180591,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT05180721,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05188703,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT05197829,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05198674,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05202262,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05202509,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05206773,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT05208905,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05211869,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05218980,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,condition_text,Cholesterol
+NCT05220917,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes
+NCT05222906,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT05229718,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05232071,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05243680,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05251259,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05253677,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05254002,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05256654,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05259033,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05261126,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT05272241,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05274815,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05275400,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05278065,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05280496,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05280548,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT05284747,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT05286892,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05288361,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,ancestor,Coronary Disease
+NCT05292586,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05312164,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Coronary Disease
+NCT05313165,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05317455,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05317585,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05325294,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05329194,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05337826,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05341726,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05342545,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05347771,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT05348733,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05352815,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05354947,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05358353,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05360446,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05362058,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05363670,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05378529,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05383209,DIABETES,Diabetes,questionable,complication_only,condition_text,Nonproliferative Diabetic Retinopathy
+NCT05387837,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05388643,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT05390892,DIABETES,Diabetes,included,,condition_text,Type2Diabetes
+NCT05390892,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,ASCVD
+NCT05394519,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05399446,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05403502,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05406622,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05409131,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05409235,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT05413135,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05413239,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05415683,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05420051,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05420766,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT05425745,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05427370,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05433584,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05448105,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05451914,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05457855,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05462756,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05463705,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05463744,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05464186,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT05476276,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT05478252,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05480228,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Neuropathies
+NCT05485376,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT05485961,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05485961,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05486065,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05489172,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT05491668,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05501639,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05505734,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05514535,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05535478,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05540704,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05543265,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05544266,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05548205,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05552326,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT05553912,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05560971,DIABETES,Diabetes,excluded,prediabetes,mesh,Prediabetic State
+NCT05563246,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05565534,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05565742,HIGHCHOL,High cholesterol,questionable,broad_category,condition_text,Lipoprotein Disorder
+NCT05571293,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT05573100,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05575037,CASTHMA,Asthma,included,,mesh,"Asthma, Aspirin-Induced"
+NCT05577728,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05581303,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05583877,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05597943,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT05608044,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT05620576,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT05629572,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT05635370,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05649137,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05650229,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05656924,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05660538,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathy
+NCT05662332,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05681351,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT05681884,DIABETES,Diabetes,questionable,complication_only,condition_text,Non-Proliferative Diabetic Retinopathy
+NCT05683392,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05685381,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05692180,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05700916,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05701358,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05703880,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05706506,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05711108,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05712720,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05713266,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05713266,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05714059,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05723445,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis-related Diabetes
+NCT05727891,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05729516,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05734313,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05739383,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05742685,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05743244,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05748600,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05754190,DIABETES,Diabetes,excluded,healthy_volunteers_only,mesh,Diabetic Neuropathies
+NCT05754281,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05755711,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05755906,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05757102,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT05757713,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT05757908,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05758545,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT05759468,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05762107,DIABETES,Diabetes,included,,condition_text,Type 1 Diabetes Mellitus With Hypoglycemia
+NCT05763875,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT05768945,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05772169,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05776563,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05785832,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05790681,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05791201,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05791695,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT05799222,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05803421,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05811364,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05815342,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes
+NCT05819814,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05824572,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05832151,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Gastroparesis
+NCT05832437,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT05846802,DIABETES,Diabetes,included,,condition_text,Gastroparesis Due to Diabetes Mellitus Type I
+NCT05850091,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT05850494,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05851443,CASTHMA,Asthma,included,,mesh,Asthma
+NCT05852431,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT05858905,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05866536,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT05872620,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05874726,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05874726,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT05893498,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05899166,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT05901831,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT05904743,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05908331,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05916950,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT05925634,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT05929079,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05936151,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05946629,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05949515,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT05955339,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05966662,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT05966753,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT05968924,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT05971940,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT05972070,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT05975021,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT05997693,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Chronic Coronary Disease
+NCT05999032,CASTHMA,Asthma,excluded,child_only,condition_text,Pediatric Asthma
+NCT06000813,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06003153,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06008756,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT06019624,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06020014,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06023589,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT06027788,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06037252,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06041386,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06045221,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06046560,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06051058,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06052267,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06056297,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT06056908,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT06065540,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06074562,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathy
+NCT06074601,DIABETES,Diabetes,excluded,gestational,condition_text,Gestational Diabetes Mellitus in Pregnancy
+NCT06086795,HIGHCHOL,High cholesterol,excluded,healthy_volunteers_only,condition_text,Lipoproteins
+NCT06087575,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06089135,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Treatment in Calcified Coronary Disease
+NCT06098729,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06102005,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06104969,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06105931,DIABETES,Diabetes,included,,condition_text,type1diabetes
+NCT06109311,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06111586,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06112418,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06116916,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema (DME)
+NCT06118281,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Acute Myocardial Infarction (AMI)
+NCT06131372,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06132568,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT06136091,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT06138821,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06140303,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT06141434,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06150924,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Nephropathies
+NCT06160934,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06171412,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06172257,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT06173570,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT06177691,DIABETES,Diabetes,excluded,child_only,condition_text,Type1 Diabetes
+NCT06181240,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06190158,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06190717,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06190808,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06192108,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06196879,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06203002,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT06217302,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06221969,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06235112,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06236607,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06251323,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06253104,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT06260722,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06261957,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06269107,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06270836,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT06271590,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06273124,DIABETES,Diabetes,included,,condition_text,Type1diabetes
+NCT06283992,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06292013,HIGHCHOL,High cholesterol,included,,condition_text,Elevated Lp(a)
+NCT06297603,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06300450,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT06307665,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT06321302,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT06321575,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06323174,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06334133,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06340854,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06347003,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT06347016,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT06347133,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT06354660,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06358508,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06358859,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06362265,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT06368817,DIABETES,Diabetes,excluded,not_mellitus,mesh,Diabetes Insipidus
+NCT06372496,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06383390,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06383390,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT06385236,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06388460,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT06399692,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06399705,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06401668,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06402565,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT06408961,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06411210,DIABETES,Diabetes,included,,condition_text,Diabetes type1
+NCT06420245,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT06422689,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06432790,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT06438315,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT06445608,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06445946,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06449677,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis-related Diabetes
+NCT06451757,DIABETES,Diabetes,included,,condition_text,Maternally Inherited Diabetes and Deafness (MIDD)
+NCT06457139,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06457685,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06460948,DIABETES,Diabetes,excluded,healthy_volunteers_only,mesh,"Diabetes Insipidus, Neurogenic"
+NCT06473129,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06473779,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06481904,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06491914,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT06494488,HIGHCHOL,High cholesterol,questionable,broad_category,mesh,Lipid Metabolism Disorders
+NCT06496607,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06507943,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT06513026,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06525259,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT06529419,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06534411,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06535854,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06538376,CASTHMA,Asthma,questionable,overlap_syndrome,condition_text,Asthma COPD
+NCT06542874,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06557005,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06565156,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT06569290,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06571045,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema (DME)
+NCT06572228,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06579105,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06580184,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06582056,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06596512,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06601166,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06603571,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06604871,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT06610019,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT06612294,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06614322,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain (DPN)
+NCT06614569,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT06619860,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT06623396,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06625801,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06628362,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06628908,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT06637371,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06656364,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06658067,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06659679,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06659718,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06659744,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06664619,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06675175,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT06679270,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT06685783,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06686121,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06687590,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06691217,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,ASCVD
+NCT06691971,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06692764,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT06696443,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT06700889,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06713239,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06724172,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06734117,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT06739122,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT06743659,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT06747000,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT06748053,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06750289,CASTHMA,Asthma,included,,condition_text,Eosinophilic Asthma
+NCT06751589,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06769412,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT06777901,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06779630,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06779929,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06779929,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT06783309,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06790784,DIABETES,Diabetes,questionable,complication_only,condition_text,Proliferative Diabetic Retinopathy (PDR)
+NCT06797869,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06822439,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06822790,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT06825871,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06837181,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06843902,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06850922,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT06853990,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06858787,DIABETES,Diabetes,excluded,healthy_volunteers_only,mesh,"Diabetes, Gestational"
+NCT06858878,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06860516,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06865989,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06869057,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06878872,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06880770,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT06885177,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT06890975,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06892002,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06899503,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06903897,CASTHMA,Asthma,excluded,healthy_volunteers_only,condition_text,Pediatric Asthma
+NCT06903897,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06903897,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT06907147,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06909565,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT06914102,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06914141,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06914154,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06914895,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06915090,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06919354,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06926842,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06931275,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06932263,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06935084,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06939413,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06957080,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema (DME)
+NCT06957821,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT06959277,DIABETES,Diabetes,included,,condition_text,Peripheral Neuropathy With Type 2 Diabetes
+NCT06959316,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06965504,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT06966479,CASTHMA,Asthma,included,,mesh,Asthma
+NCT06967701,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT06980623,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT06988306,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06988462,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT06988462,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT06999954,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT07000123,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07000357,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07009106,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07009704,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT07011147,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07028749,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT07037433,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07043426,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07045194,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07046767,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT07048808,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07052942,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07058077,HIGHCHOL,High cholesterol,excluded,child_only,condition_text,Heterozygous Familial Hypercholesterolemia (HeFH)
+NCT07059806,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07061574,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07062887,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07064473,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07070830,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07076199,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07087431,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07088068,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07088718,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07096063,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07105228,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT07112872,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07120503,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07123480,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT07133984,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Multivessel Coronary Artery Disease
+NCT07136012,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Disease
+NCT07142252,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07144150,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT07155252,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07157774,HIGHCHOL,High cholesterol,included,,condition_text,Elevated Lp(a)
+NCT07161583,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT07174414,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT07187531,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07198009,HIGHCHOL,High cholesterol,included,,mesh,Hyperlipidemias
+NCT07203677,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes Mellitus
+NCT07203677,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07209475,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT07216391,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07216677,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT07219173,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07220759,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07222683,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07224061,CASTHMA,Asthma,excluded,child_only,condition_text,Asthma in Children
+NCT07224321,DIABETES,Diabetes,excluded,child_only,mesh,Diabetes Mellitus
+NCT07225283,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07228052,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07228117,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07231419,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT07232069,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Coronary Artery Disease Progression
+NCT07238556,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07238556,HIGHCHOL,High cholesterol,included,,mesh,Dyslipidemias
+NCT07269210,HIGHCHOL,High cholesterol,questionable,ancestor_only,ancestor,Dyslipidemias
+NCT07271043,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07271186,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07276724,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07276776,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07282600,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07282613,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07282639,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07284901,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07285018,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Peripheral Neuropathic Pain
+NCT07286578,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07296484,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07296744,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07301255,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07315997,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07323654,CASTHMA,Asthma,included,,condition_text,Eosinophilic Asthma
+NCT07330778,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07340320,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07348718,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07359846,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07360080,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07376226,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07376655,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07383701,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT07390110,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07415954,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07417618,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07417618,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,ASCVD
+NCT07417631,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07444567,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07448038,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07448974,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07449923,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT07449936,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT07461961,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Myocardial Infarction
+NCT07468188,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07481305,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07484074,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema (DME)
+NCT07485491,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,Type 2 Myocardial Infarction
+NCT07497880,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07512206,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07517263,HIGHCHOL,High cholesterol,questionable,lab_value_only,condition_text,Cardiovascular Disease and Lipoprotein(a)
+NCT07521475,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07525375,CASTHMA,Asthma,excluded,child_only,mesh,Asthma
+NCT07531251,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT07535502,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT07545005,HIGHCHOL,High cholesterol,excluded,child_only,mesh,Dyslipidemias
+NCT07546929,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07548372,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07553429,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema
+NCT07556159,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07559903,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07564414,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07568509,DIABETES,Diabetes,excluded,not_mellitus,mesh,"Diabetes Insipidus, Neurogenic"
+NCT07579702,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07590817,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 1"
+NCT07597239,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT07599293,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07599982,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07610577,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Myocardial Infarction
+NCT07613294,HIGHCHOL,High cholesterol,questionable,lab_value_only,condition_text,Lipoprotein(a)
+NCT07613840,HIGHCHOL,High cholesterol,excluded,ascvd_only,ancestor,Atherosclerosis
+NCT07614984,HIGHCHOL,High cholesterol,questionable,lab_value_only,condition_text,Lipoprotein(a)
+NCT07619131,HIGHCHOL,High cholesterol,included,,mesh,Hypercholesterolemia
+NCT07619495,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07632001,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Foot
+NCT07654374,DIABETES,Diabetes,included,,condition_text,Type2 Diabetes Mellitus
+NCT07660731,CASTHMA,Asthma,included,,mesh,Asthma
+NCT07662044,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07662109,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07662135,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07662213,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07668336,DIABETES,Diabetes,excluded,child_only,mesh,"Diabetes Mellitus, Type 2"
+NCT07676565,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07683026,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07684144,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07688070,DIABETES,Diabetes,questionable,secondary_cause,condition_text,Cystic Fibrosis Related Diabetes
+NCT07689877,DIABETES,Diabetes,included,,mesh,Diabetes Mellitus
+NCT07705555,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT07705607,DIABETES,Diabetes,questionable,complication_only,mesh,Diabetic Retinopathy
+NCT07743450,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07748208,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07758816,HIGHCHOL,High cholesterol,questionable,broad_category,ancestor,Lipid Metabolism Disorders
+NCT07783802,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07783802,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Atherosclerosis
+NCT07784270,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07794579,DIABETES,Diabetes,excluded,prediabetes,mesh,Prediabetic State
+NCT07797036,DIABETES,Diabetes,excluded,gestational,mesh,"Diabetes, Gestational"
+NCT07797335,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07808151,DIABETES,Diabetes,questionable,monogenic_or_rare,mesh,"Diabetes Mellitus, Insulin-Dependent, 12"
+NCT07817251,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 2"
+NCT07848529,HIGHCHOL,High cholesterol,excluded,ascvd_only,mesh,Coronary Artery Disease
+NCT07864168,DIABETES,Diabetes,included,,mesh,"Diabetes Mellitus, Type 1"
+NCT07867080,DIABETES,Diabetes,questionable,complication_only,condition_text,Diabetic Macular Edema (DME)
+NCT07883564,HIGHCHOL,High cholesterol,excluded,ascvd_only,condition_text,ASCVD

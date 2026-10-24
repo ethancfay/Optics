@@ -87,3 +87,77 @@ def write_outputs(pipeline_dir: Path, processed_dir: Path,
     finally:
         if staging is not None:
             shutil.rmtree(staging, ignore_errors=True)
+
+
+TMP_PREFIX = ".tmp-"
+
+
+def _write_error(target: Path, exc: OSError) -> PipelineError:
+    return PipelineError("could not write %s (%s)" % (target.name, _reason(exc)))
+
+
+def _make_temp(target: Path, data: bytes, temps: "list[Path]") -> Path:
+    """Create a temp file next to `target` (tracked in `temps` for cleanup),
+    then write and fsync `data` into it."""
+    fd, name = tempfile.mkstemp(dir=target.parent, prefix=TMP_PREFIX)
+    os.close(fd)
+    temp = Path(name)
+    temps.append(temp)
+    _write_bytes(temp, data)
+    return temp
+
+
+def _restore(target: Path, original: "bytes | None", temps: "list[Path]") -> None:
+    """Best-effort rollback of one already replaced target."""
+    try:
+        if original is None:
+            target.unlink()
+        else:
+            os.replace(_make_temp(target, original, temps), target)
+    except OSError:
+        pass
+
+
+def write_files_atomically(files: "list[tuple[Path, bytes]]") -> None:
+    """Write several files, possibly in different directories, all or nothing
+    (condition-grouping design § Atomic write; Req 9.11, 9.12, 14.11).
+
+    1. Write and fsync a temp file per target in the target's own directory.
+       A failure here leaves every target untouched.
+    2. Save the original bytes of each target (None if absent).
+    3. `os.replace` each temp onto its target in list order. If replace k
+       fails, targets 1..k-1 are restored (or deleted if they were absent).
+    4. Remove leftover temp files in `finally`.
+    """
+    targets = [Path(target) for target, _ in files]
+    temps: "list[Path]" = []
+    try:
+        staged: "list[Path]" = []
+        for target, (_, data) in zip(targets, files):
+            try:
+                staged.append(_make_temp(target, data, temps))
+            except OSError as exc:
+                raise _write_error(target, exc) from None
+
+        originals: "list[bytes | None]" = []
+        for target in targets:
+            try:
+                originals.append(target.read_bytes())
+            except FileNotFoundError:
+                originals.append(None)
+            except OSError as exc:
+                raise _write_error(target, exc) from None
+
+        for k, (target, temp) in enumerate(zip(targets, staged)):
+            try:
+                os.replace(temp, target)
+            except OSError as exc:
+                for done in range(k):
+                    _restore(targets[done], originals[done], temps)
+                raise _write_error(target, exc) from None
+    finally:
+        for temp in temps:
+            try:
+                temp.unlink()
+            except OSError:
+                pass

@@ -1,0 +1,415 @@
+/*
+ * Global visual design system (web/src/styles/visual-design steering).
+ *
+ * This is the single global stylesheet. It is imported once in `main.tsx`,
+ * AFTER `palette.css`, so every colour here resolves against the palette custom
+ * properties (the single source of truth for WCAG AA contrast). It styles the
+ * dashboard "chrome" and the shared page primitives (cards, headings, tables,
+ * links, buttons) by targeting the markup and class names the pages already
+ * render — it changes look only, never copy, data flow, or markup semantics.
+ *
+ * Component-scoped stylesheets (Layout.css, Investigate.css, DotWhiskerChart.css)
+ * still own their component specifics; this file provides the shared baseline
+ * they sit on top of.
+ */
+
+/* --- Reset + document ----------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Numbers read as aligned columns of tabular figures. */
+body {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * #main is focused programmatically on every route change (Layout moves focus
+ * there with tabIndex={-1}); it must never show the orange focus outline just
+ * for being the landing target. Real controls keep their visible --focus ring.
+ */
+main:focus {
+  outline: none;
+}
+
+/* --- Content column ------------------------------------------------------- */
+
+/*
+ * The routed page content sits in a centered column. `.layout__main` is the
+ * <main> wrapper Layout renders on every page.
+ */
+.layout__main {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+@media (max-width: 600px) {
+  .layout__main {
+    padding: 24px 16px 32px;
+  }
+}
+
+/* --- Type scale ----------------------------------------------------------- */
+
+h1,
+h2,
+h3 {
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 650;
+  margin: 0 0 12px;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+/* --- Links ---------------------------------------------------------------- */
+
+/*
+ * Standalone/navigational links underline on hover only. Inline body links (a
+ * link nested directly inside a paragraph or list item) stay underlined at all
+ * times so they are distinguishable without relying on colour (accessibility).
+ */
+a {
+  color: var(--accent);
+}
+
+a:where(:not(:hover)) {
+  text-decoration: none;
+}
+
+p a,
+li a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* --- Cards ---------------------------------------------------------------- */
+
+/*
+ * Content sections sit in cards. Every routed page is a single top-level block
+ * (`.home-page`, `.where-page`, `.method-page`, `.build-page`, `.not-found-page`)
+ * or a top-level <section>/<article> rendered straight into <main>; style those
+ * as cards so each page reads as a panel on the --surface background.
+ */
+.layout__main > .home-page,
+.layout__main > .where-page,
+.layout__main > .method-page,
+.layout__main > .build-page,
+.layout__main > .not-found-page,
+.layout__main > section,
+.layout__main > article {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+/* Inner sections of a multi-section page are spaced, not nested cards. */
+.method-page > section,
+.build-page > section {
+  margin-top: 24px;
+}
+
+.method-page > section:first-of-type,
+.build-page > section:first-of-type {
+  margin-top: 16px;
+}
+
+/* --- Small / muted text --------------------------------------------------- */
+
+.home-finding-note,
+.inv-definition,
+.method-page__fetched,
+.footer__disclaimer,
+.footer__data-as-of,
+.footer__sources-unavailable {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+/*
+ * Shared table styling for the Investigate breakdown tables (.inv-table), the
+ * chart/map text-alternative tables (.dw-table, .county-map__table), and the
+ * Evidence study table (.evidence-table). Full width, --surface header row,
+ * 12px cells, --border row rules, numbers right-aligned.
+ */
+.inv-table,
+.dw-table,
+.county-map__table,
+.evidence-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 12px;
+}
+
+.inv-table caption,
+.dw-table caption,
+.county-map__table caption,
+.evidence-table caption {
+  text-align: left;
+  color: var(--ink);
+  font-weight: 600;
+  padding: 0 0 8px;
+}
+
+.inv-table th,
+.dw-table th,
+.county-map__table th,
+.evidence-table th {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.inv-table td,
+.dw-table td,
+.county-map__table td,
+.evidence-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+
+/*
+ * Right-align the numeric column. Both tables put the count/value in the
+ * second column; the dw-table's first column is the condition control.
+ */
+.inv-table td:last-child,
+.inv-table th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Buttons -------------------------------------------------------------- */
+
+/*
+ * Primary button. The Home "see every disease" link is styled as a primary
+ * button via `.home-what-link a` below; this class is available for any button
+ * element that should read as the primary action.
+ */
+.btn-primary,
+.home-what-link a {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: var(--radius-control);
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+.home-what-link a:hover {
+  text-decoration: none;
+  filter: brightness(0.94);
+}
+
+/* --- Home hero ------------------------------------------------------------ */
+
+/*
+ * Home is a hero card: the h1 question framing, the one-line problem statement,
+ * then the top finding with its range shown as a big tabular-number stat, and
+ * the primary button. All copy is unchanged; only the presentation differs.
+ */
+.home-problem-statement {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+.home-top-finding {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/*
+ * The top-finding sentence embeds the low and high index values in <strong>
+ * tags. Render those as the big stat: large, bold, tabular numbers in the
+ * accent colour so the range is the visual focal point of the hero.
+ */
+.home-top-finding p:first-of-type strong {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+/* The disease name is the first <strong>; keep it as emphasis, not a number. */
+.home-top-finding p:first-of-type strong:first-of-type {
+  font-size: inherit;
+  color: var(--ink);
+}
+
+.home-what-link {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+/* --- Investigate ---------------------------------------------------------- */
+
+.inv-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.inv-count-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* --- Where ---------------------------------------------------------------- */
+
+.where-intro {
+  color: var(--muted);
+  max-width: 70ch;
+  margin-bottom: 24px;
+}
+
+/* --- Method --------------------------------------------------------------- */
+
+.method-page__intro {
+  color: var(--muted);
+  max-width: 70ch;
+}
+
+/* The index formula, shown as a monospace equation block. */
+.method-page__equation {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+
+.method-page__source-links {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.method-page__source-links li {
+  margin-bottom: 4px;
+}
+
+.method-page__fetched {
+  white-space: nowrap;
+}
+
+/* --- Build ---------------------------------------------------------------- */
+
+.build-page__intro {
+  color: var(--muted);
+  max-width: 70ch;
+}
+
+.build-page__links {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.build-page__links li {
+  margin-bottom: 4px;
+}
+
+/* --- Footer --------------------------------------------------------------- */
+
+.footer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 24px 16px;
+  }
+}
+
+.footer__disclaimer {
+  margin: 0 0 8px;
+}
+
+/* Sources render as inline links separated by " · ". */
+.footer__source-links {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: inline;
+}
+
+.footer__source-links li {
+  display: inline;
+}
+
+.footer__source-links li:not(:last-child)::after {
+  content: " · ";
+  color: var(--muted);
+}
+
+.footer__data-as-of {
+  margin: 0;
+}

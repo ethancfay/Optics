@@ -1,0 +1,42 @@
+{
+  "check_date": "2026-10-24",
+  "threshold": 0.8,
+  "diseases": [
+    {
+      "measureid": "CASTHMA",
+      "disease_label": "Asthma",
+      "recall_query_term": "Asthma",
+      "found_count": 35,
+      "included_count": 24,
+      "ctgov_count": 35,
+      "ratio_found": 1.0,
+      "ratio_included": 0.686,
+      "flagged": false,
+      "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=Asthma&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
+    },
+    {
+      "measureid": "DIABETES",
+      "disease_label": "Diabetes",
+      "recall_query_term": "Diabetes",
+      "found_count": 157,
+      "included_count": 114,
+      "ctgov_count": 155,
+      "ratio_found": 1.013,
+      "ratio_included": 0.735,
+      "flagged": false,
+      "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=Diabetes&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
+    },
+    {
+      "measureid": "HIGHCHOL",
+      "disease_label": "High cholesterol",
+      "recall_query_term": "hypercholesterolemia OR hyperlipidemia OR dyslipidemia OR LDL",
+      "found_count": 123,
+      "included_count": 11,
+      "ctgov_count": 15,
+      "ratio_found": 8.2,
+      "ratio_included": 0.733,
+      "flagged": false,
+      "request_url": "https://clinicaltrials.gov/api/v2/studies?query.cond=hypercholesterolemia+OR+hyperlipidemia+OR+dyslipidemia+OR+LDL&query.locn=Massachusetts&filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING&countTotal=true&pageSize=1&fields=NCTId"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+/*
+ * Styles for the CountyMap choropleth, its disease selector, its distance
+ * legend, and its text-alternative table (Req 9, 10).
+ *
+ * Colours reference the palette custom properties in `src/styles/palette.css`
+ * (single source of truth, WCAG AA contrast), and the chrome follows the
+ * visual-design steering: 8px control radius, --border hairlines, the 4/8/12/16/
+ * 24 spacing scale, and 14px --muted for secondary text.
+ *
+ * Restyle only: markup, copy, ARIA wiring and data flow are untouched here, so
+ * the legend and table text keep carrying the meaning the fills show
+ * (Req 9.5, 15.2). Table cell/row styling is shared and lives in base.css.
+ */
+
+/* --- Section -------------------------------------------------------------- */
+
+.county-map {
+  margin: 0;
+}
+
+/* --- Disease selector (Req 9.2, 10.4) ------------------------------------- */
+
+/*
+ * The label and its <select> sit on one row, wrapping to a stack only when the
+ * viewport is too narrow to keep both readable.
+ */
+.county-map__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 16px;
+}
+
+.county-map__controls label {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/*
+ * Control styling from the design system: 8px radius, 1px --border, 8px 12px
+ * padding, page font. The native select chrome is kept (no `appearance: none`)
+ * so the disclosure indicator and platform keyboard behaviour are preserved.
+ */
+.county-map__select {
+  font: inherit;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--ink);
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+.county-map__select:hover {
+  background-color: var(--surface);
+}
+
+/* Visible --focus ring, matching the nav links and chart row buttons. */
+.county-map__select:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* --- Distance legend (Req 9.5, 15.2) -------------------------------------- */
+
+/*
+ * One horizontal row of "coloured square + range label" pairs. Colour is never
+ * the only cue: the range text sits beside every square and the unknown state
+ * keeps its hatch, so the legend still reads correctly in greyscale.
+ */
+.county-map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.county-map__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* The bucket colour itself is set inline from --seq-1..--seq-5; this is the
+ * square's shape, with a hairline so the lightest bucket reads against --card. */
+.county-map__swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(16, 24, 40, 0.15);
+  border-radius: 3px;
+}
+
+/*
+ * Unknown swatch: the same --unknown base and 45deg ink hatch the SVG paints
+ * into unknown counties, so legend and map agree and the state is textured
+ * rather than merely greyer (Req 9.3, 9.4, 15.2).
+ */
+.county-map__swatch--unknown {
+  background-color: var(--unknown);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--ink) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+/* --- Map ------------------------------------------------------------------ */
+
+/*
+ * The choropleth sits on its own inset plate, capped at 700px and centred so
+ * the projection never stretches across the full content column.
+ */
+.county-map__svg {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  margin: 0 auto 24px;
+  padding: 12px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+/* County outlines are sub-pixel; rounding the joins keeps borders clean. */
+.county-map__county {
+  stroke-linejoin: round;
+}
+
+/* --- Text alternative table (Req 10.1-10.3) -------------------------------- */
+
+/*
+ * County names are ROW headers, so they must not pick up the --surface tint the
+ * shared th rule gives column headers — otherwise the first column reads as a
+ * striped band. The row-header weight from base.css still marks them as labels.
+ */
+.county-map__table tbody th {
+  background: transparent;
+}
+
+/* --- Empty state (Req 9.6) ------------------------------------------------ */
+
+.county-map__empty {
+  margin: 0;
+  padding: 12px 16px;
+  color: var(--muted);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  font-size: 14px;
+}
