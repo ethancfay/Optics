@@ -163,3 +163,30 @@ def ctgov_query_pages(draw) -> list[dict]:
     q1 = draw(st.lists(page, min_size=1, max_size=3))
     q2 = draw(st.lists(page, min_size=1, max_size=3))
     return q1 + q2
+
+# --- CSV round-trip generators (P5, Req 7.7, 13.4) ------------------------------
+# Tricky fragments are sampled often; general text excludes surrogates (Cs),
+# which cannot be encoded as UTF-8 and so are not valid row values.
+CSV_TRICKY = ["", "|", "\\", "[", "]", "[]", '["a","b"]', '[""]', ",", '"', '""',
+              "\r", "\n", "\r\n", "é", "Ünïcödé", "日本語", "😀", "a,b", 'say "hi"',
+              "\\n", "null", " ", "\u2028", "\x00"]
+csv_text = st.one_of(
+    st.sampled_from(CSV_TRICKY),
+    st.text(alphabet=st.characters(blacklist_categories=("Cs",)), max_size=12),
+    st.lists(st.sampled_from(CSV_TRICKY), max_size=4).map("".join),
+)
+csv_lists = st.lists(csv_text, max_size=4)
+
+
+def _rows_of(row_type, list_fields: frozenset[str]):
+    from dataclasses import fields as dc_fields
+    return st.builds(row_type, **{
+        f.name: (csv_lists if f.name in list_fields else csv_text)
+        for f in dc_fields(row_type)
+    })
+
+
+def csv_rows(kind: str):
+    """Rows of one table kind with tricky strings in every field."""
+    from pipeline.io.csv_writer import LIST_COLUMNS, ROW_TYPES
+    return st.lists(_rows_of(ROW_TYPES[kind], LIST_COLUMNS[kind]), max_size=6)

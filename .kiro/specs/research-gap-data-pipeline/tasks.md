@@ -131,7 +131,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 4.1–4.9, 5.1–5.11, 13.2, 13.3, 13.12_
 
-- [-] 8. PLACES_Transformer
+- [x] 8. PLACES_Transformer
   - Implement `pipeline/transform/places_transformer.py` as specified in design § PLACES_Transformer:
     - The MA + `CrdPrv` filter.
     - Identifier validation, and `locationid` converted to a 5-character FIPS string.
@@ -147,7 +147,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 6.1–6.8, 13.11_
 
-- [ ] 9. CSV_Writer and CSV_Reader
+- [-] 9. CSV_Writer and CSV_Reader
   - Implement `pipeline/io/csv_writer.py` as specified in design § CSV_Writer:
     - Column order.
     - Sorting with the tie-breakers.

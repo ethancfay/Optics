@@ -442,9 +442,25 @@ Implementation details fixed in task 8:
 ### CSV_Writer (`pipeline/io/csv_writer.py`), Req 7
 
 ```python
-def encode_rows(kind: Literal["studies","sites","places"], rows) -> EncodedTable  # header + list[list[str]]
+@dataclass(frozen=True)
+class EncodedTable:
+    kind: str                  # "studies", "sites" or "places"
+    header: tuple[str, ...]
+    rows: list[list[str]]      # cell strings, in sorted order
+    file_name: str             # property: studies.csv, sites.csv or places_ma.csv
+
+def encode_rows(kind: Literal["studies","sites","places"], rows) -> EncodedTable
 def serialize(table: EncodedTable) -> bytes
+COLUMNS: dict[str, tuple[str, ...]]      # from the dataclass field order
+LIST_COLUMNS: dict[str, frozenset[str]]  # shared with the CSV_Reader
+FILE_NAMES: dict[str, str]
 ```
+
+Implementation details fixed in task 9:
+
+- `EncodedTable` carries its `kind`, so the PII_Guard can find the list columns and the file name of each table without a second argument (Req 8.1, 8.4).
+- `COLUMNS` comes from the field order of `StudyRow`, `SiteRow`, and `PlacesRow` (Req 7.2). The `studies` list columns are `phases`, `stdAges`, `conditions`, `interventionTypes`, `interventionNames`, `meshTerms`, `meshIds`, `ancestorTerms`, and `ancestorIds` (Req 4.7, 7.4). `sites` and `places` have no list columns.
+- `csv_writer.py` does not write files. The atomic output step writes the bytes from `serialize` and names the file on failure (Req 7.10).
 
 - Sorting (Req 7.8) uses plain `str` comparison, which is Unicode code point order:
   - Studies: `nctId`.
@@ -460,6 +476,13 @@ def serialize(table: EncodedTable) -> bytes
 ### CSV_Reader (`pipeline/io/csv_reader.py`), Req 7.6
 
 The reader opens the file with `newline=""` and parses it with `csv.reader`. It maps each data line to a dict keyed by the header. Cells in the known list columns of each table are decoded with `json.loads`, and `[]` decodes to an empty list. The set of list columns is defined once in `csv_writer.py` and shared with the reader.
+
+```python
+def read_csv(path, kind: Literal["studies","sites","places"]) -> list[dict[str, object]]
+```
+
+- The caller passes the table `kind`, which selects the list columns (Req 7.6).
+- The reader raises `PipelineError` if the header row differs from `COLUMNS[kind]`, if a line has the wrong number of cells, or if a list cell is not a JSON array of strings. Messages name the file, line, and column only, never cell text (Req 3.3).
 
 ### PII_Guard (`pipeline/transform/pii_guard.py`), Req 8
 
