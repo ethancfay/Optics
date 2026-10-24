@@ -179,7 +179,16 @@ class CtgovFetchResult:
     removal_counts: RemovalCounts
 
 def fetch_ctgov(client: HttpClient, raw_store, fetch_date: datetime) -> CtgovFetchResult
+
+def recent_completed_cutoff(fetch_date: datetime) -> date
+def q2_lower_bound(fetch_date: datetime) -> date     # cutoff minus 1 day
+def is_allowed_state(state: object) -> bool          # Req 5.3 comparison
+ALLOWED_STATES: frozenset[str]                        # casefolded names and abbreviations
 ```
+
+- `recent_completed_cutoff`, `ALLOWED_STATES`, and `is_allowed_state` live in this module because the fetcher (Q2 lower bound) and the fetch checks use them first. The Study_Transformer imports them from here (steps 4 and 5), so the cutoff and the state comparison are defined once.
+- `QueryResult.total_count` is `None` when page 1 has no `totalCount`, or a value that is not an `int` (a `bool` counts as not an `int`).
+- `Q2_SERVER_CUTOFF` is read when the Q2 parameters are built, so tests can set it to `False` with `monkeypatch`.
 
 The fetcher runs Q1 to completion, then Q2. Each query builds its parameters once, and only `pageToken` changes between pages of the same query (Req 1.2):
 
@@ -229,8 +238,10 @@ Per-page loop, run separately for each query. Page numbers, seen tokens, and the
 2. Parse with `json.loads`. If parsing fails, or the result has no `studies` list, stop with the URL and page number (Req 1.6, 3.5). Nothing from the page is written.
 3. Scrub the page (Contact_Scrubber), then call `raw_store.write_page("ctgov_q1" or "ctgov_q2", n, page)` (Req 10.1). This happens before the next request.
 4. On the query's page 1, read `totalCount`. A non-integer or `bool` value fails the check in Req 1.10, which runs after the fetch.
-5. Read `nextPageToken`. If the field is absent, null, or `""`, stop paging this query (Req 1.3). If the token was seen earlier in this query, stop with an error naming the token and the query (Req 1.5). If this is the query's page 100 and a token is present, stop with an error stating the 100-page limit (Req 1.7).
-6. HTTP 400 from `HttpStatusError`: stop with the URL, status 400, and the hint "check parameter filter.geo". For Q2 the hint is "check parameter filter.geo or filter.advanced" (Req 1.11).
+5. Read `nextPageToken`. If the field is absent, null, or `""`, stop paging this query (Req 1.3). A token that is present but not a string stops the run with the URL and page number. If the token was seen earlier in this query, stop with an error naming the token and the query (Req 1.5). If this is the query's page 100 and a token is present, stop with an error stating the 100-page limit (Req 1.7).
+6. HTTP 400 from `HttpStatusError`: stop with the URL, status 400, and the hint "check parameter filter.geo". For Q2 the hint is "check parameter filter.geo or filter.advanced" (Req 1.11). Any other `HttpStatusError` is passed on unchanged (Req 9.4).
+
+Error messages name the query as `Q1` or `Q2` together with the per-query page number, for example "Q2 page 3 of <URL>".
 
 Merge: the transformers receive the Q1 pages followed by the Q2 pages. Deduplication by `nctId` happens in the Study_Transformer (Req 4.5). A study can appear in both queries if its status changes between the two queries. In that case the Q1 copy is kept.
 
@@ -239,6 +250,13 @@ The Fetch_Date is captured as `datetime.now(timezone.utc)` once, before the firs
 ### Fetch checks (in `__main__.py`), Req 1.10, 1.12
 
 These checks run after the CTGov pages are available (network or offline) and before transformation:
+
+```python
+def check_total_counts(pages_by_query: dict[str, list[dict]]) -> None     # Req 1.10
+def check_allowed_states(pages_by_query: dict[str, list[dict]]) -> None   # Req 1.12
+```
+
+Both take `{"q1": [...pages], "q2": [...pages]}`, built from `CtgovFetchResult.queries` in a network run or from `RawCache.ctgov_q1_pages` and `ctgov_q2_pages` in Offline_Mode. Both modes read `totalCount` from the query's page 1, so the check is the same code path in each. Each raises `PipelineError` on failure.
 
 - Req 1.10, per query: page 1 of each query must have an integer `totalCount`, and that query's total number of `studies` elements across its pages must equal it. Duplicates and records without an `nctId` are counted at this stage, because the count is of records as received. Studies that appear in both queries count once in each query. On failure, the message names the query and gives both numbers. In Offline_Mode, `totalCount` is read from each query's stored page 1, which keeps that field.
 - Req 1.12: at least one record must have a location whose state matches Allowed_States, using the Req 5.3 comparison. Otherwise the run stops with a message that names `filter.geo`.
@@ -347,8 +365,8 @@ Steps, in this order:
 1. Flatten the Q1 records, then the Q2 records. Within each query, records are ordered by page, then by position within the page.
 2. Drop records with an absent or empty `nctId` (Req 4.9).
 3. Deduplicate by `nctId` across both queries, keeping the first record. The later records and their sites are discarded (Req 4.5). This step runs before the status filter, so "first record" means first in the Q1-then-Q2 order.
-4. Apply the status filter (Req 4.1). Keep records with `overallStatus` in `{RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED}`, compared exactly. A `COMPLETED` record is kept only if `lastUpdatePostDateStruct.date` matches `^\d{4}-\d{2}-\d{2}$`, parses with `date.fromisoformat`, and is on or after the cutoff. The cutoff is `recent_completed_cutoff(fetch_date)`: the UTC date minus 3 years, with 29 February mapped to 28 February. Offline_Mode uses the stored Fetch_Date, so offline output stays byte-identical (Req 10.5). Every `studyType` is kept, including an empty or absent one.
-5. Build sites (Req 5). Keep a location only if its stripped, casefolded `state` is one of `massachusetts, ma, rhode island, ri, new hampshire, nh, connecticut, ct, new york, ny, vermont, vt` (Req 5.3). Each kept location becomes a Site_Row with stripped text values. A missing or empty value becomes `""`.
+4. Apply the status filter (Req 4.1). Keep records with `overallStatus` in `{RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED}`, compared exactly. A `COMPLETED` record is kept only if `lastUpdatePostDateStruct.date` matches `^\d{4}-\d{2}-\d{2}$`, parses with `date.fromisoformat`, and is on or after the cutoff. The cutoff is `recent_completed_cutoff(fetch_date)` from `ctgov_fetcher.py`: the UTC date minus 3 years, with 29 February mapped to 28 February. Offline_Mode uses the stored Fetch_Date, so offline output stays byte-identical (Req 10.5). Every `studyType` is kept, including an empty or absent one.
+5. Build sites (Req 5). Keep a location only if `is_allowed_state` from `ctgov_fetcher.py` accepts it, that is, its stripped, casefolded `state` is one of `massachusetts, ma, rhode island, ri, new hampshire, nh, connecticut, ct, new york, ny, vermont, vt` (Req 5.3). Each kept location becomes a Site_Row with stripped text values. A missing or empty value becomes `""`.
    - `siteStatus` is the location `status`, stripped. All statuses are kept (Req 5.2).
    - Geo: if `geoPoint.lat` and `geoPoint.lon` are both `int` or `float` (not `bool`) and finite, they are range-checked. Within range gives `ok`. Out of range gives `out_of_range` with empty coordinates (Req 5.7). Anything else gives `missing_geo` with empty coordinates (Req 5.4).
    - Deduplicate on (`nctId`, `facility`, `city`, `state`, `zip`), comparing the stripped values and keeping the first (Req 5.10).

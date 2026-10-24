@@ -13,6 +13,7 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 
+from pipeline.data.ctgov_fetcher import is_allowed_state
 from pipeline.errors import PipelineError
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -48,6 +49,51 @@ def build_parser() -> argparse.ArgumentParser:
         help="rerun from the cached pages in pipeline/raw/ with no network requests",
     )
     return parser
+
+
+def check_total_counts(pages_by_query: "dict[str, list[dict]]") -> None:
+    """Req 1.10: each query's page 1 has an integer totalCount equal to its fetched records.
+
+    `pages_by_query` maps "q1" and "q2" to that query's scrubbed pages, from a
+    network fetch or the Raw_Store. Records are counted as received, so
+    duplicates and records without an nctId count (design § Fetch checks).
+    """
+    for query, pages in pages_by_query.items():
+        label = query.upper()
+        total = pages[0].get("totalCount") if pages else None
+        fetched = sum(len(page.get("studies", [])) for page in pages)
+        if type(total) is not int:
+            raise PipelineError(
+                "%s: page 1 has no integer totalCount (fetched %d records)" % (label, fetched)
+            )
+        if fetched != total:
+            raise PipelineError(
+                "%s: fetched %d records but totalCount is %d; rerun the pipeline"
+                % (label, fetched, total)
+            )
+
+
+def check_allowed_states(pages_by_query: "dict[str, list[dict]]") -> None:
+    """Req 1.12: at least one record has a site whose state is in Allowed_States (Req 5.3)."""
+    for pages in pages_by_query.values():
+        for page in pages:
+            for study in page.get("studies", []):
+                for location in _locations(study):
+                    if isinstance(location, dict) and is_allowed_state(location.get("state")):
+                        return
+    raise PipelineError(
+        "no study has a site in Allowed_States (MA, RI, NH, CT, NY, VT); "
+        "check parameter filter.geo"
+    )
+
+
+def _locations(study: object) -> list:
+    node: object = study
+    for key in ("protocolSection", "contactsLocationsModule", "locations"):
+        if not isinstance(node, dict):
+            return []
+        node = node.get(key)
+    return node if isinstance(node, list) else []
 
 
 def _run_stages(args: argparse.Namespace, paths: Paths, client: object) -> None:
