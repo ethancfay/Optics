@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [],
+      "_comment_allowed_domains": "Network access is limited to clinicaltrials.gov and data.cdc.gov (cdc.gov) per the Research Gap Index health-safety rules. mcp-server-fetch has no built-in allowlist; enforce the limit with scripts/allow_fetch_domains.py wired as a PreToolUse hook on the fetch tool (see steering/research-gap-data.md). No secrets belong in this file."
+    }
+  }
+}

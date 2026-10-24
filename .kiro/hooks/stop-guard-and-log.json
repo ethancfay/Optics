@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Guard terms and contact data on stop",
+      "trigger": "Stop",
+      "description": "When the agent stops, scan files changed this session for forbidden claim terms and contact data, then append one summary line to KIRO_LOG.md.",
+      "action": {
+        "type": "agent",
+        "prompt": "The agent run has stopped. Do a quick compliance pass, following the #health-safety steering rules:\n\n1. Identify the files changed during this session (use `git status --porcelain` and `git diff` to see staged, unstaged, and newly created files).\n\n2. Scan the content of those changed files for:\n   - Forbidden claim terms (case-insensitive): \"neglected\", \"underfunded\", \"needs more trials\". These framing/claim words violate the \"index, not prediction/recommendation\" rule.\n   - Contact data: email addresses, phone numbers, and investigator/contact/official names. Per health-safety, these must never be read, stored, logged, or displayed. Do NOT reproduce any matched contact value in your output or in the log — refer to it by file and field only.\n\n3. If you find any forbidden term or contact data, flag it clearly in your response: list the file and the kind of violation (never the raw contact value), and recommend removing it. Do not auto-commit changes that contain violations.\n\n4. Append exactly ONE line to KIRO_LOG.md summarizing this check. Use the existing pipe-delimited row format and a UTC timestamp:\n   | <UTC time, e.g. 2026-10-24T18:30Z> | Kiro | Stop hook | <one short sentence: what was checked and whether any forbidden terms or contact data were found> | |\n\nKeep the summary factual and free of any actual contact values."
+      }
+    }
+  ]
+}
