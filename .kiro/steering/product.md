@@ -2,60 +2,82 @@
 
 Research Gap Index is a burden-first research intelligence prototype. It compares
 how common selected diseases are among Massachusetts adults with observable
-clinical research activity, and helps researchers investigate why an apparent
-mismatch appears in the available public data.
+Massachusetts-associated clinical study activity, then decomposes that activity
+(study type, drug interventions, status, phase) so researchers can see what the
+public records do and do not explain about an apparent mismatch.
 
 ## User
 Pharmaceutical and biotech R&D strategy and clinical-development professionals
-doing early opportunity screening. They use it to decide what to investigate
-next, not to make investment or drug-development decisions.
+doing exploratory research-landscape review. They use it to decide what to
+investigate next, not to make investment or drug-development decisions.
 
 ## Core question
-Why might some diseases with substantial measured burden in Massachusetts show
-comparatively limited observable clinical research activity?
+For common diseases with substantial adult prevalence in Massachusetts, what does
+the composition of MA-associated clinical research look like, and which parts of
+an apparent count-based mismatch can public records explain?
 
 ## What "gap" means
-A descriptive discrepancy between measured burden and observed research activity.
-It is NOT proof of underfunding, unmet therapeutic need, commercial opportunity,
-or a reason to develop a drug. Do not imply an optimal burden-to-trial ratio.
+A descriptive discrepancy between adult prevalence and observed study activity.
+It is NOT proof of underfunding, unmet medical need, need for a new drug,
+commercial opportunity, or sponsor motives. Do not imply an optimal
+burden-to-trial ratio. Index, never prediction or recommendation.
+
+## Differentiation
+Focus is the composition of therapeutic research relative to prevalence, with a
+traceable drill-down to NCT records. Location/maps are not the hero feature. Do
+not claim the general capability is industry-first.
 
 ## Scope
-- Massachusetts proof of concept. 3,145 recruiting studies list a Massachusetts
-  location (ClinicalTrials.gov v2, query.locn=Massachusetts,
-  filter.overallStatus=RECRUITING, retrieved 2026-10-24).
-- 3-5 common diseases with a direct CDC PLACES measure match (candidates:
-  asthma, high cholesterol, high blood pressure, diabetes, depression).
-- Burden = CDC PLACES crude prevalence, adults 18+, county level. DALYs/severity
-  are not included; say so in the app.
-- MA trial activity does not represent all research relevant to MA patients.
+- Massachusetts only for all published metrics. The fetch covers a 150-mile
+  radius and six states; only MA sites count toward MA metrics.
+- 3,145 recruiting studies list a Massachusetts location (ClinicalTrials.gov v2,
+  query.locn=Massachusetts, filter.overallStatus=RECRUITING, retrieved 2026-10-24).
+- Diseases: start with 3 (asthma, high cholesterol, diabetes) using
+  burden_test/inclusion_rules.md. Add high blood pressure / depression only if
+  their precision check passes. Fallback: 3 -> 2 -> 1 fully demonstrated disease.
+- Burden = CDC PLACES 2025 county crude prevalence, adults 18+ (totalpop18plus),
+  with the data year per measure (2022 or 2023). DALYs/severity are not included;
+  say so in the app.
+- MA study activity does not represent all research relevant to MA patients.
 
 ## MVP features (user flow)
-1. Burden vs activity (WHAT): per disease, distinct studies (NCT IDs) per 100,000
-   affected adults as a low-high range from PLACES confidence limits:
-   [T/(N*p_high), T/(N*p_low)] * 100,000. Sites shown as a local breakdown.
-2. Investigate: for a selected disease, breakdown by overall status, study type,
-   intervention type and phase, and MA vs US study counts (same filters).
-   Label findings "possible explanation from available records" or
-   "cannot determine from public data".
-3. Evidence: list of contributing NCT IDs with links, filters, mapping choices,
-   missing data and "Data as of" date.
-4. WHERE (secondary): county map of miles to the nearest verified site for the
-   disease; show "unknown" when no matching site exists, never 0.
-5. Method page: crosswalk, filters, formulas, limits.
+1. Select disease: MA adult crude prevalence, population-weighted across
+   counties as sum(pop18 x prevalence) / sum(pop18), with data year; and distinct
+   MA-associated studies (NCT IDs) per 100,000 affected adults as a low-high
+   range [T/(N*p_high), T/(N*p_low)] x 100,000.
+2. Decompose activity (distinct NCT IDs each): all eligible -> interventional
+   -> DRUG intervention -> BIOLOGICAL (separate) -> by status (active vs
+   recently updated completed) -> by reported phase (NA shown as NA; overlaps
+   disclosed). "Drug" means a study lists a DRUG-type intervention; it may be an
+   existing drug, comparator or placebo.
+3. Evidence table: NCT ID, title, status, phases, reported intervention names,
+   link. Every count links to its list of studies.
+4. Limitations: observed patterns vs what public records cannot explain
+   (funding, sponsor motives, unmet need). Prevalence, not severity.
+5. Method & sources page: inclusion rules, filters, formulas, data years,
+   validation results.
+
+Deferred (not MVP): county map, US/national comparison, AI-generated text,
+intervention-name normalization.
 
 ## Success
-A researcher picks a disease, sees burden vs activity, and reaches at least one
-record-supported explanation plus what remains unknown, in under 1 minute.
+A researcher selects a disease and, in under 1 minute, sees prevalence vs
+activity, the drug/status/phase breakdown, at least one record-supported
+observation, and what remains unknown, with every number traceable to source.
 
 ## Non-goals
-No drug efficacy prediction, diagnosis or treatment advice; no claims a disease is
-neglected or needs more trials; no inferring pharma motives; no global pipeline;
-no rare-disease ontology; no openFDA in the MVP; no AI-generated text.
+No drug efficacy prediction, diagnosis, treatment, eligibility or trial
+recommendations; no claims a disease is neglected, underfunded or needs a new
+drug; no inferring sponsor motives; no global pipeline; no rare-disease
+ontology; no data sources beyond clinicaltrials.gov and data.cdc.gov.
 
 ## Counting rules
 - Study count = distinct NCT IDs within each disease. A study may count for
   several diseases; totals across diseases need not equal total studies.
-- Site status is separate from overall study status.
+- Sites never count as studies; one MA study with several MA sites counts once.
+- Site status is separate from overall study status; unknown site status is
+  never treated as recruiting.
+- Show "unknown" instead of 0 when a value cannot be computed.
 - County joins use 5-character FIPS strings.
 
 ## Non-negotiable rules
@@ -64,3 +86,4 @@ no rare-disease ontology; no openFDA in the MVP; no AI-generated text.
 - A failed run leaves existing files in `pipeline/processed/` byte-for-byte unchanged.
 - Runs on a laptop only. No backend, database, or cloud service. Network access is limited to `clinicaltrials.gov` and `data.cdc.gov`.
 - Offline reruns from cached raw data must produce byte-identical outputs.
+- Every displayed number is computed from pipeline output, never hard-coded.
