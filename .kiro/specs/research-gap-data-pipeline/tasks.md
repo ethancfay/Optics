@@ -98,7 +98,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 1.1–1.12 (as amended), 3.1, 3.3, 3.5_
 
-- [ ] 6. PLACES_Fetcher
+- [-] 6. PLACES_Fetcher
   - Implement `pipeline/data/places_fetcher.py` as specified in design § PLACES_Fetcher: `$select`, `$where`, and `$order`, with or without `:id` depending on V9, plus `$limit=1000` and the `$offset` sequence.
   - Error handling: stop on an empty first page, an invalid body, or the 100-page limit.
   - Each page is written to the Raw_Store before the next request.
