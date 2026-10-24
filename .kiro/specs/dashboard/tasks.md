@@ -314,7 +314,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data (`what.json`, `sources.json` + fixture test); (c) Investigate + Method changes with tests; (d) test hygiene.
 
-- [ ] 19. Three-disease scope (CASTHMA, DIABETES, HIGHCHOL)
+- [x] 19. Three-disease scope (CASTHMA, DIABETES, HIGHCHOL)
   - Scope follows the Spec 2 MVP (`.kiro/specs/condition-grouping/requirements.md`, Introduction). BPHIGH and DEPRESSION are deferred.
   - _Requirements: 2.8, 18.4, 20.1-20.6_
 
@@ -323,24 +323,24 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Spec-change checkpoint: do not start 19.2-19.5 until the spec changes are approved.
     - _Requirements: 20.1-20.6_
 
-  - [ ] 19.2 Sample data
+  - [x] 19.2 Sample data
     - Remove the `BPHIGH` and `DEPRESSION` entries from `what.json`, `investigate.json`, `evidence.json`, and their keys from `sources.json` `prevalence_years`. Leave the remaining entries otherwise unchanged (the `evidence.json` NCTs stay verbatim from `studies.csv`).
     - In `investigate.json`, rescale `by_study_type` so it sums to `ma_studies`, keeping each disease's interventional:observational ratio (rounded): CASTHMA 86/21 (107), DIABETES 239/33 (272), HIGHCHOL 113/19 (132). `by_overall_status` already sums to `ma_studies`; confirm.
     - Set `sources.json` `data_as_of` and both `fetched` dates to `2026-10-24`, the UTC date of `fetch_date` in `pipeline/processed/fetch_log.json`.
     - _Requirements: 20.1, 20.2, 20.3_
 
-  - [ ] 19.3 Copy: Investigate sample intro, no deferred-disease text
+  - [x] 19.3 Copy: Investigate sample intro, no deferred-disease text
     - Make `useIsSample()` cautious: `false` only when Sources_Data is `ready` with `data.is_sample === false`; `true` otherwise. It still throws outside `SourcesProvider`.
     - `SampleDataBanner` reads `useSources()` directly (`ready && isSample`) so the banner behaviour (Req 2.7) is unchanged.
     - Investigate intro: export `INTRO_REAL_SENTENCE` and `INTRO_SAMPLE_SENTENCE`; render the real sentence only when `useIsSample()` is false.
     - Confirm no rendered copy names high blood pressure, hypertension or depression, or says "five" (grep of `web/src` non-test files and `index.html` found none outside test fixtures as of this task; the data entries are removed in 19.2).
     - _Requirements: 20.4, 20.5_
 
-  - [ ] 19.4 Method page sentences
+  - [x] 19.4 Method page sentences
     - Add `DISEASE_SCOPE` and `HIGHCHOL_HEART_DISEASE_NOTE` to the crosswalk section of `Method.tsx`, per design, plus a code-only `// TODO(scoring-export)` comment on how "questionable" studies are treated (nothing rendered).
     - _Requirements: 20.6_
 
-  - [ ] 19.5 Tests
+  - [x] 19.5 Tests
     - Update tests that assume five measures: `app-integration.test.tsx` (exactly the three ids, not "3-5"), `Investigate.headline.property.test.tsx`, `Investigate.property.test.tsx`, `Evidence.property.test.tsx`, `forbiddenTerms.property.test.tsx` generator id lists; `Evidence.test.tsx` empty-ncts fixture and `CountyMap.test.tsx` second disease move off `DEPRESSION` to an in-scope id.
     - Add to `src/data/sampleData.consistency.test.ts`: Property 17 data test (same `measure_id` set across `what.json`, `investigate.json`, `evidence.json`, `sources.json` `prevalence_years`, equal to {CASTHMA, DIABETES, HIGHCHOL}) and Property 18 data test (`by_study_type` and `by_overall_status` each sum to `ma_studies`). If either fails, fix the data, not the test.
     - Wrap the `Investigate.test.tsx` harness in `SourcesProvider` (serve `sources.json` from the fetch mock); in the property tests that mock the providers module, add a `useIsSample` mock. Do not loosen the hook.
@@ -348,7 +348,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Unit tests: Investigate intro shows the real sentence only for `is_sample: false`, the sample sentence for `is_sample: true` and while sources is not loaded; Method page shows the two Req 20.6 sentences and no "To do"/"questionable" text.
     - _Requirements: 20.1, 20.2, 20.5, 20.6_
 
-  - [ ] 19.6 Verify and commit (don't push)
+  - [x] 19.6 Verify and commit (don't push)
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data; (c) copy + tests.
 

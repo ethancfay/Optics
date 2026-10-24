@@ -22,12 +22,15 @@ const useWhatDataMock = vi.fn<() => LoadState<WhatEntry[]>>();
 vi.mock("../data/providers", () => ({
   useInvestigateData: () => useInvestigateDataMock(),
   useWhatData: () => useWhatDataMock(),
+  // The providers module is mocked, so the sample flag is mocked too (the
+  // intro sentence does not affect the headline).
+  useIsSample: () => true,
 }));
 
 // Import AFTER the mock is registered.
 import Investigate from "./Investigate";
 
-const MEASURE_IDS = ["CASTHMA", "HIGHCHOL", "BPHIGH", "DIABETES", "DEPRESSION"] as const;
+const MEASURE_IDS = ["CASTHMA", "HIGHCHOL", "DIABETES"] as const;
 
 const whatEntryArb = (measure_id: string): fc.Arbitrary<WhatEntry> =>
   fc

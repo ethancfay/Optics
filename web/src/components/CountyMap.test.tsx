@@ -53,14 +53,14 @@ const FEATURES: readonly CountyFeature[] = [
 ];
 
 const ASTHMA = { measureId: "CASTHMA", condition: "Asthma" } as const;
-const DEPRESSION = { measureId: "DEPRESSION", condition: "Depression" } as const;
+const DIABETES = { measureId: "DIABETES", condition: "Diabetes" } as const;
 
 // Disease A (Asthma):
 //   25001 Barnstable -> numeric bucket (10 mi)
 //   25003 Berkshire  -> Unknown_Distance (null + has_verified_site false)
 //   25005 Bristol    -> NO entry at all (missing)
 //
-// Disease B (Depression):
+// Disease B (Diabetes):
 //   25001 Barnstable -> Unknown_Distance (flips from bucket -> unknown)
 //   25003 Berkshire  -> numeric bucket (20 mi) (flips unknown -> bucket)
 //   25005 Bristol    -> numeric bucket (5 mi)  (flips missing -> bucket)
@@ -86,24 +86,24 @@ const WHERE_DATA: readonly WhereEntry[] = [
   {
     county_fips: "25001",
     county: "Barnstable",
-    condition: "Depression",
-    measure_id: "DEPRESSION",
+    condition: "Diabetes",
+    measure_id: "DIABETES",
     miles_to_nearest: null,
     has_verified_site: false,
   },
   {
     county_fips: "25003",
     county: "Berkshire",
-    condition: "Depression",
-    measure_id: "DEPRESSION",
+    condition: "Diabetes",
+    measure_id: "DIABETES",
     miles_to_nearest: 20,
     has_verified_site: true,
   },
   {
     county_fips: "25005",
     county: "Bristol",
-    condition: "Depression",
-    measure_id: "DEPRESSION",
+    condition: "Diabetes",
+    measure_id: "DIABETES",
     miles_to_nearest: 5,
     has_verified_site: true,
   },
@@ -141,7 +141,7 @@ describe("CountyMap", () => {
       <CountyMap
         features={FEATURES}
         whereData={[]}
-        diseaseOptions={[ASTHMA, DEPRESSION]}
+        diseaseOptions={[ASTHMA, DIABETES]}
       />
     );
 
@@ -198,9 +198,9 @@ describe("CountyMap", () => {
     expect(distanceCellFor("Berkshire")).toBe(UNKNOWN_TEXT);
     expect(pathFillFor("Berkshire")).toMatch(/hatch/);
 
-    // --- Switch to Depression. ---
-    fireEvent.change(select, { target: { value: "DEPRESSION" } });
-    expect(select).toHaveValue("DEPRESSION");
+    // --- Switch to Diabetes. ---
+    fireEvent.change(select, { target: { value: "DIABETES" } });
+    expect(select).toHaveValue("DIABETES");
 
     // Barnstable flips bucket -> unknown; Berkshire flips unknown -> bucket;
     // Bristol flips missing -> bucket. Both map and table reflect the change.
@@ -211,7 +211,7 @@ describe("CountyMap", () => {
     expect(pathFillFor("Berkshire")).toContain("var(--seq-");
 
     // 25005 had no Asthma entry (labeled by FIPS, unknown) and now has a
-    // Depression entry naming it "Bristol" with a numeric distance.
+    // Diabetes entry naming it "Bristol" with a numeric distance.
     expect(distanceCellFor("Bristol")).toBe("5 mi");
     expect(pathFillFor("Bristol")).toContain("var(--seq-");
   });
