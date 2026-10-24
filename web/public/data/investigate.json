@@ -1,0 +1,110 @@
+[
+  {
+    "measure_id": "CASTHMA",
+    "condition": "Asthma",
+    "ma_studies": 107,
+    "us_studies": null,
+    "by_overall_status": [
+      { "label": "Recruiting", "count": 37 },
+      { "label": "Active, not recruiting", "count": 12 },
+      { "label": "Completed", "count": 58 }
+    ],
+    "by_study_type": [
+      { "label": "Interventional", "count": 86 },
+      { "label": "Observational", "count": 21 }
+    ],
+    "by_intervention_type": [
+      { "label": "Drug", "count": 29 },
+      { "label": "Device", "count": 6 },
+      { "label": "Behavioral", "count": 9 }
+    ],
+    "by_phase": [
+      { "label": "Phase 2", "count": 15 },
+      { "label": "Phase 3", "count": 10 },
+      { "label": "Not applicable", "count": 12 }
+    ],
+    "phase_overlap_studies": 4,
+    "findings": [
+      {
+        "text": "Most recruiting studies are interventional drug trials, which may reflect where current activity is concentrated.",
+        "label": "possible explanation from available records"
+      },
+      {
+        "text": "Whether this level of activity matches patient demand across the state cannot be established from the public records.",
+        "label": "cannot determine from public data"
+      }
+    ]
+  },
+  {
+    "measure_id": "DIABETES",
+    "condition": "Diabetes",
+    "ma_studies": 272,
+    "us_studies": null,
+    "by_overall_status": [
+      { "label": "Recruiting", "count": 96 },
+      { "label": "Active, not recruiting", "count": 27 },
+      { "label": "Completed", "count": 149 }
+    ],
+    "by_study_type": [
+      { "label": "Interventional", "count": 239 },
+      { "label": "Observational", "count": 33 }
+    ],
+    "by_intervention_type": [
+      { "label": "Drug", "count": 72 },
+      { "label": "Device", "count": 18 },
+      { "label": "Behavioral", "count": 15 }
+    ],
+    "by_phase": [
+      { "label": "Phase 2", "count": 33 },
+      { "label": "Phase 3", "count": 29 },
+      { "label": "Not applicable", "count": 34 }
+    ],
+    "phase_overlap_studies": 8,
+    "findings": [
+      {
+        "text": "A relatively high ratio of studies to affected adults may be explained by concentrated drug development in this area.",
+        "label": "possible explanation from available records"
+      },
+      {
+        "text": "The drivers of the observed study mix cannot be determined from public data.",
+        "label": "cannot determine from public data"
+      }
+    ]
+  },
+  {
+    "measure_id": "HIGHCHOL",
+    "condition": "High Cholesterol",
+    "ma_studies": 132,
+    "us_studies": null,
+    "by_overall_status": [
+      { "label": "Recruiting", "count": 41 },
+      { "label": "Active, not recruiting", "count": 14 },
+      { "label": "Completed", "count": 77 }
+    ],
+    "by_study_type": [
+      { "label": "Interventional", "count": 113 },
+      { "label": "Observational", "count": 19 }
+    ],
+    "by_intervention_type": [
+      { "label": "Drug", "count": 38 },
+      { "label": "Behavioral", "count": 10 },
+      { "label": "Device", "count": 3 }
+    ],
+    "by_phase": [
+      { "label": "Phase 2", "count": 16 },
+      { "label": "Phase 3", "count": 13 },
+      { "label": "Not applicable", "count": 12 }
+    ],
+    "phase_overlap_studies": 5,
+    "findings": [
+      {
+        "text": "The low ratio relative to affected adults may reflect that activity is recorded under related conditions elsewhere.",
+        "label": "possible explanation from available records"
+      },
+      {
+        "text": "Whether studies are recorded under other related labels cannot be determined from public data.",
+        "label": "cannot determine from public data"
+      }
+    ]
+  }
+]

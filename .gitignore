@@ -8,3 +8,4 @@ dist/
 .DS_Store
 pipeline/raw/
 pipeline/.staging-*/
+web/.vite/

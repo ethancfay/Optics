@@ -1,0 +1,154 @@
+[
+  {
+    "measure_id": "CASTHMA",
+    "condition": "Asthma",
+    "ncts": [
+      {
+        "nct_id": "NCT00595491",
+        "url": "https://clinicaltrials.gov/study/NCT00595491",
+        "title": "Pilot Study to Identify the Mediators and Inflammatory Cell Surface Receptors Involved in Allergic Airway Inflammation",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE1"],
+        "intervention_types": ["BIOLOGICAL"],
+        "intervention_names": [
+          "Bronchoscopy, Segmental Allergen Challenge, and Broncheoalveolar Lavage"
+        ]
+      },
+      {
+        "nct_id": "NCT03524222",
+        "url": "https://clinicaltrials.gov/study/NCT03524222",
+        "title": "Home Hospital for Suddenly Ill Adults",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["OTHER"],
+        "intervention_names": ["Home Hospitalization"]
+      },
+      {
+        "nct_id": "NCT05272241",
+        "url": "https://clinicaltrials.gov/study/NCT05272241",
+        "title": "Registry of Asthma Characterization and Recruitment 3 (RACR3)",
+        "status": "RECRUITING",
+        "study_type": "OBSERVATIONAL",
+        "phases": [],
+        "intervention_types": [],
+        "intervention_names": []
+      }
+    ],
+    "filters": [
+      "Located in Massachusetts",
+      "Fetched 2026-10-24"
+    ],
+    "mapping_choices": [
+      "Selected studies whose meshTerms list contains the MeSH heading \"Asthma\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
+    ],
+    "missing_data_notes": [
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
+    ]
+  },
+  {
+    "measure_id": "DIABETES",
+    "condition": "Diabetes",
+    "ncts": [
+      {
+        "nct_id": "NCT04101669",
+        "url": "https://clinicaltrials.gov/study/NCT04101669",
+        "title": "The RESET System Pivotal Clinical Trial (Protocol Revision K)",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["DEVICE", "OTHER"],
+        "intervention_names": ["RESET Liner", "Sham"]
+      },
+      {
+        "nct_id": "NCT05317585",
+        "url": "https://clinicaltrials.gov/study/NCT05317585",
+        "title": "Continuous Glucose Monitor Use in Pregnancy",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["DEVICE", "DEVICE"],
+        "intervention_names": [
+          "Continuous Glucose Monitor",
+          "Routine Capillary Blood Glucose Monitoring (Fingerstick Glucose)"
+        ]
+      },
+      {
+        "nct_id": "NCT05420051",
+        "url": "https://clinicaltrials.gov/study/NCT05420051",
+        "title": "Boosting Emotional Well-being and Happiness in Outpatients Living With Diabetes",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["BEHAVIORAL", "BEHAVIORAL"],
+        "intervention_names": [
+          "Positive Psychology + Motivational Interviewing",
+          "Motivational Interviewing"
+        ]
+      }
+    ],
+    "filters": [
+      "Located in Massachusetts",
+      "Fetched 2026-10-24"
+    ],
+    "mapping_choices": [
+      "Selected studies whose meshTerms list contains the MeSH heading \"Diabetes Mellitus, Type 2\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
+    ],
+    "missing_data_notes": [
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
+    ]
+  },
+  {
+    "measure_id": "HIGHCHOL",
+    "condition": "High Cholesterol",
+    "ncts": [
+      {
+        "nct_id": "NCT06743659",
+        "url": "https://clinicaltrials.gov/study/NCT06743659",
+        "title": "Computerized Decision Support for Identification and Management of Familial Hypercholesterolemia",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["DEVICE"],
+        "intervention_names": ["Alert-based computerized decision support"]
+      },
+      {
+        "nct_id": "NCT06988462",
+        "url": "https://clinicaltrials.gov/study/NCT06988462",
+        "title": "Pilot Study of \"Bottarga\" Supplementation: A Little-known, Sustainable \"Blue\" Food",
+        "status": "RECRUITING",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["NA"],
+        "intervention_types": ["OTHER", "OTHER"],
+        "intervention_names": ["Bottarga", "Comparator"]
+      },
+      {
+        "nct_id": "NCT01764633",
+        "url": "https://clinicaltrials.gov/study/NCT01764633",
+        "title": "Further Cardiovascular Outcomes Research With PCSK9 Inhibition in Subjects With Elevated Risk",
+        "status": "COMPLETED",
+        "study_type": "INTERVENTIONAL",
+        "phases": ["PHASE3"],
+        "intervention_types": ["BIOLOGICAL", "DRUG"],
+        "intervention_names": ["Evolocumab", "Placebo"]
+      }
+    ],
+    "filters": [
+      "Located in Massachusetts",
+      "Fetched 2026-10-24"
+    ],
+    "mapping_choices": [
+      "Selected studies whose meshTerms list contains the MeSH heading \"Hypercholesterolemia\" exactly (an ancestorTerms exact match is used only when fewer than three studies qualify on meshTerms).",
+      "Restricted to studies with at least one Massachusetts site in sites.csv; recruiting studies preferred.",
+      "Child-only studies (stdAges without ADULT or OLDER_ADULT, i.e. maximum age under 18) were excluded, matching the adults-18+ scope."
+    ],
+    "missing_data_notes": [
+      "Sample: hand-picked from the 2026-10-24 fetch; replaced by the scoring export."
+    ]
+  }
+]
