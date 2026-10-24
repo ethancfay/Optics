@@ -37,17 +37,15 @@
 
 ## Common commands
 
-Planned commands, to be confirmed during design:
+Run from the repository root:
 
 ```sh
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Network run (exact entry point TBD in design)
-python -m pipeline
-
-# Offline run from pipeline/raw/ (flag name TBD)
-python -m pipeline --offline
+# Pipeline: python -m pipeline [--offline]
+python -m pipeline            # network run: fetch, then write pipeline/processed/
+python -m pipeline --offline  # rerun from pipeline/raw/ with no network requests
 
 # Tests
 pytest
@@ -55,5 +53,3 @@ pytest
 # Website
 cd web && npm install && npm run dev
 ```
-
-Update this section once the entry point and flags are fixed.

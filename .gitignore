@@ -7,3 +7,4 @@ dist/
 *.zip
 .DS_Store
 pipeline/raw/
+pipeline/.staging-*/
