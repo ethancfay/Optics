@@ -101,6 +101,7 @@ export interface SourcesData {
   data_as_of: string; // ISO 8601 YYYY-MM-DD
   is_sample?: boolean; // true in sample fixtures (drives sample-data label, Req 2.7)
   sources: SourceEntry[];
+  prevalence_years?: Record<string, string>; // measure_id -> PLACES year (optional extra key)
 }
 
 // ma_counties.geojson — FeatureCollection of exactly 14 Features (Req 2.12)

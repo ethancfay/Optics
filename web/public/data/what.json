@@ -9,7 +9,7 @@
     "affected_adults": 612000,
     "p_low": 0.102,
     "p_high": 0.113,
-    "prevalence_year": "2022",
+    "prevalence_year": "2023",
     "ctgov_url": "https://clinicaltrials.gov/search?cond=Asthma&locStr=Massachusetts"
   },
   {
@@ -48,7 +48,7 @@
     "affected_adults": 603000,
     "p_low": 0.096,
     "p_high": 0.108,
-    "prevalence_year": "2022",
+    "prevalence_year": "2023",
     "ctgov_url": "https://clinicaltrials.gov/search?cond=Diabetes&locStr=Massachusetts"
   },
   {
@@ -61,7 +61,7 @@
     "affected_adults": 1490000,
     "p_low": 0.274,
     "p_high": 0.299,
-    "prevalence_year": "2022",
+    "prevalence_year": "2023",
     "ctgov_url": "https://clinicaltrials.gov/search?cond=Hypercholesterolemia&locStr=Massachusetts"
   }
 ]
