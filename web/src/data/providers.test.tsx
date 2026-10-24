@@ -177,14 +177,49 @@ describe("SourcesProvider / useSources / useIsSample", () => {
     expect(result.current.isSample).toBe(true);
   });
 
-  it("useIsSample is false for real (non-sample) sources data", async () => {
+  it("useIsSample is false only for loaded sources with is_sample: false (Req 20.5)", async () => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
+      jsonResponse({ ...sources, is_sample: false })
+    );
+    const { result } = renderHook(() => useIsSample(), { wrapper });
+    await waitFor(() => expect(result.current).toBe(false));
+  });
+
+  it("useIsSample is true when is_sample is absent (cautious, Req 20.5)", async () => {
     (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
       jsonResponse(sources)
     );
+    const { result } = renderHook(
+      () => ({ sources: useSources(), isSample: useIsSample() }),
+      { wrapper }
+    );
+    await waitFor(() => expect(result.current.sources.status).toBe("ready"));
+    expect(result.current.isSample).toBe(true);
+  });
 
-    const { result } = renderHook(() => useIsSample(), { wrapper });
+  it("useIsSample is true while sources.json is not loaded yet (Req 20.5)", () => {
+    // The fetch never settles, so Sources_Data stays in the loading state.
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      new Promise<Response>(() => {})
+    );
+    const { result } = renderHook(
+      () => ({ sources: useSources(), isSample: useIsSample() }),
+      { wrapper }
+    );
+    expect(result.current.sources.status).toBe("loading");
+    expect(result.current.isSample).toBe(true);
+  });
 
-    await waitFor(() => expect(result.current).toBe(false));
+  it("useIsSample is true when sources.json fails to load (Req 20.5)", async () => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new Error("network down")
+    );
+    const { result } = renderHook(
+      () => ({ sources: useSources(), isSample: useIsSample() }),
+      { wrapper }
+    );
+    await waitFor(() => expect(result.current.sources.status).toBe("error"));
+    expect(result.current.isSample).toBe(true);
   });
 });
 

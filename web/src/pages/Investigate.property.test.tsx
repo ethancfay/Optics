@@ -29,6 +29,9 @@ const useInvestigateDataMock = vi.fn<() => LoadState<InvestigateEntry[]>>();
 vi.mock("../data/providers", () => ({
   useInvestigateData: () => useInvestigateDataMock(),
   useWhatData: (): LoadState<unknown[]> => ({ status: "empty" }),
+  // The providers module is mocked, so the sample flag is mocked too (the
+  // intro sentence does not affect finding labels).
+  useIsSample: () => true,
 }));
 
 // Import AFTER the mock is registered so Investigate picks up the mocked hook.
@@ -64,7 +67,7 @@ const findingArb: fc.Arbitrary<Finding> = fc.record({
 
 /** A valid InvestigateEntry with 1+ findings and minimal valid breakdowns. */
 const investigateEntryArb: fc.Arbitrary<InvestigateEntry> = fc.record({
-  measure_id: fc.constantFrom("CASTHMA", "HIGHCHOL", "BPHIGH", "DIABETES"),
+  measure_id: fc.constantFrom("CASTHMA", "HIGHCHOL", "DIABETES"),
   condition: fc.string({ minLength: 1, maxLength: 24 }).filter((s) => s.trim().length > 0),
   ma_studies: fc.nat({ max: 1000 }),
   us_studies: fc.nat({ max: 1000 }),

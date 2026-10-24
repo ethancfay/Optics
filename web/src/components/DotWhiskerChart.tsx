@@ -21,7 +21,7 @@ import { useId } from "react";
 import { useNavigate } from "react-router-dom";
 import type { WhatEntry } from "../data/types";
 import { chartScale } from "../data/chartScale";
-import { axisTicks, formatAxisTick } from "../data/axisTicks";
+import { formatAxisTick } from "../data/axisTicks";
 import "./DotWhiskerChart.css";
 
 /** Props for {@link DotWhiskerChart}. Entries arrive already sorted by the caller. */
@@ -31,8 +31,15 @@ export interface DotWhiskerChartProps {
 }
 
 /** The fixed axis unit label (Req 5.4). */
-const AXIS_LABEL =
+export const AXIS_LABEL =
   "distinct recruiting MA studies per 100,000 affected adults (18+)";
+
+/** Suffix added to the axis label while the log scale is in use (Req 22.4). */
+export const LOG_SCALE_SUFFIX = " (log scale)";
+
+/** Sentence added to the chart's accessible title in log mode (Req 22.4). */
+export const LOG_SCALE_TITLE_NOTE =
+  "The axis uses a log scale: each labeled step is ten times the one before.";
 
 /** Placeholder text shown for any missing/unavailable table cell (Req 6.5). */
 const UNAVAILABLE = "unavailable";
@@ -115,8 +122,9 @@ export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
   );
 
   // Shared horizontal scale mapping index values to x pixel positions so that
-  // x(low) <= x(mid) <= x(high) for every disease (Req 5.1, 5.6). The pixel
-  // range starts at the plot's left edge, i.e. right of the name column.
+  // x(low) <= x(mid) <= x(high) for every disease (Req 5.1, 5.6, 22.6). It is
+  // log10 when every low > 0 and linear from 0 otherwise (Req 22.1, 22.5). The
+  // pixel range starts at the plot's left edge, i.e. right of the name column.
   const scale = chartScale(entries, [
     nameColumnWidth,
     nameColumnWidth + PLOT_WIDTH,
@@ -129,9 +137,11 @@ export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
   const axisLabelY = plotBottom + 42;
   const height = plotBottom + BOTTOM_PAD;
 
-  // Round tick values spanning the real domain, so the axis is readable
-  // (2, 3, 4, 5 here) instead of echoing the raw data bounds (Req 5.4).
-  const ticks = axisTicks(scale.domainMin, scale.domainMax);
+  // Ticks come with the scale: powers of ten in log mode (0.1, 1, 10 for the
+  // shipped data), round linear values from 0 in the fallback (Req 22.3, 22.5).
+  const ticks = scale.ticks;
+  const isLog = scale.kind === "log";
+  const axisLabel = isLog ? AXIS_LABEL + LOG_SCALE_SUFFIX : AXIS_LABEL;
 
   const handleSelect = (measureId: string) => {
     navigate(`/investigate/${measureId}`);
@@ -150,8 +160,10 @@ export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
           viewBox={`0 0 ${width} ${height}`}
         >
           <title id={titleId}>
-            Index range per disease, lowest midpoint first. Each disease shows a
-            whisker from its low to high value and a dot at its midpoint.
+            {"Index range per disease, lowest midpoint first. Each disease " +
+              "shows a whisker from its low to high value and a dot at its " +
+              "midpoint." +
+              (isLog ? ` ${LOG_SCALE_TITLE_NOTE}` : "")}
           </title>
 
           {/* Axis furniture, drawn first so every mark sits on top of it. The
@@ -281,14 +293,14 @@ export default function DotWhiskerChart({ entries }: DotWhiskerChartProps) {
             </text>
           ))}
 
-          {/* Axis label (Req 5.4), centred under the plot it describes. */}
+          {/* Axis label (Req 5.4, 22.4), centred under the plot it describes. */}
           <text
             className="dw-axis-label"
             x={nameColumnWidth + PLOT_WIDTH / 2}
             y={axisLabelY}
             textAnchor="middle"
           >
-            {AXIS_LABEL}
+            {axisLabel}
           </text>
         </svg>
       </div>

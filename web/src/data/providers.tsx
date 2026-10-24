@@ -258,14 +258,16 @@ export const CountyBoundariesProvider = countyBoundariesContext.Provider;
 export const useCountyBoundaries = countyBoundariesContext.useData;
 
 /**
- * The sample-data flag (Req 2.7). The sample flag lives only in `sources.json`'s
- * optional `is_sample` field, surfaced on the Sources `ready` state's `isSample`.
- * This derived hook returns `true` only when Sources_Data has loaded and is
- * flagged as sample data; any other state (loading / error / empty / real data)
- * returns `false` so the sample-data label is shown only when we are certain the
- * loaded data is sample data. Must be used within `SourcesProvider`.
+ * Cautious sample-data flag (Req 20.5). Returns `false` ONLY when Sources_Data
+ * has loaded and the file's `is_sample` is exactly `false`; every other state
+ * (loading / error / empty / `is_sample` true or absent) returns `true`, so copy
+ * that claims real numbers is shown only when we are certain the data is real.
+ *
+ * The sample-data banner (Req 2.7) does NOT use this hook: it reads
+ * `useSources()` directly and shows only for a loaded `is_sample: true`.
+ * Must be used within `SourcesProvider` (throws otherwise).
  */
 export function useIsSample(): boolean {
   const sources = useSources();
-  return sources.status === "ready" && sources.isSample;
+  return !(sources.status === "ready" && sources.data.is_sample === false);
 }

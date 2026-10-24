@@ -32,13 +32,21 @@ import {
   LoadStateView,
   LoadingIndicator,
 } from "../components/LoadStateView";
-import { useInvestigateData, useWhatData } from "../data/providers";
+import { useInvestigateData, useIsSample, useWhatData } from "../data/providers";
 import {
   selectInvestigateHeadline,
   type InvestigateHeadline,
 } from "../data/investigateHeadline";
 import type { InvestigateEntry, LabelCount, LoadState, WhatEntry } from "../data/types";
 import "./Investigate.css";
+
+/** Intro sentence shown only for confirmed real data (`is_sample === false`, Req 20.5). */
+export const INTRO_REAL_SENTENCE =
+  "The numbers come straight from public study records.";
+
+/** Cautious intro sentence for sample or not-yet-loaded sources (Req 20.5). */
+export const INTRO_SAMPLE_SENTENCE =
+  "These are sample numbers for layout; real counts come from the scoring export.";
 
 /** Label for the headline count (Req 19.3). */
 export const HEADLINE_LABEL =
@@ -134,13 +142,14 @@ function InvestigateDetail({
   whatState: LoadState<WhatEntry[]>;
 }) {
   const what = resolveHeadline(whatState, entry.measure_id);
+  const isSample = useIsSample();
   return (
     <article>
       <h1>{entry.condition}</h1>
-      <p>
+      <p className="inv-intro">
         This page describes the Massachusetts studies counted for this disease
-        and how they break down. The numbers come straight from public study
-        records.
+        and how they break down.{" "}
+        {isSample ? INTRO_SAMPLE_SENTENCE : INTRO_REAL_SENTENCE}
       </p>
 
       <h2>Study counts</h2>

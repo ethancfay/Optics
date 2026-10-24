@@ -232,7 +232,7 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     stubFetchWithRealFiles();
   });
 
-  it("what.json loads with zero omitted entries and 3-5 distinct in-scope ids (Req 2.6, 2.8)", async () => {
+  it("what.json loads with zero omitted entries and exactly the three in-scope ids (Req 2.6, 2.8, 20.1)", async () => {
     const state = await loadJson<WhatEntry>("what.json", validateWhatEntry);
     expect(state.status).toBe("ready");
     if (state.status !== "ready") return;
@@ -240,20 +240,9 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     expect(state.omittedCount).toBe(0);
     expect(state.data.length).toBe(whatRaw.length);
 
-    const inScope = new Set([
-      "CASTHMA",
-      "HIGHCHOL",
-      "BPHIGH",
-      "DIABETES",
-      "DEPRESSION",
-    ]);
     const ids = state.data.map((e) => e.measure_id);
     expect(new Set(ids).size).toBe(ids.length); // distinct
-    expect(ids.length).toBeGreaterThanOrEqual(3);
-    expect(ids.length).toBeLessThanOrEqual(5);
-    for (const id of ids) {
-      expect(inScope.has(id)).toBe(true);
-    }
+    expect([...ids].sort()).toEqual(["CASTHMA", "DIABETES", "HIGHCHOL"]);
   });
 
   it("investigate.json: one entry per what id, every breakdown non-empty, >=1 finding per label (Req 2.9)", async () => {
@@ -330,17 +319,72 @@ describe("Sample fixtures load with zero omissions (Req 2.6-2.12)", () => {
     }
   });
 
-  it("sources.json loads and is flagged is_sample (Req 2.7)", async () => {
+  it("sources.json is flagged isSample from the file's is_sample flag (Req 2.7)", async () => {
+    // The shipped sources.json is now REAL Spec 3 output (is_sample: false), so
+    // this test no longer reads the file's flag off disk. It instead serves a
+    // sources body through the fetch stub with is_sample explicitly set, and
+    // checks that loadSources reflects whichever value the file carries. The
+    // real file's shape is reused as the base so validateSourcesData and the
+    // sources-count assertion stay meaningful.
     expect(validateSourcesData(sourcesRaw)).toBe(true);
-    const state = await loadSources("sources.json");
-    expect(state.status).toBe("ready");
-    if (state.status !== "ready") return;
-    expect(state.isSample).toBe(true);
-    expect(state.data.sources.length).toBeGreaterThan(0);
+    const base = sourcesRaw as SourcesData;
+
+    // is_sample true -> isSample true.
+    const sampleBody: SourcesData = { ...base, is_sample: true };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: string) => {
+        if (input === "/data/sources.json") {
+          return Promise.resolve(jsonResponse(sampleBody));
+        }
+        return Promise.reject(new Error(`unexpected fetch: ${input}`));
+      })
+    );
+    const sampleState = await loadSources("sources.json");
+    expect(sampleState.status).toBe("ready");
+    if (sampleState.status !== "ready") return;
+    expect(sampleState.isSample).toBe(true);
+    expect(sampleState.data.sources.length).toBeGreaterThan(0);
+
+    // is_sample false -> isSample false (the real shipped value).
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    const realBody: SourcesData = { ...base, is_sample: false };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: string) => {
+        if (input === "/data/sources.json") {
+          return Promise.resolve(jsonResponse(realBody));
+        }
+        return Promise.reject(new Error(`unexpected fetch: ${input}`));
+      })
+    );
+    const realState = await loadSources("sources.json");
+    expect(realState.status).toBe("ready");
+    if (realState.status !== "ready") return;
+    expect(realState.isSample).toBe(false);
   });
 
   it("renders the sample-data label when is_sample is true and omits it otherwise (Req 2.7)", async () => {
-    // is_sample true (the real sources.json): the banner shows.
+    // The shipped sources.json is now REAL Spec 3 output (is_sample: false), so
+    // the banner-shown case mocks /data/sources.json with is_sample true via the
+    // fetch stub (the other files are served from the real fixtures so the rest
+    // of the app renders). The banner-hidden case mocks a body with no flag.
+    const sampleSources: SourcesData = { ...(sourcesRaw as SourcesData), is_sample: true };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: string) => {
+        if (input === "/data/sources.json") {
+          return Promise.resolve(jsonResponse(sampleSources));
+        }
+        if (input === "/data/what.json") return Promise.resolve(jsonResponse(whatRaw));
+        if (input === "/data/investigate.json")
+          return Promise.resolve(jsonResponse(investigateRaw));
+        if (input === "/data/evidence.json")
+          return Promise.resolve(jsonResponse(evidenceRaw));
+        return Promise.reject(new Error(`unexpected fetch: ${input}`));
+      })
+    );
     const first = renderApp("/build");
     expect(await screen.findByText(SAMPLE_DATA_LABEL)).toBeInTheDocument();
     first.unmount();

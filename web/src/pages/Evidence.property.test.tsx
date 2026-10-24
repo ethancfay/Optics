@@ -51,7 +51,7 @@ const nctRefArb: fc.Arbitrary<NctRef> = nctIdArb.map((nct_id) => ({
  */
 const evidenceEntryArb: fc.Arbitrary<EvidenceEntry> = fc
   .record({
-    measure_id: fc.constantFrom("CASTHMA", "HIGHCHOL", "BPHIGH", "DIABETES"),
+    measure_id: fc.constantFrom("CASTHMA", "HIGHCHOL", "DIABETES"),
     condition: fc.constantFrom("Asthma", "High cholesterol", "Diabetes"),
     ncts: fc.uniqueArray(nctRefArb, {
       minLength: 1,

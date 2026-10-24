@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "research-gap-data",
+  "version": "0.1.0",
+  "description": "Answer questions about ClinicalTrials.gov studies and CDC PLACES adult (18+) prevalence for Massachusetts with a domain-restricted fetch tool, following the Research Gap Index data contract and health-safety rules.",
+  "author": { "name": "Research Gap Index team" },
+  "keywords": ["clinicaltrials.gov", "clinical trials", "CDC PLACES", "prevalence", "Massachusetts", "research gap index", "NCT"],
+  "repository": "https://github.com/ethancfay/research-gap-index",
+  "license": "MIT"
+}

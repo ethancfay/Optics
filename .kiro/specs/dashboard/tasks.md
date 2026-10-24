@@ -314,6 +314,96 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data (`what.json`, `sources.json` + fixture test); (c) Investigate + Method changes with tests; (d) test hygiene.
 
+- [x] 19. Three-disease scope (CASTHMA, DIABETES, HIGHCHOL)
+  - Scope follows the Spec 2 MVP (`.kiro/specs/condition-grouping/requirements.md`, Introduction). BPHIGH and DEPRESSION are deferred.
+  - _Requirements: 2.8, 18.4, 20.1-20.6_
+
+  - [x] 19.1 Confirm the spec reflects the plan (requirements.md + design.md)
+    - Requirement 20 (new); amended Assumption 4, Req 2.8, Req 18.4; design sample-data plan, Investigate/Method page notes, cautious `useIsSample`, banner reads `useSources` directly, Properties 17 and 18.
+    - Spec-change checkpoint: do not start 19.2-19.5 until the spec changes are approved.
+    - _Requirements: 20.1-20.6_
+
+  - [x] 19.2 Sample data
+    - Remove the `BPHIGH` and `DEPRESSION` entries from `what.json`, `investigate.json`, `evidence.json`, and their keys from `sources.json` `prevalence_years`. Leave the remaining entries otherwise unchanged (the `evidence.json` NCTs stay verbatim from `studies.csv`).
+    - In `investigate.json`, rescale `by_study_type` so it sums to `ma_studies`, keeping each disease's interventional:observational ratio (rounded): CASTHMA 86/21 (107), DIABETES 239/33 (272), HIGHCHOL 113/19 (132). `by_overall_status` already sums to `ma_studies`; confirm.
+    - Set `sources.json` `data_as_of` and both `fetched` dates to `2026-10-24`, the UTC date of `fetch_date` in `pipeline/processed/fetch_log.json`.
+    - _Requirements: 20.1, 20.2, 20.3_
+
+  - [x] 19.3 Copy: Investigate sample intro, no deferred-disease text
+    - Make `useIsSample()` cautious: `false` only when Sources_Data is `ready` with `data.is_sample === false`; `true` otherwise. It still throws outside `SourcesProvider`.
+    - `SampleDataBanner` reads `useSources()` directly (`ready && isSample`) so the banner behaviour (Req 2.7) is unchanged.
+    - Investigate intro: export `INTRO_REAL_SENTENCE` and `INTRO_SAMPLE_SENTENCE`; render the real sentence only when `useIsSample()` is false.
+    - Confirm no rendered copy names high blood pressure, hypertension or depression, or says "five" (grep of `web/src` non-test files and `index.html` found none outside test fixtures as of this task; the data entries are removed in 19.2).
+    - _Requirements: 20.4, 20.5_
+
+  - [x] 19.4 Method page sentences
+    - Add `DISEASE_SCOPE` and `HIGHCHOL_HEART_DISEASE_NOTE` to the crosswalk section of `Method.tsx`, per design, plus a code-only `// TODO(scoring-export)` comment on how "questionable" studies are treated (nothing rendered).
+    - _Requirements: 20.6_
+
+  - [x] 19.5 Tests
+    - Update tests that assume five measures: `app-integration.test.tsx` (exactly the three ids, not "3-5"), `Investigate.headline.property.test.tsx`, `Investigate.property.test.tsx`, `Evidence.property.test.tsx`, `forbiddenTerms.property.test.tsx` generator id lists; `Evidence.test.tsx` empty-ncts fixture and `CountyMap.test.tsx` second disease move off `DEPRESSION` to an in-scope id.
+    - Add to `src/data/sampleData.consistency.test.ts`: Property 17 data test (same `measure_id` set across `what.json`, `investigate.json`, `evidence.json`, `sources.json` `prevalence_years`, equal to {CASTHMA, DIABETES, HIGHCHOL}) and Property 18 data test (`by_study_type` and `by_overall_status` each sum to `ma_studies`). If either fails, fix the data, not the test.
+    - Wrap the `Investigate.test.tsx` harness in `SourcesProvider` (serve `sources.json` from the fetch mock); in the property tests that mock the providers module, add a `useIsSample` mock. Do not loosen the hook.
+    - `useIsSample` tests: false for `is_sample: false`; true for `is_sample: true`, absent, while loading (not loaded), and on load error.
+    - Unit tests: Investigate intro shows the real sentence only for `is_sample: false`, the sample sentence for `is_sample: true` and while sources is not loaded; Method page shows the two Req 20.6 sentences and no "To do"/"questionable" text.
+    - _Requirements: 20.1, 20.2, 20.5, 20.6_
+
+  - [x] 19.6 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
+    - Commits: (a) spec; (b) data; (c) copy + tests.
+
+- [x] 20. Method page matching section reflects Spec 2's real rules
+  - Sources: `.kiro/specs/condition-grouping/requirements.md` (Req 2-5, 7), `pipeline/mapping/rules.py`, `.kiro/specs/scoring-export/requirements.md` (Glossary "Eligible_Study", Req 4.1, 5.1), `.kiro/steering/data-contract.md` ("Eligible for a disease"), `pipeline/scoring/index.py` (skips `match_status != "included"`).
+  - _Requirements: 11.2, 20.6, 21.1-21.6_
+
+  - [x] 20.1 Spec: Requirement 21 (new); amend Req 11.2 and Req 20.6; design Method_Page note
+    - _Requirements: 21.1-21.6_
+
+  - [x] 20.2 Method page copy
+    - Replace the generic crosswalk paragraph in `Method.tsx` with exported constants `MATCHING_TERMS_NOTE`, `CHILD_ONLY_NOTE`, `QUESTIONABLE_NOT_COUNTED` (plus the existing `HIGHCHOL_HEART_DISEASE_NOTE`), per design. Change the last filter bullet to refer to the word lists, not the crosswalk. Remove the `TODO(scoring-export)` comment and every "crosswalk" mention in the file.
+    - _Requirements: 11.2, 21.1-21.5_
+
+  - [x] 20.3 Tests
+    - `Method.test.tsx`: each Req 21 sentence renders once; the questionable sentence says these studies are not counted; no rendered "crosswalk" or "to do"/"todo" text; the source file has no `TODO(scoring-export)`; the matching-section copy stays at grade 8 or lower (Flesch-Kincaid) and has no Forbidden_Terms.
+    - _Requirements: 21.4-21.6_
+
+  - [x] 20.4 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
+    - Commits: (a) spec; (b) Method copy + tests.
+
+- [ ] 21. WHAT view: log scale, readable table, ratio headline
+  - Problem: `chartScale` uses a linear domain starting at min(`low`), so the shipped values (0.23–12.83) squeeze High Cholesterol and Asthma against the left edge and exaggerate the gap between them.
+  - _Requirements: 5.4, 5.6, 5.12-5.14, 6.1-6.9, 22.1-22.8_
+
+  - [x] 21.1 Confirm the spec reflects the plan (requirements.md + design.md)
+    - Requirement 22 (new); amended Req 5.4, Req 6.1; new Req 5.12-5.14 and 6.6-6.9; glossary Log_Scale, One_Per_N_Range, Headline_Ratio_Range; design chart section (scale, headline, table), Property 6 (amended), Properties 19 and 20, testing strategy.
+    - Spec-change checkpoint: do not start 21.2-21.5 until the spec changes are approved.
+    - _Requirements: 5.12-5.14, 6.1-6.9, 22.1-22.8_
+
+  - [x] 21.2 Log scale with linear fallback in `chartScale`
+    - Extend `ChartScale` with `kind: "log" | "linear"` and `ticks`. Log mode when every `low > 0`: domain `[10 ** floor(log10(min low)), 1.1 × max high]` (epsilon-safe floor), ticks at every power of ten in the domain. Otherwise linear `[0, max high]` with ticks from `axisTicks(0, max high)`; zero-width domain pins to `rangeMin`.
+    - `DotWhiskerChart`: draw gridlines/labels from `scale.ticks`; axis label gets " (log scale)" in log mode only; add the log-scale sentence to the SVG `<title>` in log mode; keep `aria-describedby={tableId}`. `formatAxisTick` prints "0.1", "1", "10", "1,000".
+    - Update Property 6 in `chartScale.test.ts` (tag `// Feature: dashboard, Property 6: ...`, `numRuns: 100`) to cover both modes: `kind` is `log` iff every `low > 0`; `x(low) <= x(mid) <= x(high)`; positions inside the range; log ticks are powers of ten in the domain. Generators span several decades and sometimes inject `low = 0`.
+    - Unit tests: shipped `what.json` → `log`, ticks exactly `[0.1, 1, 10]`, label ends " (log scale)". Fallback: one entry `low = mid = high = 0` → `linear`, `domainMin` 0, first tick 0, no suffix, chart renders, `aria-describedby` still names the table id; all-zero entries → every mark at `rangeMin`. Update existing axis-label and tick assertions in `DotWhiskerChart.test.tsx` / `axisTicks.test.ts`.
+    - _Requirements: 5.4, 22.1-22.8_
+
+  - [ ] 21.3 Human-readable text-alternative table
+    - Create `web/src/data/whatTable.ts` with `formatNumber` (fixed `Intl.NumberFormat("en-US", { maximumFractionDigits: 2 })`), `roundSig2`, `onePerN(entry)` (exact `{ fewest: 100000/high, most: 100000/low }`, `unknown` when `low <= 0` or `high <= 0`, `unavailable` when missing), and `prevalenceCaption(entries)`.
+    - Table headers exactly "Disease", "Studies counted", "Affected MA adults", "Index range per 100k", "1 recruiting MA study per … adults"; range cell "<low> to <high> (midpoint <mid>)"; drop the `prevalence_year` column; caption from `prevalenceCaption`; `num` class (right-aligned, tabular-nums) on numeric cells and headers. Keep the select buttons and "unavailable" placeholders.
+    - Property 19 test tagged `// Feature: dashboard, Property 19: ...` at `numRuns: 100`: bounds equal `100000/high` and `100000/low`; rendered text uses `roundSig2` + `formatNumber`; rounded bounds have ≤ 2 significant figures and are within 5 % of exact; `low <= 0` → `unknown`.
+    - Unit tests: headers; shipped Diabetes row ("61", "553,588", "9.61 to 12.83 (midpoint 11.02)", "7,800 to 10,000"); caption "Adults 18+, CDC PLACES 2023. Range reflects prevalence uncertainty only." plus mixed-year and missing-year forms; `num` class present; `low = 0` row shows "unknown". Update tests that assert the old raw headers or the `prevalence_year` column.
+    - _Requirements: 6.1, 6.2, 6.5-6.9_
+
+  - [ ] 21.4 Ratio headline above the chart
+    - Create `web/src/data/headlineRatio.ts` with `headlineRatio(entries)` (`null` for < 2 entries, `unknown` when min `low <= 0`, else exact `lower = max(low)/min(high)`, `upper = max(high)/min(low)`), `headlineText(entries)`, and exported `HEADLINE_RANGE_TEMPLATE`, `HEADLINE_UNKNOWN`, `HEADLINE_LIMIT`. Render it in `What.tsx` between the `<h1>` and the chart, from the same sorted valid entries the chart gets.
+    - Property 20 test tagged `// Feature: dashboard, Property 20: ...` at `numRuns: 100`: bounds match the formula; text contains both rounded bounds, `n` and `HEADLINE_LIMIT`, and no Forbidden_Terms; `null` / `unknown` branches as in the design.
+    - Unit tests: shipped data renders "Across these 3 diseases, the highest index is about 36 to 56 times the lowest." plus the limit sentence, before the chart in DOM order; one disease → no headline; `low = 0` → `HEADLINE_UNKNOWN`. Confirm the existing Forbidden_Terms page test (Property 12) covers the What page with the headline.
+    - _Requirements: 5.6, 5.12, 5.13, 5.14, 17.1-17.4_
+
+  - [ ] 21.5 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures. Check the WHAT page at 375 px: no page-level horizontal overflow and the three diseases still visible in the first screen (Req 15.6, 16.1).
+    - Commits: (a) spec; (b) log scale + tests; (c) table + tests; (d) headline + tests.
+
 ## Notes
 
 - Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 14 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
@@ -342,7 +432,18 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     { "id": 12, "tasks": ["18.1"] },
     { "id": 13, "tasks": ["18.2", "18.5", "18.6"] },
     { "id": 14, "tasks": ["18.3", "18.4"] },
-    { "id": 15, "tasks": ["18.7"] }
+    { "id": 15, "tasks": ["18.7"] },
+    { "id": 16, "tasks": ["19.1"] },
+    { "id": 17, "tasks": ["19.2", "19.3", "19.4"] },
+    { "id": 18, "tasks": ["19.5"] },
+    { "id": 19, "tasks": ["19.6"] },
+    { "id": 20, "tasks": ["20.1"] },
+    { "id": 21, "tasks": ["20.2"] },
+    { "id": 22, "tasks": ["20.3"] },
+    { "id": 23, "tasks": ["20.4"] },
+    { "id": 24, "tasks": ["21.1"] },
+    { "id": 25, "tasks": ["21.2", "21.3", "21.4"] },
+    { "id": 26, "tasks": ["21.5"] }
   ]
 }
 ```
