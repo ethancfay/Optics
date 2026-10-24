@@ -146,14 +146,13 @@ The "Common commands" section of `tech.md` lists these commands.
 ## Components and Interfaces
 
 ### HTTP_Client (`pipeline/data/http_client.py`), Req 9, 14.3
-
 ```python
 class HttpClient:
-    def __init__(self, sleep=time.sleep, opener=urllib.request.urlopen, clock=time.monotonic): ...
+    def __init__(self, sleep=time.sleep, opener=None, clock=time.monotonic): ...
     def get(self, url: str) -> bytes: ...
 ```
-
-- Host allowlist: the client raises `PipelineError` before sending anything if the URL host is not `clinicaltrials.gov` or `data.cdc.gov` (Req 14.3).
+- Host allowlist: the client raises `PipelineError` before sending anything if the URL is not https or the host is not exactly `clinicaltrials.gov` or `data.cdc.gov` (Req 14.3).
+- Redirect allowlist: `opener=None` means the client builds a urllib opener on each call with an `HTTPRedirectHandler` subclass that runs the same allowlist check on the redirect target, so a redirect to a host outside the allowlist (or to non-https) raises `PipelineError` and is not followed (Req 14.3). The opener is built per call rather than bound as a default argument, so the test-time network block in `tests/conftest.py` applies to it. Tests inject their own `opener`.
 - Attempts: 1 initial attempt plus up to 3 retries, waiting 1, 2, then 4 s (Req 9.1). Each `get` call has its own counter (Req 9.2).
 - Retried failures: `URLError` / `ConnectionError`, timeouts, HTTP 429, and HTTP 5xx. `Retry-After` is ignored because the requirements fix the waits.
 - Other 4xx: raises `HttpStatusError(url, status)` (a `PipelineError` subclass) with no retry (Req 9.4). The CTGov_Fetcher turns status 400 into the Req 1.11 message.
