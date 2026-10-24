@@ -195,9 +195,13 @@ class SocketClosingResponse(FakeResponse):
         return chunk
 
 
+@pytest.mark.allow_loopback
 def test_socket_closed_at_end_of_body_is_not_an_error_req_9_7():
     # Req 9.5, 9.7: the per-read timeout is set only on an open socket, so a 2xx
     # body whose socket closes at EOF is returned instead of failing with EBADF.
+    # socket.socketpair() falls back to a loopback TCP pair on Windows; the
+    # allow_loopback marker lets that connect through while the block stays on
+    # for every other address.
     a, b = socket.socketpair()
     try:
         client, opener, sleeps = make_client([SocketClosingResponse(b'{"studies":[]}', a)])

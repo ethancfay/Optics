@@ -35,10 +35,40 @@ def _describe_address(address: object) -> str:
     return str(address)
 
 
+# Loopback hosts. On Windows, socket.socketpair() has no native AF_UNIX
+# implementation and falls back to a connected TCP pair over the loopback
+# interface, so the block must let loopback connects through for tests that
+# deliberately use socketpair(). Marked with @pytest.mark.allow_loopback.
+_LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "localhost"})
+
+
+def _is_loopback(address: object) -> bool:
+    if isinstance(address, tuple) and len(address) >= 1:
+        return str(address[0]) in _LOOPBACK_HOSTS
+    return False
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    config.addinivalue_line(
+        "markers",
+        "allow_loopback: permit loopback (127.0.0.1/::1) socket connects in this test "
+        "(e.g. socket.socketpair() on Windows); all other addresses stay blocked.",
+    )
+
+
 @pytest.fixture(autouse=True)
-def network_block(monkeypatch: pytest.MonkeyPatch):
-    """Block the network for every test. Yields the list of attempted URLs."""
+def network_block(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
+    """Block the network for every test. Yields the list of attempted URLs.
+
+    A test marked ``@pytest.mark.allow_loopback`` may connect to loopback
+    addresses only; every non-loopback address, and urlopen for any URL, stays
+    blocked and recorded.
+    """
     attempts: list[str] = []
+    allow_loopback = request.node.get_closest_marker("allow_loopback") is not None
+
+    real_connect = socket.socket.connect
+    real_connect_ex = socket.socket.connect_ex
 
     def blocked_urlopen(url, *args, **kwargs):
         target = getattr(url, "full_url", url)
@@ -46,13 +76,22 @@ def network_block(monkeypatch: pytest.MonkeyPatch):
         raise NetworkBlocked(str(target))
 
     def blocked_connect(self, address):
+        if allow_loopback and _is_loopback(address):
+            return real_connect(self, address)
+        target = _describe_address(address)
+        attempts.append(target)
+        raise NetworkBlocked(target)
+
+    def blocked_connect_ex(self, address):
+        if allow_loopback and _is_loopback(address):
+            return real_connect_ex(self, address)
         target = _describe_address(address)
         attempts.append(target)
         raise NetworkBlocked(target)
 
     monkeypatch.setattr(urllib.request, "urlopen", blocked_urlopen)
     monkeypatch.setattr(socket.socket, "connect", blocked_connect)
-    monkeypatch.setattr(socket.socket, "connect_ex", blocked_connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", blocked_connect_ex)
 
     yield attempts
 

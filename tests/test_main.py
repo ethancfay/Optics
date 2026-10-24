@@ -45,6 +45,7 @@ sys.__stdout__.write(json.dumps({
 def _run_reject_probe(version):
     proc = subprocess.run(
         [sys.executable, "-c", _REJECT_PROBE, str(MAIN_PATH), json.dumps(list(version))],
+        stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
