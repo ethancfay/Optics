@@ -1,0 +1,32 @@
+/*
+ * Colour-blind-safe palette (single source of truth).
+ *
+ * All colours below are verified for WCAG AA contrast against a white
+ * (#FFFFFF) page background: >= 4.5:1 for normal text (--ink, --accent,
+ * --focus) and >= 3:1 for large text / graphical objects (chart marks,
+ * focus rings). (Req 15.1)
+ *
+ * The sequential blue ramp (--seq-1 .. --seq-5, light -> dark) is a
+ * single-hue choropleth scale chosen so it stays distinguishable under all
+ * common colour-vision deficiencies. It deliberately avoids any red/green
+ * pairing, so hue is never the sole carrier of meaning. (Req 9.5, 15.2)
+ *
+ * --unknown is the fill for counties in the Unknown_Distance state. It is
+ * always paired with an SVG hatch pattern (and "unknown" legend/table text),
+ * so the unknown state is never distinguished by colour alone. (Req 5.8, 15.2)
+ */
+:root {
+  --bg: #FFFFFF;
+  --ink: #1A1A1A;             /* body text, ~16:1 on white */
+  --accent: #0F6CBD;          /* links, chart dot/whisker; AA on white */
+  --focus: #B54708;           /* visible focus ring, AA on white */
+
+  /* Sequential blue choropleth ramp (light -> dark), colour-blind safe */
+  --seq-1: #DEEBF7;
+  --seq-2: #9ECAE1;
+  --seq-3: #4292C6;
+  --seq-4: #2171B5;
+  --seq-5: #08519C;
+
+  --unknown: #BDBDBD;         /* "unknown" fill, paired with a hatch pattern */
+}

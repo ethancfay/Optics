@@ -8,23 +8,23 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
 
 ## Tasks
 
-- [ ] 1. Scaffold the Vite + React + TypeScript project and tooling
+- [x] 1. Scaffold the Vite + React + TypeScript project and tooling
   - Create the `web/` Vite + React + TypeScript app (`web/package.json`, `tsconfig.json`, `vite.config.ts`, `index.html`, `src/main.tsx`, `src/App.tsx` placeholder).
   - Add and configure the test stack: Vitest with jsdom environment, `@testing-library/react`, `@testing-library/jest-dom`, and `fast-check`; wire a `vitest.config.ts` (or `test` block in `vite.config.ts`) and a `test` npm script using `vitest --run`.
   - Add `web/vercel.json` with a SPA rewrite of all paths to `/index.html`, and document that the Vercel project root directory is `web`.
   - Add `react-router-dom` (v6) and `d3-geo` as pinned dependencies; create the base folder layout (`src/data/`, `src/components/`, `src/pages/`, `src/styles/`, `src/test/`).
   - _Requirements: 1.1, 1.3, 1.4, 14.3_
 
-- [ ] 2. Data contract types, palette, and shared constants
-  - [ ] 2.1 Define TypeScript types for the six-file JSON contract
+- [x] 2. Data contract types, palette, and shared constants
+  - [x] 2.1 Define TypeScript types for the six-file JSON contract
     - Create `src/data/types.ts` with `WhatEntry` (incl. `t`, `p_low`, `p_high`, `ctgov_url`), `LabelCount`, `Finding`, `InvestigateEntry`, `NctRef`, `EvidenceEntry`, `WhereEntry` (`miles_to_nearest: number | null`, `has_verified_site: boolean`), `SourceEntry`, `SourcesData` (with optional `is_sample`), `CountyFeature`, and the `LoadState<T>` discriminated union exactly as in the design.
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.12_
 
-  - [ ] 2.2 Define the colour-blind-safe palette
+  - [x] 2.2 Define the colour-blind-safe palette
     - Create `src/styles/palette.css` with the CSS custom properties (`--bg`, `--ink`, `--accent`, `--focus`, `--seq-1..5`, `--unknown`) from the design, verified for WCAG AA contrast on white.
     - _Requirements: 5.8, 9.5, 15.1, 15.2_
 
-  - [ ] 2.3 Define shared label and forbidden-term constants and the content-safety guard
+  - [x] 2.3 Define shared label and forbidden-term constants and the content-safety guard
     - Create `src/data/evidenceLabels.ts` exporting the `EvidenceLabel` union and the `EVIDENCE_LABELS` constant object (`possible`, `cannotDetermine`) as the single source of truth for the two permitted finding labels.
     - Create `src/data/forbiddenTerms.ts` exporting `FORBIDDEN_TERMS` (`neglected`, `underfunded`, `needs more trials`, `unmet need`, `optimal ratio`).
     - Create `src/data/contentSafety.ts` with `containsContactData(value)` scanning for email and North-American phone patterns, so validators and tests can enforce that no name/email/phone is ever exposed in data or UI.

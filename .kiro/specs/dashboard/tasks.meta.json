@@ -1,0 +1,60 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "2.1 Define TypeScript types for the six-file JSON contract": [
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861763433
+      },
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861924628
+      }
+    ],
+    "2.2 Define the colour-blind-safe palette": [
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861764881
+      },
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861926013
+      }
+    ],
+    "2.3 Define shared label and forbidden-term constants and the content-safety guard": [
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861765671
+      },
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861926644
+      }
+    ],
+    "2. Data contract types, palette, and shared constants": [
+      {
+        "executionId": "982a9ea5-f42b-485d-93e0-45e0a7f7220f",
+        "chatSessionId": "sess_e2cccf7f-e5f2-4cbe-a2cb-4f74c41ecdf2",
+        "timestamp": 1792861926683
+      }
+    ],
+    "1. Scaffold the Vite + React + TypeScript project and tooling": [
+      {
+        "executionId": "8b59e8e8-92ed-46b5-8735-505e63d3bb8e",
+        "chatSessionId": "sess_2033c659-9887-4d5e-a548-3b1c3f188e25",
+        "timestamp": 1792861939538
+      },
+      {
+        "executionId": "8b59e8e8-92ed-46b5-8735-505e63d3bb8e",
+        "chatSessionId": "sess_2033c659-9887-4d5e-a548-3b1c3f188e25",
+        "timestamp": 1792862316970
+      }
+    ]
+  }
+}
