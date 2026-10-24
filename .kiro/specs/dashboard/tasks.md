@@ -380,7 +380,7 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Spec-change checkpoint: do not start 21.2-21.5 until the spec changes are approved.
     - _Requirements: 5.12-5.14, 6.1-6.9, 22.1-22.8_
 
-  - [ ] 21.2 Log scale with linear fallback in `chartScale`
+  - [x] 21.2 Log scale with linear fallback in `chartScale`
     - Extend `ChartScale` with `kind: "log" | "linear"` and `ticks`. Log mode when every `low > 0`: domain `[10 ** floor(log10(min low)), 1.1 × max high]` (epsilon-safe floor), ticks at every power of ten in the domain. Otherwise linear `[0, max high]` with ticks from `axisTicks(0, max high)`; zero-width domain pins to `rangeMin`.
     - `DotWhiskerChart`: draw gridlines/labels from `scale.ticks`; axis label gets " (log scale)" in log mode only; add the log-scale sentence to the SVG `<title>` in log mode; keep `aria-describedby={tableId}`. `formatAxisTick` prints "0.1", "1", "10", "1,000".
     - Update Property 6 in `chartScale.test.ts` (tag `// Feature: dashboard, Property 6: ...`, `numRuns: 100`) to cover both modes: `kind` is `log` iff every `low > 0`; `x(low) <= x(mid) <= x(high)`; positions inside the range; log ticks are powers of ten in the domain. Generators span several decades and sometimes inject `low = 0`.

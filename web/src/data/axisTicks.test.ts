@@ -60,4 +60,15 @@ describe("formatAxisTick", () => {
     expect(formatAxisTick(0.30000000000000004)).toBe("0.3");
     expect(formatAxisTick(Number.NaN)).toBe("");
   });
+
+  it("renders log-scale powers of ten in plain decimal form (Req 22.3)", () => {
+    expect(formatAxisTick(0.1)).toBe("0.1");
+    expect(formatAxisTick(1)).toBe("1");
+    expect(formatAxisTick(10)).toBe("10");
+    expect(formatAxisTick(100)).toBe("100");
+    expect(formatAxisTick(1000)).toBe("1,000");
+    expect(formatAxisTick(1 / 100)).toBe("0.01");
+    expect(formatAxisTick(1 / 1000)).toBe("0.001");
+    expect(formatAxisTick(0.0010000000000000002)).toBe("0.001");
+  });
 });

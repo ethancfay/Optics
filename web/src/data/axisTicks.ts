@@ -96,15 +96,29 @@ export function axisTicks(
   return ticks;
 }
 
+/** Fixed en-US grouping so tick labels do not depend on the browser locale. */
+const INTEGER_FORMAT = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 0,
+});
+
 /**
- * Format a tick value for display: integers plainly ("2"), fractional ticks
- * with at most one decimal ("2.5") so the axis stays compact and tabular.
+ * Format a tick value for display in plain decimal form: integers with en-US
+ * grouping ("2", "1,000"), fractional ticks of at least 0.1 with at most one
+ * decimal ("2.5"), and smaller log-scale ticks with their own significant
+ * digits ("0.01", "0.001") so they are never rounded to "0" (Req 22.3).
  */
 export function formatAxisTick(value: number): string {
   if (!Number.isFinite(value)) {
     return "";
   }
-  return Number.isInteger(value)
-    ? String(value)
-    : String(Math.round(value * 10) / 10);
+  if (Number.isInteger(value)) {
+    return INTEGER_FORMAT.format(value);
+  }
+  if (Math.abs(value) >= 0.1) {
+    return String(Math.round(value * 10) / 10);
+  }
+  // Fixed-point with a few digits past the first significant one strips binary
+  // noise (0.0010000000000000002 -> "0.001") and never uses exponent form.
+  const digits = Math.min(20, 5 - Math.floor(Math.log10(Math.abs(value))));
+  return value.toFixed(digits).replace(/0+$/, "");
 }
