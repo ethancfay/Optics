@@ -27,3 +27,5 @@ Tightened sites.zip validation to accept only `^\d{5}(-?\d{4})?$` (5 digits or 5
 - All 238 tests pass
 | 20:17 | Ethan | Custom agent (health-reviewer) | Ran health-reviewer as a read-only sub-agent on product.md, README.md, pipeline/transform/. NEEDS CHANGES: README listed IHME and U.S. Census (not allowed sources), used "looks thin" framing, and omitted the adult-18+/not-severity limit. product.md and transform/ passed. | |
 | 20:19 | Ethan | Custom agent (health-reviewer) | Applied the 3 README fixes (neutral wording, adult 18+ / not-severity limit, only ClinicalTrials.gov + CDC PLACES). Re-ran health-reviewer: PASS, 0 findings. | |
+| 2026-10-24T20:24Z | Kiro | Stop hook | Compliance pass on session-changed files (new .kiro/settings/mcp.json; README already committed clean): no forbidden claim terms and no contact data (email/phone/names) found. | |
+| 2026-10-24T20:27Z | Kiro | Stop hook | Compliance pass on session-changed files (KIRO_LOG.md, new fetch-domain allowlist hook + guard script, mcp.json): no forbidden claim terms and no contact data (email/phone/names) found. | |
