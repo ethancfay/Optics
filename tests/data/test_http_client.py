@@ -167,3 +167,42 @@ def test_headers_and_allowed_places_host():
     request, _ = opener.requests[0]
     assert request.get_header("User-agent") == "research-gap-index-pipeline"
     assert request.get_header("Accept") == "application/json"
+
+
+class _Raw:
+    def __init__(self, sock):
+        self._sock = sock
+
+
+class _Fp:
+    def __init__(self, sock):
+        self.raw = _Raw(sock)
+
+
+class SocketClosingResponse(FakeResponse):
+    """Like http.client: the socket is closed as soon as the whole body has been read,
+    before the final read returns b"" (found in the first live run, task 11)."""
+
+    def __init__(self, body, sock):
+        super().__init__(body)
+        self.fp = _Fp(sock)
+        self._sock = sock
+
+    def read(self, n=-1):
+        chunk = self._buf.read(n)
+        if self._buf.tell() == len(self._buf.getvalue()):
+            self._sock.close()
+        return chunk
+
+
+def test_socket_closed_at_end_of_body_is_not_an_error_req_9_7():
+    # Req 9.5, 9.7: the per-read timeout is set only on an open socket, so a 2xx
+    # body whose socket closes at EOF is returned instead of failing with EBADF.
+    a, b = socket.socketpair()
+    try:
+        client, opener, sleeps = make_client([SocketClosingResponse(b'{"studies":[]}', a)])
+        assert client.get(URL) == b'{"studies":[]}'
+        assert len(opener.requests) == 1 and sleeps == []
+    finally:
+        a.close()
+        b.close()

@@ -155,7 +155,10 @@ class HttpClient:
             remaining = deadline - self._clock()
             if remaining <= 0:
                 raise _RetryableFailure("timeout")
-            if sock is not None:
+            # http.client closes the socket once it has read the whole body,
+            # before the final read returns b"". A closed socket has fileno -1
+            # and settimeout would raise EBADF, so it is skipped then.
+            if sock is not None and sock.fileno() != -1:
                 sock.settimeout(remaining)
             chunk = response.read(CHUNK_SIZE)
             if not chunk:

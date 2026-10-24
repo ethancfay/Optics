@@ -6,7 +6,11 @@ Removes contact data from a ClinicalTrials.gov page at any nesting depth:
 - `contacts` from each dict element of any list stored under a key named
   `locations` (one count per removed `contacts` key);
 - the investigator name fields of any dict stored under a key named
-  `responsibleParty` (one count per removed field).
+  `responsibleParty` (one count per removed field);
+- inside each dict element of a `locations` list, every Email_Pattern or
+  Phone_Pattern match in a string `facility` or `city` value is replaced with
+  `[removed]` (one count per replaced match). The first live run found phone
+  numbers written into a facility name (task 11).
 
 The walk is iterative (explicit stack), so deep inputs cannot hit the recursion
 limit. `scrub` builds a new tree and never mutates or returns its input.
@@ -19,9 +23,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from pipeline.errors import PipelineError
+from pipeline.patterns import PATTERNS
 
 ALWAYS_REMOVED = ("centralContacts", "overallOfficials")
 LOCATION_CONTACTS_KEY = "contacts"
+LOCATION_TEXT_FIELDS = ("facility", "city")
+REDACTION = "[removed]"
 RESPONSIBLE_PARTY_FIELDS = frozenset(
     {"investigatorFullName", "investigatorTitle", "investigatorAffiliation", "oldNameTitle"}
 )
@@ -32,6 +39,7 @@ LOG_KEYS = (
     ("overallOfficials", "overallOfficials"),
     ("locations_contacts", "locations[].contacts"),
     ("responsibleParty_investigator", "responsibleParty investigator name fields"),
+    ("locations_text", "locations[] facility/city pattern matches"),
 )
 
 _SCALARS = (str, int, float, bool, type(None))
@@ -43,6 +51,7 @@ class RemovalCounts:
     overallOfficials: int = 0
     locations_contacts: int = 0  # reported as "locations[].contacts"
     responsibleParty_investigator: int = 0
+    locations_text: int = 0  # reported as "locations[] facility/city pattern matches"
 
     def __add__(self, other: "RemovalCounts") -> "RemovalCounts":
         if not isinstance(other, RemovalCounts):
@@ -112,6 +121,11 @@ def _scrub(page: object) -> tuple[dict, RemovalCounts]:
                     else:
                         counts.responsibleParty_investigator += 1
                     continue
+                if (LOCATION_CONTACTS_KEY in drop_self and key in LOCATION_TEXT_FIELDS
+                        and isinstance(value, str)):
+                    # src is a location element: redact contact patterns (Req 3.2).
+                    value, replaced = _redact(value)
+                    counts.locations_text += replaced
                 child_drop_self: frozenset = frozenset()
                 child_drop_elements: frozenset = frozenset()
                 if key == "locations" and isinstance(value, list):
@@ -124,6 +138,15 @@ def _scrub(page: object) -> tuple[dict, RemovalCounts]:
                 elem_drop = drop_elements if isinstance(value, dict) else frozenset()
                 dst.append(_child(value, stack, elem_drop, frozenset()))  # type: ignore[union-attr]
     return root, counts
+
+
+def _redact(text: str) -> tuple[str, int]:
+    """Replace every Email_Pattern, then Phone_Pattern, match with REDACTION."""
+    total = 0
+    for _, regex in PATTERNS:
+        text, n = regex.subn(REDACTION, text)
+        total += n
+    return text, total
 
 
 def _child(value: object, stack: list, drop_self: frozenset, drop_elements: frozenset) -> object:

@@ -83,7 +83,28 @@ def test_scrub_zero_counts_when_nothing_removed():
     assert counts.to_log_dict() == {
         "centralContacts": 0, "overallOfficials": 0, "locations[].contacts": 0,
         "responsibleParty investigator name fields": 0,
+        "locations[] facility/city pattern matches": 0,
     }
+
+
+def test_scrub_redacts_patterns_in_location_facility_and_city():
+    """Req 3.2, 3.4 (amended in task 11): Email/Phone matches inside a location's
+    facility or city text become [removed], one count per match. Other fields,
+    and facility text outside a locations list, are left alone."""
+    page = {"studies": [{"protocolSection": {"contactsLocationsModule": {"locations": [
+        {"facility": "Clinic, Dept (1-617-555-0100, 1-617-555-0199) and more",
+         "city": "Boston a@b.org", "zip": "0211512345", "state": "Massachusetts"},
+        {"facility": "Plain Site", "city": "Worcester"},
+    ]}}, "facility": "617-555-0100"}]}
+    scrubbed, counts = scrub(page, 1, URL)
+    locations = scrubbed["studies"][0]["protocolSection"]["contactsLocationsModule"]["locations"]
+    assert locations[0]["facility"] == "Clinic, Dept ([removed], [removed]) and more"
+    assert locations[0]["city"] == "Boston [removed]"
+    assert locations[0]["zip"] == "0211512345"
+    assert locations[1] == {"facility": "Plain Site", "city": "Worcester"}
+    assert scrubbed["studies"][0]["facility"] == "617-555-0100"
+    assert counts == RemovalCounts(locations_text=3)
+    assert "617-555" not in json.dumps(locations) and "a@b.org" not in json.dumps(locations)
 
 
 def test_scrub_handles_deep_nesting_without_recursion_error():

@@ -44,7 +44,8 @@ def test_file_names_and_manifest(tmp_path):
         "pages": {"ctgov_q1": 2, "ctgov_q2": 1, "cdc_places": 1},
         "contact_removals": {"centralContacts": 1, "overallOfficials": 2,
                              "locations[].contacts": 3,
-                             "responsibleParty investigator name fields": 4},
+                             "responsibleParty investigator name fields": 4,
+                             "locations[] facility/city pattern matches": 0},
     }
 
 

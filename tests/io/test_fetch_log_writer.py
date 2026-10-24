@@ -75,7 +75,8 @@ def test_shape_and_key_order():
     assert log["urls"]["cdc_places"] == ["https://data.cdc.gov/p"]
     assert log["contact_removals"] == {
         "centralContacts": 1, "overallOfficials": 2, "locations[].contacts": 3,
-        "responsibleParty investigator name fields": 4}
+        "responsibleParty investigator name fields": 4,
+        "locations[] facility/city pattern matches": 0}
     assert log["missing_geo"]["count"] == 3
     assert [(s["nctId"], s["facility"]) for s in log["missing_geo"]["sites"]] == [
         ("NCT1", "A"), ("NCT1", "B"), ("NCT2", "A")]

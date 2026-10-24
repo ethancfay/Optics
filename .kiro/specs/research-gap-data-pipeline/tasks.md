@@ -163,7 +163,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 7.2–7.9, 13.4_
 
-- [-] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
+- [x] 10. PII_Guard, Sanity_Checker, and Fetch_Log_Writer
   - Implement `pipeline/transform/pii_guard.py` as specified in design § PII_Guard:
     - Scan the encoded cells and each decoded list item.
     - Report every match, with file, row identifier, field, and pattern, but never the matched text.
@@ -179,7 +179,7 @@ Rules for every task:
   - Done when: `pytest` passes.
   - _Requirements: 8.1, 8.2, 8.4, 8.5, 11.1–11.6, 12.2–12.8, 12.11, 12.12_
 
-- [ ] 11. Atomic output, end-to-end run, and first live fetch
+- [-] 11. Atomic output, end-to-end run, and first live fetch
   - Implement `pipeline/io/atomic.py`: a staging directory under `pipeline/`, three CSVs then `os.replace`, then `fetch_log.json`, with cleanup in `finally` (design § Atomic output).
   - Wire up `run()` in `__main__.py` in the order shown in design § Data flow:
     - The network path and the offline path. The offline path never builds an HTTP_Client.

@@ -51,6 +51,7 @@ pipeline/
   __init__.py              # empty; must parse on old Pythons (see Version check)
   __main__.py              # entry point: version check, argument parsing, run orchestration
   errors.py                # PipelineError (shared by all subpackages)
+  patterns.py              # Email_Pattern, Phone_Pattern (Contact_Scrubber + PII_Guard)
   data/
     __init__.py
     http_client.py         # HTTP_Client
@@ -160,6 +161,8 @@ class HttpClient:
 - 60 s total per attempt (Req 9.5): urllib's `timeout` applies to each socket operation, not to the whole response. The client therefore records a deadline when it sends the request, reads the body in 64 KiB chunks, and resets the socket timeout to the remaining time before each read. Passing the deadline raises a timeout failure.
 - Headers: `User-Agent: research-gap-index-pipeline` and `Accept: application/json`. No API keys.
 - The client returns the raw bytes. It never logs bodies.
+- Socket closed at end of body (fixed in task 11): `http.client` closes the socket as soon as the whole body has been read, before the last `read` returns `b""`. Calling `settimeout` on that socket raised `OSError` EBADF, which the first live run reported as "connection error (OSError) after 4 attempts". The client now resets the timeout only while `sock.fileno() != -1`. The deadline check between chunks is unchanged.
+- No HTTP 400 was seen in the first live run, so the optional "name the rejected parameter from the 400 body" change was not made. The 400 message still gives the `filter.geo` / `filter.advanced` hint (Req 1.11).
 
 ### CTGov_Fetcher (`pipeline/data/ctgov_fetcher.py`), Req 1, 3.1
 
@@ -308,6 +311,8 @@ Removed structures (Req 3.4):
 - `contacts` from each dict element of any list stored under a key named `locations`, counting one per removed `contacts` key.
 - The investigator name fields (`investigatorFullName`, `investigatorTitle`, `investigatorAffiliation`, `oldNameTitle`) of any dict stored under a key named `responsibleParty`, counting one per removed field. `oldNameTitle` is the legacy name field.
 
+Replaced text (Req 3.2 as amended in task 11): inside each dict element of a `locations` list, every Email_Pattern match and then every Phone_Pattern match in a string `facility` or `city` value is replaced with `[removed]`, counting one per replaced match (`RemovalCounts.locations_text`, log name `locations[] facility/city pattern matches`). The first live run found a Massachusetts site whose 232-character facility text contained two phone numbers. Before this rule the Raw_Store stored them and the PII_Guard stopped the run. The patterns come from `pipeline/patterns.py`, which the PII_Guard also uses, so both apply the same definitions. Other location fields are not rewritten. `zip` is excluded on purpose (see PII_Guard).
+
 Error handling (Req 3.5): `scrub` raises `PipelineError` if the page is not a dict, if any key is not a string, or if any value is not a JSON type. The `page_number` and `url` arguments are used only in the error message, which names only the page number and URL, never page content.
 
 `RemovalCounts` has `to_log_dict` and `from_log_dict` methods that map the fields to their log names (`centralContacts`, `overallOfficials`, `locations[].contacts`, `responsibleParty investigator name fields`). These log names appear in `manifest.json` and `fetch_log.json`.
@@ -333,7 +338,8 @@ manifest.json                                      # written last; it marks a co
  "urls": {"clinicaltrials_gov": [...], "cdc_places": [...]},
  "pages": {"ctgov_q1": N1, "ctgov_q2": N2, "cdc_places": M},
  "contact_removals": {"centralContacts": 0, "overallOfficials": 0,
-                      "locations[].contacts": 0, "responsibleParty investigator name fields": 0}}
+                      "locations[].contacts": 0, "responsibleParty investigator name fields": 0,
+                      "locations[] facility/city pattern matches": 0}}
 ```
 
 The `fetch_date` is stored as `YYYY-MM-DDTHH:MM:SSZ` in UTC. The `urls` object has one list per source: `clinicaltrials_gov` holds the Q1 and Q2 URLs in order, and `cdc_places` holds the PLACES URLs. The `pages` object counts by raw file prefix (`ctgov_q1`, `ctgov_q2`, `cdc_places`).
@@ -506,6 +512,11 @@ Implementation details fixed in task 10:
 - Each entry reads `<file>: <row identifier>: field <name>: <email|phone>`. Row identifiers are `nctId=<value>` for studies, `nctId=<value>, row <n>` for sites, and `locationname=<value>, measureid=<value>` for PLACES (Req 8.4).
 - If an identifier cell itself matches a pattern, its value is written as `<redacted>`, so the message never carries matched text (Req 8.4, 3.3).
 
+Changes from task 11 (first live run):
+
+- `EMAIL`, `PHONE`, and `PATTERNS` now live in `pipeline/patterns.py`. `pii_guard` re-exports `EMAIL` and `PHONE`.
+- `EMAIL_ONLY_FIELDS = {"sites": {"zip"}}`: `sites.zip` is checked against the Email_Pattern only (Req 8.7). The live run found a Massachusetts site with a 10-digit zip, a ZIP+4 written without its hyphen, and it matched the Phone_Pattern. The P1 test applies the same exemption.
+
 ### Sanity_Checker (`pipeline/transform/sanity_checker.py`), Req 11
 
 ```python
@@ -537,7 +548,8 @@ The log is written with `json.dumps(obj, ensure_ascii=False, indent=2)` plus a t
   "urls": {"clinicaltrials_gov": [], "cdc_places": []},
   "contact_removals": {"centralContacts": 0, "overallOfficials": 0,
                        "locations[].contacts": 0,
-                       "responsibleParty investigator name fields": 0},
+                       "responsibleParty investigator name fields": 0,
+                       "locations[] facility/city pattern matches": 0},
   "missing_geo": {"count": 0, "sites": [{"nctId": "", "facility": "", "location_quality": ""}]},
   "places_duplicates": [{"locationid": "", "measureid": "", "kept_year": "", "discarded": 0}],
   "warnings": []
@@ -568,6 +580,12 @@ Implementation details fixed in task 10:
 4. It moves each CSV into `processed/` with `os.replace`. Each replace is atomic for that file.
 5. It writes `fetch_log.json` to staging, then moves it with `os.replace` (Req 12.1).
 6. It removes the staging directory. A `finally` block also removes it on failure.
+
+Implementation details fixed in task 11:
+
+- `write_outputs(pipeline_dir, processed_dir, csv_files, fetch_log)` takes `[(file_name, bytes), ...]` for the three CSVs and the `fetch_log.json` bytes. `processed/` is created only after all three CSVs are staged.
+- Staged files are written by `_write_bytes` (write, flush, fsync). Tests patch it to simulate disk errors. An `OSError` becomes `PipelineError("could not write <file> (<ErrorType>: <strerror>)")` (Req 7.10, 12.10).
+- `__main__._run_stages` follows design § Data flow. The network path is `begin_network_run` → `fetch_ctgov` → `fetch_places` → `finish_network_run`. The offline path is `RawStore.load` plus a re-scrub of every CTGov page, with the re-scrub counts added to the stored totals, and it never builds an `HttpClient`. Both paths then run the fetch checks, the transformers, `encode_rows`, the PII_Guard, the Sanity_Checker, `build_fetch_log`, and `write_outputs`. The `<file>: <n> rows` summary goes to stdout only after `write_outputs` returns (Req 14.6, 14.8). In a network run, `run_started_at` and the Fetch_Date are the same timestamp, captured once at the start.
 
 Remaining risk: if the second or third `os.replace` fails (for example, a disk error), the CSVs already moved are new while the rest are old. Making the whole set atomic would need a directory swap with a `processed` symlink. I consider that out of proportion for a laptop tool. If the user reports the problem, it can be added later. `.gitignore` excludes `pipeline/.staging-*/`.
 

@@ -11,18 +11,14 @@ matched text is never included (Req 8.4, 3.3).
 from __future__ import annotations
 
 import json
-import re
 
 from pipeline.errors import PipelineError
 from pipeline.io.csv_writer import LIST_COLUMNS, EncodedTable
+from pipeline.patterns import EMAIL, PATTERNS, PHONE  # noqa: F401 (EMAIL, PHONE re-exported)
 
-EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
-# The (?<![\d.]) lookbehind stops the decimal part of a long coordinate such
-# as -71.8123456789 from matching (design § PII_Guard).
-PHONE = re.compile(
-    r"(?<![\d.])(?:\+?1[ .-]?)?(?:\(\d{3}\)|\d{3})[ .-]?\d{3}[ .-]?\d{4}(?!\d)"
-)
-PATTERNS = (("email", EMAIL), ("phone", PHONE))
+# Fields checked against the Email_Pattern only (Req 8.1, amended in task 11):
+# a 10-digit ZIP+4 written without its hyphen matches the Phone_Pattern.
+EMAIL_ONLY_FIELDS = {"sites": frozenset({"zip"})}
 
 # Table order used when listing matches.
 TABLE_ORDER = ("studies", "sites", "places")
@@ -41,9 +37,10 @@ def _candidates(cell: str, is_list: bool) -> list[str]:
     return values
 
 
-def _matched_patterns(cell: str, is_list: bool) -> list[str]:
+def _matched_patterns(cell: str, is_list: bool, email_only: bool = False) -> list[str]:
     values = _candidates(cell, is_list)
-    return [name for name, regex in PATTERNS if any(regex.search(v) for v in values)]
+    return [name for name, regex in PATTERNS
+            if not (email_only and name == "phone") and any(regex.search(v) for v in values)]
 
 
 def _is_clean(value: str) -> bool:
@@ -73,9 +70,10 @@ def find_matches(tables: dict[str, EncodedTable]) -> list[str]:
     for key in ordered:
         table = tables[key]
         list_columns = LIST_COLUMNS.get(table.kind, frozenset())
+        email_only = EMAIL_ONLY_FIELDS.get(table.kind, frozenset())
         for index, cells in enumerate(table.rows):
             for name, cell in zip(table.header, cells):
-                for pattern in _matched_patterns(cell, name in list_columns):
+                for pattern in _matched_patterns(cell, name in list_columns, name in email_only):
                     entries.append("%s: %s: field %s: %s" % (
                         table.file_name, _row_identifier(table, index, cells), name, pattern))
     return entries

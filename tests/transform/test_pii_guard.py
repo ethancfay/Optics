@@ -113,3 +113,17 @@ def test_matching_identifier_is_redacted():
     msg = str(err.value)
     assert "locationname=<redacted>" in msg
     assert EMAIL_VALUE not in msg
+
+
+def test_site_zip_is_checked_for_email_only():
+    """Req 8.1 (amended in task 11): a 10-digit ZIP+4 with no hyphen is not a phone
+    match in sites.zip, but an email in zip, or a phone in another site field, still is."""
+    ok = site()
+    ok = SiteRow(**{**ok.__dict__, "zip": "0211512345"})
+    pii_guard.check(tables(sites=[ok]))
+    with_email = SiteRow(**{**ok.__dict__, "zip": "a@b.org"})
+    assert pii_guard.find_matches(tables(sites=[with_email])) == [
+        "sites.csv: nctId=NCT00000001, row 1: field zip: email"]
+    phone_city = SiteRow(**{**ok.__dict__, "city": "0211512345"})
+    assert pii_guard.find_matches(tables(sites=[phone_city])) == [
+        "sites.csv: nctId=NCT00000001, row 1: field city: phone"]
