@@ -13,7 +13,7 @@ The Pipeline keeps all study types and all site statuses. Spec 3 (scoring) filte
 
 ### Requirements changes needed before implementation
 
-`structure.md` says to update the spec before code differs from it. The split fetch changes the following text in `requirements.md`. **These changes have not been applied yet.** They need approval, and they need the V10 result from task 1.
+`structure.md` says to update the spec before code differs from it. The split fetch changes the following text in `requirements.md`. **Applied on 2026-10-24 at the end of task 1.** V10 passed, so Q2 keeps `filter.advanced` (see `probe_results.md`).
 
 | Location | Current text | Change to |
 |---|---|---|
@@ -383,6 +383,8 @@ def build_places_rows(records: list[dict]) -> tuple[list[PlacesRow], list[Places
 PLACES_Row columns, in this order: `locationname, locationid, measureid, measure, data_value, low_confidence_limit, high_confidence_limit, totalpop18plus, latitude, longitude, year`.
 
 Socrata leaves null fields out of the JSON entirely. The transformer treats an absent key the same as an empty value.
+
+**PLACES measures do not all share one data year.** Probe V5 found 490 MA crude prevalence rows from 2023 and 70 from 2022, all in the same 2025 release. These are different measures, not duplicates: no (`locationname`, `measureid`) pair repeats. Each PLACES_Row therefore keeps its own `year` column, and code must never assume one year for the whole release. Downstream outputs (Spec 2 grouping, Spec 3 scoring and `web/public/data/*.json`, Spec 4 display) must carry the data year for each measure alongside the prevalence values. They must not show one release-wide year in its place.
 
 ### CSV_Writer (`pipeline/io/csv_writer.py`), Req 7
 

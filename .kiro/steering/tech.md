@@ -16,7 +16,13 @@
 
 ## External APIs
 
-- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies` with `filter.geo=distance(42.3,-71.8,150mi)`, `filter.overallStatus` = RECRUITING, NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED (COMPLETED kept only if `lastUpdatePostDate` is within 3 years), all study types, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination. Hard limit of 100 pages; a repeated token is an error. The number of studies fetched must equal `totalCount`. Study-type and status filtering for metrics happens in scoring, not fetching.
+- ClinicalTrials.gov v2: `https://clinicaltrials.gov/api/v2/studies`. Two queries are sent, Q1 first and then Q2. Both use `filter.geo=distance(42.3,-71.8,150mi)`, all study types, `pageSize=1000`, `countTotal=true`, an explicit `fields` list, and `pageToken` pagination.
+  - **Q1:** `filter.overallStatus=RECRUITING,NOT_YET_RECRUITING,ACTIVE_NOT_RECRUITING`.
+  - **Q2:** `filter.overallStatus=COMPLETED` plus `filter.advanced=AREA[LastUpdatePostDate]RANGE[<cutoff − 1 day>,MAX]`, where the cutoff is the fetch date minus 3 years.
+  - Results are merged (Q1 first) and deduplicated by `nctId`. The 3-year `lastUpdatePostDate` rule for COMPLETED is applied again after the fetch.
+  - Each query has a hard limit of 100 pages, a repeated token is an error, and the studies fetched must equal that query's `totalCount`.
+  - Probes on 2026-10-24 returned Q1 = 9,095 and Q2 = 7,110 (see `.kiro/specs/research-gap-data-pipeline/probe_results.md`).
+  - Study-type and status filtering for metrics happens in scoring, not fetching.
 
 ## Conventions
 

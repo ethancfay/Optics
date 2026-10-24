@@ -8,7 +8,7 @@ Rules for every task:
 - Tasks marked `*` and **(optional)** can be skipped if time is short. Skipping one leaves the listed requirement checked only by the review, not by a test.
 - Design sections are cited as "design § Name".
 
-- [ ] 1. Run API probes V1–V10 and record results
+- [x] 1. Run API probes V1–V10 and record results
   - Run each probe in design § Verify before building, using `pageSize=1` (`$limit=1` for PLACES) and the output filters given.
   - Never print or save raw ClinicalTrials.gov bodies. Print only key names, counts, identifiers, and dates.
   - Write `.kiro/specs/research-gap-data-pipeline/probe_results.md` with one row per probe, giving:
@@ -20,8 +20,11 @@ Rules for every task:
   - Record the Q1 and Q2 `totalCount` values and the expected page counts.
   - **Stop here if V1, V3, V4, or V5 fails.** Report the failure, and revise the design before starting task 2.
   - For V2, V6, V7, V8, V9, or V10 failures, record which fallback from the design applies. For V10, record the value of `Q2_SERVER_CUTOFF` (`True` or `False`).
-  - Before task 2, apply the requirement changes in design § Requirements changes needed to `requirements.md`, using the V10 outcome. This needs owner approval.
-  - Done when: `probe_results.md` is committed, and there are no core failures. No code is written and no tests run in this task.
+  - In the same step, once V10's result is known:
+    - Apply the requirement changes in design § Requirements changes needed to `requirements.md`. Use the V10 outcome to decide whether Q2 includes `filter.advanced`.
+    - Update the ClinicalTrials.gov line in the "External APIs" section of `tech.md` to describe Q1 and Q2.
+  - **Then stop and show `probe_results.md` to the owner before starting task 2.**
+  - Done when: `probe_results.md`, `requirements.md`, and `tech.md` are updated, there are no core failures, and the owner has reviewed the results. No code is written and no tests run in this task.
   - _Requirements: 1.1, 1.7, 1.9, 1.11, 2.1–2.3, 3.1, 4.1, 4.2, 5.1–5.4, 6.1, 6.5, 6.8_
 
 - [ ] 2. Scaffold the package, version check, and test harness
@@ -87,6 +90,7 @@ Rules for every task:
     - Parameters are identical across pages except `pageToken`.
     - The Q2 URL contains the expected cutoff date. This includes a Fetch_Date on 29 February and a `Q2_SERVER_CUTOFF=False` case.
     - A repeated token within a query, and the same token in Q1 and Q2 (allowed).
+    - A query whose Total_Count is an exact multiple of 1,000. The full last page carries a token, and the next page returns `studies: []` with no token (probe V7).
     - The 100-page limit.
     - A non-JSON body, and a missing `studies` key.
     - A `totalCount` mismatch in Q1, and separately in Q2.
