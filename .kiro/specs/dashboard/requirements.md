@@ -223,7 +223,7 @@ This spec also defines sample placeholder JSON files so the site can be built an
 #### Acceptance Criteria
 
 1. THE Method_Page SHALL display the formula used to compute the Index_Value as `[T / (N * p_high), T / (N * p_low)] * 100,000`, where `T` is the distinct recruiting Massachusetts study count, `N` is the adult (18+) population denominator, and `p_low` and `p_high` are the CDC PLACES crude-prevalence confidence limits.
-2. THE Method_Page SHALL display the crosswalk and filters used to attribute studies to each Disease.
+2. THE Method_Page SHALL display the matching rules (Requirement 21) and the filters used to attribute studies to each Disease.
 3. THE Method_Page SHALL display each Source_Entry from Sources_Data as a named link to its `url`, together with that source's `fetched` date.
 4. THE Method_Page SHALL display the limit that burden is measured as CDC PLACES crude prevalence for adults aged 18 and older and does not include disability-adjusted life years or any measure of severity.
 5. THE Method_Page SHALL display the limit that Massachusetts trial activity does not represent all research relevant to Massachusetts patients.
@@ -343,4 +343,19 @@ This spec also defines sample placeholder JSON files so the site can be built an
 3. THE sample `sources.json` `data_as_of` and every Source_Entry `fetched` date SHALL equal the UTC date (`YYYY-MM-DD`) of `fetch_date` in `pipeline/processed/fetch_log.json`.
 4. No rendered page SHALL display text that names high blood pressure, hypertension or depression, or that says the Dashboard covers "five" diseases, except the Method_Page scope sentence in criterion 6.
 5. THE Investigate_Page introduction SHALL display the sentence "The numbers come straight from public study records." only WHEN Sources_Data is loaded and its `is_sample` field is exactly `false`. In every other case (Sources_Data loading, failed, empty, or loaded with `is_sample` true or absent) THE Investigate_Page SHALL display, in its place, the cautious sentence "These are sample numbers for layout; real counts come from the scoring export." This rule does not change the sample-data banner, which still shows only when Sources_Data is loaded with `is_sample` true (Requirement 2.7).
-6. THE Method_Page SHALL display, in plain language at grade 8 or lower: (a) that the index covers three diseases today (asthma, diabetes and high cholesterol), and that high blood pressure and depression can be added later by editing the rules file, after review; and (b) that for high cholesterol, studies that only target heart disease (for example, heart attack trials) are not counted, which makes its count lower. How studies marked "questionable" are treated is pending the scoring export; it is tracked by a code comment only and SHALL NOT appear on the page.
+6. THE Method_Page SHALL display, in plain language at grade 8 or lower: (a) that the index covers three diseases today (asthma, diabetes and high cholesterol), and that high blood pressure and depression can be added later by editing the rules file, after review; and (b) that for high cholesterol, studies that only target heart disease (for example, heart attack trials) are not counted, which makes its count lower. How studies marked "questionable" are treated is stated by Requirement 21 criterion 4.
+
+### Requirement 21: Matching Rules on the Method Page
+
+**User Story:** As a researcher, I want the Method page to say in plain words how studies are matched to a disease, so that I can see which studies are counted and which are left out.
+
+Sources: Spec 2 `.kiro/specs/condition-grouping/requirements.md` (Requirements 2-5, 7) and `pipeline/mapping/rules.py`; the scoring export `.kiro/specs/scoring-export/requirements.md` (Glossary "Eligible_Study", Requirements 4.1 and 5.1); `.kiro/steering/data-contract.md` ("Eligible for a disease"); and `pipeline/scoring/index.py`, which skips every `study_diseases.csv` row whose `match_status` is not `included`.
+
+#### Acceptance Criteria
+
+1. THE Method_Page SHALL state that each Disease has a list of words to look for and a list of words that rule a study out, that both lists are checked against the conditions each study names, and that a ruled-out word removes only a study that does not also name the Disease itself (Spec 2 Requirements 2, 3 and 4.4).
+2. THE Method_Page SHALL state that studies that include only children (upper age limit under 18) are not counted for any Disease, because the prevalence is for adults 18 and older (Spec 2 Requirement 5).
+3. THE Method_Page SHALL state the high-cholesterol heart-disease-only exclusion of Requirement 20 criterion 6(b) (Spec 2 `ascvd_only`).
+4. THE Method_Page SHALL state that studies marked "questionable" (their condition is not clearly the Disease) are not counted, with an example taken from a real Spec 2 Questionable_Term. This matches the data contract and the scoring export, where only `match_status` `included` makes an Eligible_Study.
+5. THE Method_Page SHALL NOT use the word "crosswalk", SHALL NOT render any "to do" text, and the Method_Page source SHALL NOT contain a `TODO(scoring-export)` comment.
+6. THE matching-rule text SHALL be written at grade 8 or lower and SHALL NOT use any Forbidden_Terms (Requirement 11.6, 17).

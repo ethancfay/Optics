@@ -352,6 +352,25 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
     - Commits: (a) spec; (b) data; (c) copy + tests.
 
+- [x] 20. Method page matching section reflects Spec 2's real rules
+  - Sources: `.kiro/specs/condition-grouping/requirements.md` (Req 2-5, 7), `pipeline/mapping/rules.py`, `.kiro/specs/scoring-export/requirements.md` (Glossary "Eligible_Study", Req 4.1, 5.1), `.kiro/steering/data-contract.md` ("Eligible for a disease"), `pipeline/scoring/index.py` (skips `match_status != "included"`).
+  - _Requirements: 11.2, 20.6, 21.1-21.6_
+
+  - [x] 20.1 Spec: Requirement 21 (new); amend Req 11.2 and Req 20.6; design Method_Page note
+    - _Requirements: 21.1-21.6_
+
+  - [x] 20.2 Method page copy
+    - Replace the generic crosswalk paragraph in `Method.tsx` with exported constants `MATCHING_TERMS_NOTE`, `CHILD_ONLY_NOTE`, `QUESTIONABLE_NOT_COUNTED` (plus the existing `HIGHCHOL_HEART_DISEASE_NOTE`), per design. Change the last filter bullet to refer to the word lists, not the crosswalk. Remove the `TODO(scoring-export)` comment and every "crosswalk" mention in the file.
+    - _Requirements: 11.2, 21.1-21.5_
+
+  - [x] 20.3 Tests
+    - `Method.test.tsx`: each Req 21 sentence renders once; the questionable sentence says these studies are not counted; no rendered "crosswalk" or "to do"/"todo" text; the source file has no `TODO(scoring-export)`; the matching-section copy stays at grade 8 or lower (Flesch-Kincaid) and has no Forbidden_Terms.
+    - _Requirements: 21.4-21.6_
+
+  - [x] 20.4 Verify and commit (don't push)
+    - Run `tsc -b`, `npm test`, `npm run build` in `web/`; fix failures.
+    - Commits: (a) spec; (b) Method copy + tests.
+
 ## Notes
 
 - Tasks marked with `*` are optional (tests) and can be skipped for a faster MVP, but they implement the 14 Correctness Properties and the design's example/edge-case coverage and are strongly recommended.
@@ -384,7 +403,11 @@ Every task builds on earlier ones and ends integrated into the app — no orphan
     { "id": 16, "tasks": ["19.1"] },
     { "id": 17, "tasks": ["19.2", "19.3", "19.4"] },
     { "id": 18, "tasks": ["19.5"] },
-    { "id": 19, "tasks": ["19.6"] }
+    { "id": 19, "tasks": ["19.6"] },
+    { "id": 20, "tasks": ["20.1"] },
+    { "id": 21, "tasks": ["20.2"] },
+    { "id": 22, "tasks": ["20.3"] },
+    { "id": 23, "tasks": ["20.4"] }
   ]
 }
 ```

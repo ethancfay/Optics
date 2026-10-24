@@ -4,7 +4,8 @@
 // grade-8 plain language and with no Forbidden_Terms (Req 11.6, 17):
 //
 //   - the Index_Value formula and what each symbol means (Req 11.1);
-//   - the crosswalk and filters used to attribute studies to each disease (Req 11.2);
+//   - the matching rules and filters used to attribute studies to each disease
+//     (Req 11.2, 21);
 //   - every Source_Entry as a NAMED link to its `url`, each shown WITH its
 //     `fetched` date (Req 11.3) — this is the distinction from the Footer, which
 //     renders the same source links WITHOUT a fetched date (checked by Property 8);
@@ -22,7 +23,7 @@
 // the `useSources()` hook and wraps that single region in the shared
 // `LoadStateView` helper so the loading / error (naming `sources.json`) / empty
 // states are handled in one place and never show a partial or placeholder source
-// (Req 3.2, 3.3, 3.5). The static formula, crosswalk, filters, and limits remain
+// (Req 3.2, 3.3, 3.5). The static formula, matching rules, filters, and limits remain
 // visible regardless of the Sources load state, so one file's failure never
 // blanks the rest of the page (Req 3.6). The router (task 14) wraps this page in
 // `SourcesProvider`; `useSources` throws if used outside it.
@@ -59,6 +60,33 @@ export const DISEASE_SCOPE =
 export const HIGHCHOL_HEART_DISEASE_NOTE =
   "For high cholesterol, we do not count studies that only target heart disease, such as heart attack trials. " +
   "This makes its count lower.";
+
+/**
+ * Include and rule-out word lists (Req 21.1). Mirrors Spec 2's Include_Terms and
+ * Exclude_Terms in pipeline/mapping/rules.py (condition-grouping Req 2-4; an
+ * include match on a clean value beats any exclude match, Req 4.4).
+ */
+export const MATCHING_TERMS_NOTE =
+  "Each disease has a list of words to look for and a list of words that rule a study out. " +
+  "We check both lists against the conditions each study names. " +
+  "A rule-out word only removes a study that does not also name the disease itself.";
+
+/** Child-only studies are never counted (Req 21.2; condition-grouping Req 5). */
+export const CHILD_ONLY_NOTE =
+  "We do not count studies that include only children, with an upper age limit under 18. " +
+  "The prevalence numbers are for adults 18 and older.";
+
+/**
+ * "Questionable" studies are not counted (Req 21.4). Only `match_status`
+ * "included" makes a study eligible: data-contract.md ("Eligible for a
+ * disease"), scoring-export Eligible_Study (Req 4.1, 5.1), and
+ * pipeline/scoring/index.py, which skips every other match_status. The example
+ * is the HIGHCHOL `broad_category` Questionable_Term "Lipid Disorders" in
+ * pipeline/mapping/rules.py.
+ */
+export const QUESTIONABLE_NOT_COUNTED =
+  'Some studies are marked "questionable" because their condition is not clearly the disease, ' +
+  'for example a broad blood-fat category such as "lipid disorders". We do not count these studies.';
 
 /**
  * Render the Sources section: one named link per Source_Entry to its `url`, each
@@ -130,15 +158,13 @@ export default function Method() {
         </p>
       </section>
 
-      {/* --- Crosswalk and filters (Req 11.2) --- */}
-      <section className="method-page__crosswalk" aria-labelledby="method-crosswalk-heading">
-        <h2 id="method-crosswalk-heading">How we match studies to a disease</h2>
-        <p>
-          We use a crosswalk to tie each disease to the studies that belong to
-          it. The crosswalk maps the CDC PLACES measure for a disease to the
-          clinical-trial condition terms for the same disease, so the studies we
-          count line up with the prevalence we use.
-        </p>
+      {/* --- Matching rules and filters (Req 11.2, 21) --- */}
+      <section className="method-page__matching" aria-labelledby="method-matching-heading">
+        <h2 id="method-matching-heading">How we match studies to a disease</h2>
+        <p className="method-page__terms">{MATCHING_TERMS_NOTE}</p>
+        <p className="method-page__child-only">{CHILD_ONLY_NOTE}</p>
+        <p className="method-page__highchol">{HIGHCHOL_HEART_DISEASE_NOTE}</p>
+        <p className="method-page__questionable">{QUESTIONABLE_NOT_COUNTED}</p>
         <p>We then apply these filters to the studies we count:</p>
         <ul>
           <li>The study lists a Massachusetts recruiting location.</li>
@@ -148,16 +174,11 @@ export default function Method() {
             Massachusetts site.
           </li>
           <li>
-            The study condition matches the crosswalk terms for the disease.
+            The study matches the disease word lists and is not ruled out by
+            the rules above.
           </li>
         </ul>
         <p className="method-page__scope">{DISEASE_SCOPE}</p>
-        <p className="method-page__highchol">{HIGHCHOL_HEART_DISEASE_NOTE}</p>
-        {/*
-          TODO(scoring-export): explain how studies marked "questionable" by
-          Spec 2 are treated (counted, excluded, or shown separately) once the
-          scoring-export spec decides. Code-only; nothing is rendered (Req 20.6).
-        */}
       </section>
 
       {/* --- Sources, each with its fetched date (Req 11.3) --- */}
