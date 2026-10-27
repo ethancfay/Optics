@@ -1,7 +1,7 @@
-# Research Gap Index — Dashboard (`web/`)
+# Optics — Dashboard (`web/`)
 
-A static Vite + React + TypeScript single-page app. It reads only six
-precomputed, same-origin JSON/GeoJSON files from `public/data/` and makes no
+A static Vite + React + TypeScript single-page app. It reads only four
+precomputed, same-origin JSON files from `public/data/` and makes no
 other runtime network requests.
 
 ## Commands
@@ -27,7 +27,7 @@ builds from this folder and serves the `dist/` output.
 
 ```
 web/
-  public/data/      # the six same-origin data files (served at /data/*)
+  public/data/      # the four same-origin data files (served at /data/*)
   src/
     components/     # shared UI + visualizations
     data/           # JSON contract types, validators, pure logic, providers

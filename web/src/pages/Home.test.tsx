@@ -1,7 +1,7 @@
 // Unit tests for the Home page restyle into the two mockup cards (Req 6.5, 7).
 //
 // Covered:
-//   - the two card titles "What is Research Gap Index?" and "Top Finding"
+//   - the two card titles "What is Optics?" and "Top Finding"
 //     (Req 7.1, 7.2);
 //   - the left card holds exactly one explanatory sentence (Req 7.1);
 //   - Top_Finding_Disease is driven by `selectTopFinding` — the lowest-midpoint

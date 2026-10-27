@@ -1,7 +1,7 @@
 /*
  * Home page layout (frontend-redesign, Req 6.5, 7).
  *
- * Home is the two mockup cards: a left "What is Research Gap Index?" card and a
+ * Home is the two mockup cards: a left "What is Optics?" card and a
  * right "Top Finding" card, side by side on wide viewports and stacked on
  * narrow ones. The cards themselves are the reusable Card component, so this
  * file owns only the page layout, not the card chrome.

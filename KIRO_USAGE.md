@@ -1,6 +1,6 @@
 # How We Used Kiro
 
-We built Research Gap Index almost entirely through Kiro, using spec-driven development, steering docs, hooks, a custom agent, MCP, and a Power. Everything is in the `/.kiro` folder.
+We built Optics (formerly Research Gap Index) almost entirely through Kiro, using spec-driven development, steering docs, hooks, a custom agent, MCP, and a Power. Everything is in the `/.kiro` folder.
 
 ## Tools and setup
 We used Kiro IDE as our main environment across four laptops: three Mac and one Windows. The Windows teammate handled the hooks, agent, MCP, and Power work. We also used the Kiro CLI to run the health-reviewer agent from the terminal, which showed the same agent works outside the IDE.

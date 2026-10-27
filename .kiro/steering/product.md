@@ -1,6 +1,6 @@
 # Product
 
-Research Gap Index is a burden-first research intelligence prototype. It compares
+Optics (formerly Research Gap Index) is a burden-first research intelligence prototype. It compares
 how common selected diseases are among Massachusetts adults with observable
 Massachusetts-associated clinical study activity, then decomposes that activity
 (study type, drug interventions, status, phase) so researchers can see what the

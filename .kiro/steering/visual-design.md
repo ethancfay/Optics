@@ -23,7 +23,7 @@ Look: a calm, professional research tool (think a clean analytics dashboard), no
 - Headings use `--ink`, letter-spacing -0.01em.
 
 ## Layout pieces
-- Header: white bar with bottom border, product name "Research Gap Index" on the left, nav links on the right; active link = accent text + 2px underline. Collapses to a wrapped row on phones.
+- Header: white bar with bottom border, product name "Optics" on the left, nav links on the right; active link = accent text + 2px underline. Collapses to a wrapped row on phones.
 - Sample-data banner: slim pill-style strip above the header, `--accent-soft` background, small text.
 - Content sections sit in cards (`--card`, border, radius, shadow, 24px padding).
 - Home: hero card with h1, one-line question, and the top finding as a big stat (range in large tabular numbers) plus a primary button "Explore all diseases".

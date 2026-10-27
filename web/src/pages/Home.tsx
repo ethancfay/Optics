@@ -1,7 +1,7 @@
 // Home_Page — route component for `/` (Req 7).
 //
 // Restyle/relayout of the Home page into the two mockup cards (Req 6.5, 7):
-//   - a LEFT card titled "What is Research Gap Index?" holding exactly one
+//   - a LEFT card titled "What is Optics?" holding exactly one
 //     explanatory sentence (Req 7.1), and
 //   - a RIGHT card titled "Top Finding" naming Top_Finding_Disease — the disease
 //     whose precomputed Index_Value midpoint is lowest — with its low-high
@@ -32,7 +32,7 @@ import type { WhatEntry } from "../data/types";
 import "./Home.css";
 
 /**
- * The single explanatory sentence shown in the "What is Research Gap Index?"
+ * The single explanatory sentence shown in the "What is Optics?"
  * card (Req 7.1). One sentence, 1-200 characters, framing the result as a
  * discrepancy (not a judgment) and free of Forbidden_Terms (Req 20).
  */
