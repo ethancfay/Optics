@@ -74,6 +74,7 @@
   --ink: #F4F7FB;
   --muted: #C9D3E0;
   --card-ink: #F4F7FB;
+  --accent: #9EC5FF;
   color: #F4F7FB;
 }
 
@@ -106,10 +107,6 @@
 .card .evidence-table td,
 .card .evidence-table caption,
 .card .inv-definition,
-.card .inv-definition-inline,
-.card .inv-f2-note,
-.card .inv-caption,
-.card .inv-prevalence-year,
 .card .inv-finding,
 .card .inv-finding p,
 .card .inv-badge,
@@ -117,6 +114,8 @@
 .card .what-caveats,
 .card .what-caveat,
 .card .what-picker-select,
+.card .dw-chart,
+.card .county-map,
 .card .card-panel,
 .card .card-panel p,
 .card .card-panel li,
@@ -134,6 +133,7 @@
 .card textarea {
   --ink: #1A1A1A;
   --muted: #4A5562;
+  --accent: #2F5C9A;
   color: #1A1A1A;
 }
 
@@ -163,6 +163,7 @@
 }
 
 /* Links on light plates keep the accent blue (AA on cream / light-blue). */
+.card .dw-chart a,
 .card .inv-table a,
 .card .dw-table a,
 .card .dw-row-button,

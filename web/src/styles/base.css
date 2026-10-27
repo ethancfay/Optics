@@ -239,7 +239,7 @@ a:hover {
 .btn-primary,
 .home-what-link a {
   display: inline-block;
-  background: var(--accent);
+  background: var(--button-bg, #2F5C9A);
   color: #ffffff;
   padding: 10px 16px;
   border-radius: var(--radius-control);
@@ -516,4 +516,73 @@ a:hover {
 
 .card-body .home-top-finding p:first-of-type strong:first-of-type {
   color: var(--card-ink);
+}
+
+/* ---------------------------------------------------------------------------
+ * Navy container contrast — variable model for pages NOT wrapped in <Card>
+ * ---------------------------------------------------------------------------
+ * Evidence, Method, Build and NotFound render straight into a navy top-level
+ * block. Redefine the text/link variables on that block so every descendant
+ * (nested headings, paragraphs, captions, links) resolves to a light value, then
+ * reset them back to dark on the light plates (tables, formula box, panels).
+ */
+.layout__main > .home-page,
+.layout__main > .where-page,
+.layout__main > .method-page,
+.layout__main > .build-page,
+.layout__main > .not-found-page,
+.layout__main > section,
+.layout__main > article {
+  --ink: var(--card-ink);
+  --muted: var(--card-muted);
+  --accent: var(--card-link);
+  color: var(--card-ink);
+}
+
+.layout__main .inv-table,
+.layout__main .dw-table,
+.layout__main .county-map__table,
+.layout__main .evidence-table,
+.layout__main .dw-chart,
+.layout__main .inv-definition,
+.layout__main .inv-finding,
+.layout__main .inv-badge,
+.layout__main .method-page__equation,
+.layout__main .what-caveats,
+.layout__main .what-picker-select,
+.layout__main .card-panel {
+  --ink: #1A1A1A;
+  --muted: #4A5562;
+  --accent: #2F5C9A;
+}
+
+/* Tables get a cream plate on every cell and caption, not just the header. */
+.layout__main .inv-table,
+.layout__main .inv-table caption,
+.layout__main .inv-table td,
+.layout__main .dw-table,
+.layout__main .dw-table caption,
+.layout__main .dw-table td,
+.layout__main .county-map__table,
+.layout__main .county-map__table caption,
+.layout__main .county-map__table td,
+.layout__main .evidence-table,
+.layout__main .evidence-table caption,
+.layout__main .evidence-table td {
+  background-color: var(--surface);
+}
+
+.layout__main .inv-table caption,
+.layout__main .dw-table caption,
+.layout__main .county-map__table caption,
+.layout__main .evidence-table caption {
+  padding: 12px;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+}
+
+/* Links inside table plates use the dark accent, not the on-navy link colour. */
+.layout__main .evidence-table a,
+.layout__main .inv-table a,
+.layout__main .dw-table a {
+  color: #2F5C9A;
 }

@@ -67,6 +67,7 @@
    */
   --accent: #2F5C9A;          /* links, primary buttons; AA on cream/panel */
   --accent-deep: #2E4A6E;     /* deep blue for emphasis / active nav state */
+  --button-bg: #2F5C9A;      /* primary button fill (white text ~6.9:1) */
   --focus: #B54708;           /* visible focus ring, AA on cream + light-blue */
 
   /*
